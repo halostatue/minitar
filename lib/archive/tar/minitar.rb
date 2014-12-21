@@ -68,12 +68,13 @@ module Archive
           end
         end
 
-        # A convenience method to packs the file provided. +entry+ may either be
-        # a filename (in which case various values for the file (see below) will
-        # be obtained from <tt>File#stat(entry)</tt> or a Hash with the fields:
+        # A convenience method to pack the file provided. +entry+ may either be
+        # a filename (in which case various values for the file (see below)
+        # will be obtained from <tt>File#stat(entry)</tt> or a Hash with the
+        # fields:
         #
-        # <tt>:name</tt>::  The filename to be packed into the tarchive.
-        #                   *REQUIRED*.
+        # <tt>:name</tt>::  The filename to be packed into the archive.
+        #                   Required.
         # <tt>:mode</tt>::  The mode to be applied.
         # <tt>:uid</tt>::   The user owner of the file. (Ignored on Windows.)
         # <tt>:gid</tt>::   The group owner of the file. (Ignored on Windows.)
@@ -104,7 +105,9 @@ module Archive
         # <tt>:gid</tt>::     The group owner of the file. (+nil+ on Windows.)
         # <tt>:mtime</tt>::   The modification Time of the file.
         def pack_file(entry, outputter) #:yields action, name, stats:
-          outputter = outputter.tar if outputter.kind_of?(Archive::Tar::Minitar::Output)
+          if outputter.kind_of?(Archive::Tar::Minitar::Output)
+            outputter = outputter.tar
+          end
 
           stats = {}
 
@@ -153,9 +156,9 @@ module Archive
         end
 
         # A convenience method to pack files specified by +src+ into +dest+. If
-        # +src+ is an Array, then each file detailed therein will be packed into
-        # the resulting Archive::Tar::Minitar::Output stream; if +recurse_dirs+
-        # is true, then directories will be recursed.
+        # +src+ is an Array, then each file detailed therein will be packed
+        # into the resulting Archive::Tar::Minitar::Output stream; if
+        # +recurse_dirs+ is true, then directories will be recursed.
         #
         # If +src+ is an Array, it will be treated as the result of Find.find;
         # all files matching will be packed.

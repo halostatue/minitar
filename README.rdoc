@@ -23,23 +23,22 @@ project.
 Using this library is easy. The simplest case is:
 
   require 'zlib'
-  require 'archive/tar/minitar'
-  include Archive::Tar
+  require 'minitar'
 
-    # Packs everything that matches Find.find('tests')
-  File.open('test.tar', 'wb') { |tar| Minitar.pack('tests', tar) }
-    # Unpacks 'test.tar' to 'x', creating 'x' if necessary.
+  # Packs everything that matches Find.find('tests').
+  # test.tar will automatically be closed by Minitar.pack.
+  Minitar.pack('tests', File.open('test.tar', 'wb'))
+
+  # Unpacks 'test.tar' to 'x', creating 'x' if necessary.
   Minitar.unpack('test.tar', 'x')
 
 A gzipped tar can be written with:
 
-    tgz = Zlib::GzipWriter.new(File.open('test.tgz', 'wb'))
-      # Warning: tgz will be closed!
-    Minitar.pack('tests', tgz)
+    # test.tgz will be closed automatically.
+    Minitar.pack('tests', Zlib::GzipWriter.new(File.open('test.tgz', 'wb'))
 
-    tgz = Zlib::GzipReader.new(File.open('test.tgz', 'rb'))
-      # Warning: tgz will be closed!
-    Minitar.unpack(tgz, 'x')
+    # test.tgz will be closed automatically.
+    Minitar.unpack(Zlib::GzipReader.new(File.open('test.tgz', 'rb')), 'x')
 
 As the case above shows, one need not write to a file. However, it will
 sometimes require that one dive a little deeper into the API, as in the case of
