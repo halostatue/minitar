@@ -1,0 +1,70 @@
+= minitar
+
+home :: https://github.com/halostatue/minitar/
+code :: https://github.com/halostatue/minitar/
+bugs :: https://github.com/halostatue/minitar/issues
+rdoc :: http://rdoc.info/gems/minitar/
+continuous integration :: {<img src="https://travis-ci.org/halostatue/minitar.png" />}[https://travis-ci.org/halostatue/minitar]
+test coverage :: {<img src="https://coveralls.io/repos/halostatue/minitar/badge.png" alt="Coverage Status" />}[https://coveralls.io/r/halostatue/minitar]
+
+== Description
+
+The minitar library is a pure-Ruby library and command-line utility that
+provides the ability to deal with POSIX tar(1) archive files.
+
+This is release 0.6, …
+
+minitar (previously called Archive::Tar::Minitar) is based heavily on code
+originally written by Mauricio Julio Fernández Pradier for the rpa-base
+project.
+
+== Synopsis
+
+Using this library is easy. The simplest case is:
+
+  require 'zlib'
+  require 'archive/tar/minitar'
+  include Archive::Tar
+
+    # Packs everything that matches Find.find('tests')
+  File.open('test.tar', 'wb') { |tar| Minitar.pack('tests', tar) }
+    # Unpacks 'test.tar' to 'x', creating 'x' if necessary.
+  Minitar.unpack('test.tar', 'x')
+
+A gzipped tar can be written with:
+
+    tgz = Zlib::GzipWriter.new(File.open('test.tgz', 'wb'))
+      # Warning: tgz will be closed!
+    Minitar.pack('tests', tgz)
+
+    tgz = Zlib::GzipReader.new(File.open('test.tgz', 'rb'))
+      # Warning: tgz will be closed!
+    Minitar.unpack(tgz, 'x')
+
+As the case above shows, one need not write to a file. However, it will
+sometimes require that one dive a little deeper into the API, as in the case of
+StringIO objects. Note that I'm not providing a block with Minitar::Output, as
+Minitar::Output#close automatically closes both the Output object and the
+wrapped data stream object.
+
+  begin
+    sgz = Zlib::GzipWriter.new(StringIO.new(""))
+    tar = Output.new(sgz)
+    Find.find('tests') do |entry|
+      Minitar.pack_file(entry, tar)
+    end
+  ensure
+      # Closes both tar and sgz.
+    tar.close
+  end
+
+== minitar Semantic Versioning
+
+The minitar library uses a {Semantic Versioning}[http://semver.org/] scheme
+with one change:
+
+* When PATCH is zero (+0+), it will be omitted from version references.
+
+:include: Contributing.rdoc
+
+:include: Licence.rdoc
