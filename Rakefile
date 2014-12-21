@@ -1,113 +1,63 @@
-#! /usr/bin/env rake
-$LOAD_PATH.unshift('lib')
+# -*- ruby encoding: utf-8 -*-
 
 require 'rubygems'
-require 'rake/gempackagetask'
-require 'rake/contrib/rubyforgepublisher'
-require 'archive/tar/minitar'
-require 'zlib'
+require 'hoe'
+require 'rake/clean'
 
-DISTDIR = "archive-tar-minitar-#{Archive::Tar::Minitar::VERSION}"
-TARDIST = "../#{DISTDIR}.tar.gz"
+Hoe.plugin :doofus
+Hoe.plugin :gemspec2
+Hoe.plugin :git
+Hoe.plugin :minitest
+Hoe.plugin :travis
+Hoe.plugin :email unless ENV['CI'] or ENV['TRAVIS']
 
-DATE_RE = %r<(\d{4})[./-]?(\d{2})[./-]?(\d{2})(?:[\sT]?(\d{2})[:.]?(\d{2})[:.]?(\d{2})?)?>
+spec = Hoe.spec 'archive-tar-minitar' do
+  developer('Austin Ziegler', 'halostatue@gmail.com')
+  self.need_tar = true
 
-if ENV['RELEASE_DATE']
-  year, month, day, hour, minute, second = DATE_RE.match(ENV['RELEASE_DATE']).captures
-  year ||= 0
-  month ||= 0
-  day ||= 0
-  hour ||= 0
-  minute ||= 0
-  second ||= 0
-  ReleaseDate = Time.mktime(year, month, day, hour, minute, second)
-else
-  ReleaseDate = nil
+  self.require_ruby_version '>= 1.8'
+
+  self.history_file = 'History.rdoc'
+  self.readme_file = 'README.rdoc'
+  self.extra_rdoc_files = FileList["*.rdoc"].to_a
+  self.licenses = ["Ruby", "GPL-2"]
+
+  self.extra_dev_deps << ['hoe-doofus', '~> 1.0']
+  self.extra_dev_deps << ['hoe-gemspec2', '~> 1.1']
+  self.extra_dev_deps << ['hoe-git', '~> 1.6']
+  self.extra_dev_deps << ['hoe-rubygems', '~> 1.0']
+  self.extra_dev_deps << ['hoe-travis', '~> 1.2']
+  self.extra_dev_deps << ['minitest', '~> 5.3']
+  self.extra_dev_deps << ['minitest-autotest', ['>= 1.0.b', '<2']]
+  self.extra_dev_deps << ['rake', '~> 10.0']
+  self.extra_dev_deps << ['simplecov', '~> 0.7']
+  self.extra_dev_deps << ['coveralls', '~> 0.7']
 end
 
-task :test do |t|
-  require 'test/unit/testsuite'
-  require 'test/unit/ui/console/testrunner'
+if RUBY_VERSION >= "1.9"
+  namespace :test do
+    task :coveralls do
+      spec.test_prelude = [
+        'require "psych"',
+        'require "simplecov"',
+        'require "coveralls"',
+        'SimpleCov.formatter = Coveralls::SimpleCov::Formatter',
+        'SimpleCov.start("test_frameworks") { command_name "Minitest" }',
+        'gem "minitest"'
+      ].join('; ')
+      Rake::Task['test'].execute
+    end
 
-  runner = Test::Unit::UI::Console::TestRunner
-
-  $LOAD_PATH.unshift('tests')
-  Dir['tests/tc_*.rb'].each do |testcase|
-    load testcase
-  end
-
-  suite = Test::Unit::TestSuite.new
-
-  ObjectSpace.each_object(Class) do |testcase|
-    suite << testcase.suite if testcase < Test::Unit::TestCase
-  end
-
-  runner.run(suite)
-end
-
-spec = eval(File.read("archive-tar-minitar.gemspec"))
-desc "Build the RubyGem for Archive::Tar::Minitar."
-task :gem => [ :test ]
-Rake::GemPackageTask.new(spec) do |g|
-  g.need_tar    = false
-  g.need_zip    = false
-  g.package_dir = ".."
-end
-
-desc "Build an Archive::Tar::Minitar .tar.gz distribution."
-task :tar => [ TARDIST ]
-file TARDIST do |t|
-  current = File.basename(Dir.pwd)
-  Dir.chdir("..") do
-    begin
-      files = Dir["#{current}/**/*"].select { |dd| dd !~ %r{(?:/CVS/?|~$)} }
-      files.map! do |dd|
-        ddnew = dd.gsub(/^#{current}/, DISTDIR)
-        mtime = ReleaseDate || File.stat(dd).mtime
-        if File.directory?(dd)
-          { :name => ddnew, :mode => 0755, :dir => true, :mtime => mtime }
-        else
-          if dd =~ %r{bin/}
-            mode = 0755
-          else
-            mode = 0644
-          end
-          data = File.read(dd)
-          { :name => ddnew, :mode => mode, :data => data, :size => data.size,
-            :mtime => mtime }
-        end
-      end
-
-      ff = File.open(t.name.gsub(%r{^\.\./}o, ''), "wb")
-      gz = Zlib::GzipWriter.new(ff)
-      tw = Archive::Tar::Minitar::Writer.new(gz)
-
-      files.each do |entry|
-        if entry[:dir]
-          tw.mkdir(entry[:name], entry)
-        else
-          tw.add_file_simple(entry[:name], entry) { |os| os.write(entry[:data]) }
-        end
-      end
-    ensure
-      tw.close if tw
-      gz.close if gz
+    desc 'Run test coverage'
+    task :coverage do
+      spec.test_prelude = [
+        'require "simplecov"',
+        'SimpleCov.start("test_frameworks") { command_name "Minitest" }',
+        'gem "minitest"'
+      ].join('; ')
+      Rake::Task['test'].execute
     end
   end
-end
-task TARDIST => [ :test ]
 
-def sign(file)
-  sh %("C:\\Program Files\\Windows Privacy Tools\\GnuPG\\Gpg.exe" -ba #{file})
-end
-
-task :signtar => [ :tar ] do
-  sign TARDIST
-end
-task :signgem => [ :gem ] do
-  sign "../#{DISTDIR}.gem"
-end
-
-desc "Build everything."
-task :default => [ :signtar, :signgem ] do
+  Rake::Task['travis'].prerequisites.replace(%w(test:coveralls))
 end
