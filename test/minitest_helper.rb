@@ -5,14 +5,6 @@ require 'fileutils'
 gem 'minitest'
 require 'minitest/autorun'
 
-if RUBY_VERSION < "1.9"
-  class String
-    def bytes
-      split(//).map { |c| c[0] }
-    end
-  end
-end
-
 module TarTester
   private
   def assert_headers_equal(h1, h2)
