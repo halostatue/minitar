@@ -33,6 +33,8 @@
     streams that are not seekable, such as pipes, STDIN, or STDOUT.
   * Fix {#3}[https://github.com/halostatue/minitar/issues/3] to make the test
     timezone resilient.
+  * Fix {#6}[https://github.com/halostatue/minitar/issues/6] by making it
+    raise the correct error for a long filename with no path components.
 
 * Development:
   * Modernized minitar tooling around Hoe.

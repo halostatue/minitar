@@ -89,6 +89,10 @@ class TestTarWriter < Minitest::Test
       @os.add_file_simple(File.join("a" * 10, "b" * 110),
                                     :mode => 0644, :size => 10) { }
     end
+    # Issue #6.
+    assert_raises(Minitar::FileNameTooLong) do
+      @os.add_file_simple("a" * 114, :mode => 0644, :size => 10) { }
+    end
   end
 
   def test_add_file
