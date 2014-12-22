@@ -18,7 +18,7 @@ module Archive
         # this instance, +Input.open+ returns the value of the block.
         #
         # call-seq:
-        #    Archive::Tar::Minitar::Input.open(io)                   -> input
+        #    Archive::Tar::Minitar::Input.open(io) -> input
         #    Archive::Tar::Minitar::Input.open(io) { |input| block } -> obj
         def self.open(input)
           stream = new(input)
@@ -33,10 +33,10 @@ module Archive
           res
         end
 
-        # Creates a new Input object. If +input+ is a stream object that responds
-        # to #read), then it will simply be wrapped. Otherwise, one will be
-        # created and opened using Kernel#open. When Input#close is called, the
-        # stream object wrapped will be closed.
+        # Creates a new Input object. If +input+ is a stream object that
+        # responds to #read, then it will simply be wrapped. Otherwise, one
+        # will be created and opened using Kernel#open. When Input#close is
+        # called, the stream object wrapped will be closed.
         #
         # An exception will be raised if the stream that is wrapped does not
         # support rewinding.
@@ -55,7 +55,7 @@ module Archive
             raise Archive::Tar::Minitar::NonSeekableStream
           end
 
-          @reader = Reader.new(@io)
+          @tar = Reader.new(@io)
         end
 
         # When provided a block, iterates through each entry in the archive.
@@ -66,9 +66,9 @@ module Archive
         def each
           if block_given?
             begin
-              @reader.each { |entry| yield entry }
+              @tar.each { |entry| yield entry }
             ensure
-              @reader.rewind
+              @tar.rewind
             end
           else
             enum_for(:each)
@@ -151,14 +151,12 @@ module Archive
         end
 
         # Returns the Reader object for direct access.
-        def tar
-          @reader
-        end
+        attr_reader :tar
 
-        # Closes the Reader object and the wrapped data stream.
+        # Closes both the Reader object and the wrapped data stream.
         def close
           @io.close
-          @reader.close
+          @tar.close
         end
 
         private

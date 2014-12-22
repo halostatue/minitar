@@ -21,8 +21,8 @@ module Archive
             attr_reader field.to_sym
           end
 
-          def initialize(header, anIO)
-            @io       = anIO
+          def initialize(header, io)
+            @io       = io
             @name     = header.name
             @mode     = header.mode
             @uid      = header.uid
@@ -128,8 +128,8 @@ module Archive
         # the new _writer_ as an argument and the Reader object will
         # automatically be closed when the block terminates. In this instance,
         # +Reader::open+ returns the value of the block.
-        def self.open(anIO)
-          reader = new(anIO)
+        def self.open(io)
+          reader = new(io)
 
           return reader unless block_given?
 
@@ -143,9 +143,9 @@ module Archive
         end
 
         # Creates and returns a new Reader object.
-        def initialize(anIO)
-          @io     = anIO
-          @init_pos = anIO.pos
+        def initialize(io)
+          @io = io
+          @init_pos = io.pos
         end
 
         # Iterates through each entry in the data stream.
