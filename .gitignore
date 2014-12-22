@@ -11,4 +11,5 @@ doc
 html
 pkg
 publish
+ri
 test/cache.tst

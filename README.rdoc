@@ -20,7 +20,7 @@ project.
 
 == Synopsis
 
-Using this library is easy. The simplest case is:
+Using minitar is easy. The simplest case is:
 
   require 'zlib'
   require 'minitar'
