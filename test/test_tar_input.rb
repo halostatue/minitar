@@ -44,7 +44,7 @@ UTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIwCUgAAGnyo6wAoAAA=
     reader = Zlib::GzipReader.new(StringIO.new(TEST_TGZ))
     Minitar::Input.open(reader) do |stream|
       outer = 0
-      stream.each_with_index do |entry, i|
+      stream.each.with_index do |entry, i|
         assert_kind_of(Minitar::Reader::EntryStream, entry)
         assert TEST_CONTENTS.has_key?(entry.name)
 

@@ -6,16 +6,20 @@ module Archive
   module Tar
     module Minitar
       # Wraps a Archive::Tar::Minitar::Reader with convenience methods and
-      # wrapped stream management; Input only works with random access data
-      # streams. See Input.new for details.
+      # wrapped stream management; Input only works with data streams that can
+      # be rewound.
       class Input
         include Enumerable
 
-        # With no associated block, +Input.open+ is a synonym for
-        # +Input.new+. If the optional code block is given, it will be passed
-        # the new _writer_ as an argument and the Input object will
-        # automatically be closed when the block terminates. In this instance,
-        # +Input.open+ returns the value of the block.
+        # With no associated block, +Input.open+ is a synonym for +Input.new+.
+        # If the optional code block is given, it will be given the new Input
+        # as an argument and the Input object will automatically be closed when
+        # the block terminates (this also closes the wrapped stream object). In
+        # this instance, +Input.open+ returns the value of the block.
+        #
+        # call-seq:
+        #    Archive::Tar::Minitar::Input.open(io)                   -> input
+        #    Archive::Tar::Minitar::Input.open(io) { |input| block } -> obj
         def self.open(input)
           stream = new(input)
           return stream unless block_given?
@@ -33,21 +37,42 @@ module Archive
         # to #read), then it will simply be wrapped. Otherwise, one will be
         # created and opened using Kernel#open. When Input#close is called, the
         # stream object wrapped will be closed.
+        #
+        # An exception will be raised if the stream that is wrapped does not
+        # support rewinding.
+        #
+        # call-seq:
+        #    Archive::Tar::Minitar::Input.new(io) -> input
+        #    Archive::Tar::Minitar::Input.new(path) -> input
         def initialize(input)
           if input.respond_to?(:read)
             @io = input
           else
             @io = open(input, "rb")
           end
-          @tarreader = Archive::Tar::Minitar::Reader.new(@io)
+
+          unless Archive::Tar::Minitar.seekable?(@io, :rewind)
+            raise Archive::Tar::Minitar::NonSeekableStream
+          end
+
+          @reader = Reader.new(@io)
         end
 
-        # Iterates through each entry and rewinds to the beginning of the stream
-        # when finished.
-        def each(&block)
-          @tarreader.each { |entry| yield entry }
-        ensure
-          @tarreader.rewind
+        # When provided a block, iterates through each entry in the archive.
+        # When finished, rewinds to the beginning of the stream.
+        #
+        # If not provided a block, creates an enumerator with the same
+        # semantics.
+        def each
+          if block_given?
+            begin
+              @reader.each { |entry| yield entry }
+            ensure
+              @reader.rewind
+            end
+          else
+            enum_for(:each)
+          end
         end
 
         # Extracts the current +entry+ to +destdir+. If a block is provided, it
@@ -127,13 +152,13 @@ module Archive
 
         # Returns the Reader object for direct access.
         def tar
-          @tarreader
+          @reader
         end
 
         # Closes the Reader object and the wrapped data stream.
         def close
           @io.close
-          @tarreader.close
+          @reader.close
         end
 
         private

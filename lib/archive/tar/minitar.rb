@@ -72,9 +72,6 @@ module Archive #:nodoc:
 
       # Raised when a wrapped data stream class is not seekable.
       NonSeekableStream = Class.new(StandardError)
-      # The exception raised when a block is required for proper operation of
-      # the method.
-      BlockRequired = Class.new(ArgumentError)
       # The exception raised when operations are performed on a stream that has
       # previously been closed.
       ClosedStream = Class.new(StandardError)
