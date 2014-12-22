@@ -6,6 +6,9 @@
     few people use the command-line utility anyway.
 
 * Enhancements:
+  * Licence change. After speaking with Mauricio Fernández, we have changed the
+    licensing of this library to Ruby and Simplified BSD and have dropped the
+    GNU GPL license. This takes effect from the 0.6 release.
   * Printing a deprecation warning for including Archive::Tar to put Minitar in
     the top-level namespace.
   * Printing a deprecation warning for including Archive::Tar::Minitar into a

@@ -1,15 +1,14 @@
 == Licence
 
+minitar is free software that may be redistributed and/or modified under the
+terms of Ruby’s licence or the Simplified BSD licence.
+
 * Copyright 2004–2014 Austin Ziegler.
 * Portions copyright 2004 Mauricio Julio Fernández Pradier.
 * Portions copyright 2001–2004 Satoru Takabayashi.
 
-This program is free software. It may be redistributed and/or modified under
-the terms of the GNU GPL version 2 (or, at your option, a later version), or
-Ruby’s licence.
+=== Simplified BSD Licence
+See the file docs/bsdl.txt in the main distribution.
 
-=== GNU GPL version 2
-See the file docs/COPYING.txt in the main distribution.
-
-=== Ruby’s license
+=== Ruby’s Licence
 See the file docs/ruby.txt in the main distribution.

@@ -4,12 +4,11 @@
 .hoerc
 Contributing.rdoc
 History.rdoc
-Install
 Licence.rdoc
 Manifest.txt
 README.rdoc
 Rakefile
-docs/COPYING.txt
+docs/bsdl.txt
 docs/ruby.txt
 lib/archive-tar-minitar.rb
 lib/archive/tar/minitar.rb

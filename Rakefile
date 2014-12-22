@@ -20,7 +20,7 @@ spec = Hoe.spec 'archive-tar-minitar' do
   self.history_file = 'History.rdoc'
   self.readme_file = 'README.rdoc'
   self.extra_rdoc_files = FileList["*.rdoc"].to_a
-  self.licenses = ["Ruby", "GPL-2"]
+  self.licenses = ["Ruby", "2BSD"]
 
   self.extra_dev_deps << ['hoe-doofus', '~> 1.0']
   self.extra_dev_deps << ['hoe-gemspec2', '~> 1.1']
