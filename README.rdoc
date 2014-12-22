@@ -9,8 +9,8 @@ test coverage :: {<img src="https://coveralls.io/repos/halostatue/minitar/badge.
 
 == Description
 
-The minitar library is a pure-Ruby library and command-line utility that
-provides the ability to deal with POSIX tar(1) archive files.
+The minitar library is a pure-Ruby library that provides the ability to deal
+with POSIX tar(1) archive files.
 
 This is release 0.6, …
 

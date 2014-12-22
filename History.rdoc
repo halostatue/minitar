@@ -1,5 +1,10 @@
 == 0.6 / YYYY-MM-DD
 
+* Breaking Changes:
+  * Extracted <tt>bin/minitar</tt> into a new gem, <tt>minitar-cli</tt>. No,
+    I am *not* going to bump the major version for this. As far as I can tell,
+    few people use the command-line utility anyway.
+
 * Enhancements:
   * Printing a deprecation warning for including Archive::Tar to put Minitar in
     the top-level namespace.
@@ -13,8 +18,8 @@
     by default, and the Archive::Tar namespace will be removed entirely for
     version 1.0.
   * Modified the handling of +mtime+ in PosixHeader to do an integer conversion
-    (<tt>#to_i</tt>) so that a Time object can be used instead of the integer value of
-    the time object.
+    (<tt>#to_i</tt>) so that a Time object can be used instead of the integer
+    value of the time object.
   * Writer::RestrictedStream was renamed to Writer::WriteOnlyStream for
     clarity. No alias or deprecation warning was provided for this as it is an
     internal implementation detail.

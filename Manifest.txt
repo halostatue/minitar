@@ -9,12 +9,10 @@ Licence.rdoc
 Manifest.txt
 README.rdoc
 Rakefile
-bin/minitar
 docs/COPYING.txt
 docs/ruby.txt
 lib/archive-tar-minitar.rb
 lib/archive/tar/minitar.rb
-lib/archive/tar/minitar/command.rb
 lib/archive/tar/minitar/input.rb
 lib/archive/tar/minitar/output.rb
 lib/archive/tar/minitar/posix_header.rb
