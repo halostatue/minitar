@@ -12,7 +12,7 @@ exclude: !ruby/regexp '/
   |
   type-lists\/
   |
-  \.(coveralls|pullreview|travis).yml$
+  (coveralls|pullreview|travis|appveyor)\.yml$
   |
   \.gemspec
   |
