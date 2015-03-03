@@ -73,19 +73,24 @@ module TarTestHelpers
     update_checksum(header("5", name, prefix, 0, mode))
   end
 
-  def header(type, fname, dname, length, mode)
+  def tar_symlink_header(name, prefix, mode, target)
+    update_checksum(header("2", name, prefix, 0, mode, target))
+  end
+
+  def header(type, fname, dname, length, mode, link_name = "")
     raw_header(type,
       asciiz(fname, 100),
       asciiz(dname, 155),
       z(to_oct(length, 11)),
-      z(to_oct(mode, 7)))
+      z(to_oct(mode, 7)),
+      asciiz(link_name, 100))
   end
 
-  def raw_header(type, fname, dname, length, mode)
+  def raw_header(type, fname, dname, length, mode, link_name = "")
     arr = [
       fname, mode, z(to_oct(nil, 7)), z(to_oct(nil, 7)),
       length, z(to_oct(0, 11)), BLANK_CHECKSUM, type,
-      NULL_100, USTAR, DOUBLE_ZERO, asciiz("", 32), asciiz("", 32),
+      asciiz(link_name, 100), USTAR, DOUBLE_ZERO, asciiz("", 32), asciiz("", 32),
       z(to_oct(nil, 7)), z(to_oct(nil, 7)), dname
     ]
 
