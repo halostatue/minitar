@@ -240,6 +240,28 @@ module Archive
           nil
         end
 
+        # Creates a symbolic link entry in the tar.
+        def symlink(name, link_target, opts = {})
+          raise ClosedStream if @closed
+
+          raise FileNameTooLong if link_target.size > 100
+
+          name, prefix = split_name(name)
+          header = {
+            :name => name,
+            :mode => opts[:mode],
+            :typeflag => "2",
+            :size => 0,
+            :linkname => link_target,
+            :gid => opts[:gid],
+            :uid => opts[:uid],
+            :mtime => opts[:mtime],
+            :prefix => prefix
+          }
+          @io.write(PosixHeader.new(header))
+          nil
+        end
+
         # Passes the #flush method to the wrapped stream, used for buffered
         # streams.
         def flush

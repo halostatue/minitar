@@ -48,13 +48,19 @@ module TarTester
     header("5", name, prefix, 0, mode, checksum)
   end
 
-  def header(type, fname, dname, length, mode, checksum = nil)
+  def tar_symlink_header(name, prefix, mode, target)
+    h = header("2", name, prefix, 0, mode, nil, target)
+    checksum = calc_checksum(h)
+    header("2", name, prefix, 0, mode, checksum, target)
+  end
+
+  def header(type, fname, dname, length, mode, checksum = nil, linkname = "")
     checksum ||= " " * 8
     arr = [ASCIIZ(fname, 100), Z(to_oct(mode, 7)), Z(to_oct(nil, 7)),
            Z(to_oct(nil, 7)), Z(to_oct(length, 11)), Z(to_oct(0, 11)),
-           checksum, type, "\0" * 100, "ustar\0", "00", ASCIIZ("", 32),
-           ASCIIZ("", 32), Z(to_oct(nil, 7)), Z(to_oct(nil, 7)),
-           ASCIIZ(dname, 155) ]
+           checksum, type, ASCIIZ(linkname, 100), "ustar\0", "00",
+           ASCIIZ("", 32), ASCIIZ("", 32), Z(to_oct(nil, 7)),
+           Z(to_oct(nil, 7)), ASCIIZ(dname, 155) ]
     arr = arr.join.bytes.to_a
     h = arr.pack("C100C8C8C8C12C12C8CC100C6C2C32C32C8C8C155")
     ret = h + "\0" * (512 - h.size)
