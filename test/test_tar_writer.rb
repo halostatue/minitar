@@ -67,9 +67,10 @@ class TestTarWriter < Minitest::Test
   def test_file_name_is_split_correctly
       # test insane file lengths, and: a{100}/b{155}, etc
     @dummyos.reset
-    names = [ "#{'a' * 155}/#{'b' * 100}", "#{'a' * 151}/#{'qwer/' * 19}bla" ]
-    o_names = [ "#{'b' * 100}", "#{'qwer/' * 19}bla" ]
-    o_prefixes = [ "a" * 155, "a" * 151 ]
+    names = [ "#{'a' * 155}/#{'b' * 100}", "#{'a' * 151}/#{'qwer/' * 19}bla",
+              "/#{'a' * 49}/#{'b' * 50}" ]
+    o_names = [ "#{'b' * 100}", "#{'qwer/' * 19}bla", "#{'b' * 50}" ]
+    o_prefixes = [ "a" * 155, "a" * 151, "/#{'a' * 49}" ]
     names.each do |name|
       @os.add_file_simple(name, :mode => 0644, :size => 10) { }
     end
