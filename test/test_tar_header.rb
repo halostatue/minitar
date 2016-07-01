@@ -55,7 +55,7 @@ class TestTarHeader < Minitest::Test
   def test_new_from_stream
     header = tar_file_header("a" * 100, "", 012345, 10)
     header = StringIO.new(header)
-    h = Archive::Tar::Minitar::PosixHeader.new_from_stream(header)
+    h = Archive::Tar::Minitar::PosixHeader.from_stream(header)
     assert_equal("a" * 100, h.name)
     assert_equal(012345, h.mode)
     assert_equal(10, h.size)
@@ -66,7 +66,7 @@ class TestTarHeader < Minitest::Test
   def test_new_from_stream_with_evil_name
     header = tar_file_header("a \0" + "\0" * 97, "", 012345, 10)
     header = StringIO.new(header)
-    h = Archive::Tar::Minitar::PosixHeader.new_from_stream header
+    h = Archive::Tar::Minitar::PosixHeader.from_stream header
     assert_equal("a ", h.name)
   end
 end
