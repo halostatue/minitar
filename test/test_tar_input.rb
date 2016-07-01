@@ -95,10 +95,8 @@ UTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIwCUgAAGnyo6wAoAAA=
           assert_equal(TEST_CONTENTS[entry.name][:size], File.stat(name).size)
         end
 
-        unless RUBY_PLATFORM =~ /win32/
-          assert_modes_equal(TEST_CONTENTS[entry.name][:mode],
-                             File.stat(name).mode, entry.name)
-        end
+        assert_modes_equal(TEST_CONTENTS[entry.name][:mode],
+                           File.stat(name).mode, entry.name)
 
         if i.zero?
           begin

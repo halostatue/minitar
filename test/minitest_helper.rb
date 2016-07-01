@@ -1,6 +1,7 @@
 # -*- ruby encoding: utf-8 -*-
 
 require 'fileutils'
+require 'minitar'
 
 gem 'minitest'
 require 'minitest/autorun'
@@ -28,7 +29,7 @@ module TarTester
   end
 
   def assert_modes_equal(expected, actual, name)
-    unless RUBY_PLATFORM =~ /win32/
+    unless Minitar.windows?
       expected = "%04o" % (expected & 0777)
       actual = "%04o" % (actual & 0777)
 
