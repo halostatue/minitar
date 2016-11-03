@@ -175,7 +175,7 @@ module Archive
           loop do
             return if @io.eof?
 
-            header = PosixHeader.new_from_stream(@io)
+            header = PosixHeader.from_stream(@io)
             return if header.empty?
 
             entry = EntryStream.new(header, @io)
