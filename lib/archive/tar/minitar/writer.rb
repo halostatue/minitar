@@ -269,7 +269,7 @@ module Archive
 
             loop do
               nxt = parts.pop || ""
-              break if newname.size + 1 + nxt.size > 100
+              break if newname.size + 1 + nxt.size >= 100
               newname = "#{nxt}/#{newname}"
             end
 
