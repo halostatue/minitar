@@ -1,6 +1,7 @@
 # coding: utf-8
 
 require 'fileutils'
+require 'rbconfig'
 
 module Archive #:nodoc:
   module Tar #:nodoc:
@@ -83,6 +84,10 @@ module Archive #:nodoc:
       UnexpectedEOF = Class.new(StandardError)
 
       class << self
+        def windows?
+          RbConfig::CONFIG["host_os"] =~ /^(mswin|mingw|cygwin)/
+        end
+
         # Tests if +path+ refers to a directory. Fixes an apparently
         # corrupted <tt>stat()</tt> call on Windows.
         def dir?(path)
@@ -160,7 +165,7 @@ module Archive #:nodoc:
           stats[:mtime]  ||= stat.mtime
           stats[:size]   = stat.size
 
-          if RUBY_PLATFORM =~ /win32/
+          if windows?
             stats[:uid]  = nil
             stats[:gid]  = nil
           else
