@@ -8,5 +8,5 @@ if defined? ::Minitar
 This will conflict with future versions of minitar.
   EOS
 else
-  ::Minitar = Archive::Tar::Minitar unless defined? Minitar
+  ::Minitar = Archive::Tar::Minitar
 end

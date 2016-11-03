@@ -13,3 +13,4 @@ pkg
 publish
 ri
 test/cache.tst
+.byebug_history

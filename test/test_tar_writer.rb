@@ -162,7 +162,7 @@ class TestTarWriter < Minitest::Test
 
   def test_file_size_is_checked
     @dummyos.reset
-    assert_raises(Minitar::Writer::BoundedWriteStream::FileOverflow) do
+    assert_raises(Minitar::Writer::WriteBoundaryOverflow) do
       @os.add_file_simple("lib/foo/bar", :mode => 0644, :size => 10) do |f|
         f.write "1" * 100
       end

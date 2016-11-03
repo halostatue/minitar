@@ -24,7 +24,6 @@ project.
 
 Using minitar is easy. The simplest case is:
 
-  require 'zlib'
   require 'minitar'
 
   # Packs everything that matches Find.find('tests').
@@ -36,11 +35,12 @@ Using minitar is easy. The simplest case is:
 
 A gzipped tar can be written with:
 
-    # test.tgz will be closed automatically.
-    Minitar.pack('tests', Zlib::GzipWriter.new(File.open('test.tgz', 'wb'))
+  require 'zlib'
+  # test.tgz will be closed automatically.
+  Minitar.pack('tests', Zlib::GzipWriter.new(File.open('test.tgz', 'wb'))
 
-    # test.tgz will be closed automatically.
-    Minitar.unpack(Zlib::GzipReader.new(File.open('test.tgz', 'rb')), 'x')
+  # test.tgz will be closed automatically.
+  Minitar.unpack(Zlib::GzipReader.new(File.open('test.tgz', 'rb')), 'x')
 
 As the case above shows, one need not write to a file. However, it will
 sometimes require that one dive a little deeper into the API, as in the case of
@@ -65,7 +65,3 @@ The minitar library uses a {Semantic Versioning}[http://semver.org/] scheme
 with one change:
 
 * When PATCH is zero (+0+), it will be omitted from version references.
-
-:include: Contributing.rdoc
-
-:include: Licence.rdoc
