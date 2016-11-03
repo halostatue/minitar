@@ -5,11 +5,9 @@
 
 source "https://rubygems.org/"
 
-if RUBY_VERSION < "1.9"
-  gem 'mime-types', '~> 1.25'
-end
+gem 'mime-types', '~> 1.25' if RUBY_VERSION < "1.9"
+# gem 'byebug' if RUBY_VERSION >= "2.0"
 
-gem 'byebug'
 gemspec name: 'minitar'
 
 # vim: syntax=ruby
