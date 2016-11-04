@@ -16,7 +16,7 @@ mime_version =
 
 gem 'mime-types', "~> #{mime_version}"
 
-platforms :mri_20, :mri_21, :mri_22, :mri_23 do
+if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
   gem 'byebug'
   gem 'simplecov', '~> 0.7'
   gem 'coveralls', '~> 0.7'
