@@ -13,4 +13,6 @@ pkg
 publish
 ri
 test/cache.tst
+tmp/
+.rubocop.yml
 .byebug_history

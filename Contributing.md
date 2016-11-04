@@ -1,26 +1,24 @@
 ## Contributing
 
 I value any contribution to minitar you can provide: a bug report, a feature
-request, or code contributions.
-
-As minitar is a mature codebase, there are a few guidelines:
+request, or code contributions. There are a few guidelines for contributing to
+minitar:
 
 *   Code changes *will not* be accepted without tests. The test suite is
-    written with [Minitest](https://github.com/seattlerb/minitest).
+    written with [Minitest][].
 *   Match my coding style.
 *   Use a thoughtfully-named topic branch that contains your change. Rebase
     your commits into logical chunks as necessary.
-*   Use [quality commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
+*   Use [quality commit messages][].
 *   Do not change the version number; when your patch is accepted and a release
     is made, the version will be updated at that point.
 *   Submit a GitHub pull request with your changes.
-*   New or changed behaviours require new or updated documentation.
+*   New or changed behaviours require appropriate documentation.
 
 ### Test Dependencies
 
-minitar uses Ryan Davis’s [Hoe](https://github.com/seattlerb/hoe) to manage
-the release process, and it adds a number of rake tasks. You will mostly be
-interested in:
+minitar uses Ryan Davis’s [Hoe][] to manage the release process, and it adds a
+number of rake tasks. You will mostly be interested in:
 
     $ rake
 
@@ -45,6 +43,10 @@ can accomplish the same thing with:
 This task will install any missing dependencies, run the tests/specs, and
 generate the RDoc.
 
+You can run tests with code coverage analysis by running:
+
+    $ rake test:coverage
+
 ### Workflow
 
 Here's the most direct way to get your work merged into the project:
@@ -56,11 +58,26 @@ Here's the most direct way to get your work merged into the project:
 *   Hack away, add tests. Not necessarily in that order.
 *   Make sure everything still passes by running `rake`.
 *   If necessary, rebase your commits into logical chunks, without errors.
-*   Push the branch up (<tt>git push origin my\_awesome\_feature</tt>).
+*   Push the branch up (`git push origin my_awesome_feature`).
 *   Create a pull request against halostatue/minitar and describe what your
-  change does and the why you think it should be merged.
+    change does and the why you think it should be merged.
 
 ### Contributors
 
-* Austin Ziegler created minitar, which is based on work originally performed
-  by Mauricio Fernández for rpa-base.
+*   Austin Ziegler created minitar, based on work originally written by
+    Mauricio Fernández for rpa-base.
+
+Thanks to everyone who has contributed to minitar:
+
+*   Antoine Toulme
+*   Curtis Sampson
+*   Daniel J. Berger
+*   Kazuyoshi Kato
+*   Matthew Kent
+*   Michal Suchanek
+*   Mike Furr
+*   Zach Dennis
+
+[Minitest]: https://github.com/seattlerb/minitest
+[quality commit messages]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+[Hoe]: https://github.com/seattlerb/hoe
