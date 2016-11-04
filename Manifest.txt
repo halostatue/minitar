@@ -1,3 +1,4 @@
+Code-of-Conduct.md
 Contributing.md
 History.md
 Licence.md

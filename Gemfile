@@ -22,6 +22,6 @@ if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
   gem 'coveralls', '~> 0.7'
 end
 
-gemspec name: 'minitar'
+gemspec :name => 'minitar'
 
 # vim: syntax=ruby

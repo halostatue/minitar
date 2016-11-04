@@ -1,4 +1,3 @@
-*.md
 *.swp
 *~
 .rake_tasks~
@@ -14,5 +13,4 @@ publish
 ri
 test/cache.tst
 tmp/
-.rubocop.yml
 .byebug_history

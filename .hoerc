@@ -5,32 +5,32 @@ exclude: !ruby/regexp '/
       swp
     )$
   |
-  ^\.(?:
+  \.(?:
       autotest |
       byebug_history |
       gemtest |
       gitignore |
       hoerc |
-      minitest.rb |
-      simplecov-prelude.rb |
+      simplecov-prelude.rb
     )$
   |
   (?:
-   coveralls |
-   pullreview |
-   travis |
-   appveyor
+      appveyor |
+      coveralls |
+      pullreview |
+      rubocop |
+      travis
   )\.yml$
   |
-  ^(?i:TAGS)$
+  \b(?i:TAGS)$
   |
   \.(?:
-      DS_Store|
-      bundle|
-      git|
-      hg|
-      idea|
-      svn|
+      DS_Store |
+      bundle |
+      git |
+      hg |
+      idea |
+      svn |
       vagrant
     )\/
   |
