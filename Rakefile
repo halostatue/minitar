@@ -18,7 +18,7 @@ spec = Hoe.spec 'minitar' do
 
   self.history_file = 'History.md'
   self.readme_file = 'README.rdoc'
-  self.licenses = ["Ruby", "BSD-2-Clause"]
+  self.licenses = ['Ruby', 'BSD-2-Clause']
 
   extra_dev_deps << ['hoe-doofus', '~> 1.0']
   extra_dev_deps << ['hoe-gemspec2', '~> 1.1']
@@ -30,30 +30,14 @@ spec = Hoe.spec 'minitar' do
   extra_dev_deps << ['rake', '~> 10.0']
 end
 
-if RUBY_VERSION >= "2.0"
+if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
   namespace :test do
-    task :coveralls do
-      spec.test_prelude = [
-        'require "psych"',
-        'require "simplecov"',
-        'require "coveralls"',
-        'SimpleCov.formatter = Coveralls::SimpleCov::Formatter',
-        'SimpleCov.start("test_frameworks") { command_name "Minitest" }',
-        'gem "minitest"'
-      ].join('; ')
-      Rake::Task['test'].execute
-    end
-
     desc 'Run test coverage'
     task :coverage do
-      spec.test_prelude = [
-        'require "simplecov"',
-        'SimpleCov.start("test_frameworks") { command_name "Minitest" }',
-        'gem "minitest"'
-      ].join('; ')
+      spec.test_prelude = 'load ".simplecov-prelude.rb"'
       Rake::Task['test'].execute
     end
   end
 
-  Rake::Task['travis'].prerequisites.replace(%w(test:coveralls))
+  Rake::Task['travis'].prerequisites.replace(%w(test:coverage))
 end
