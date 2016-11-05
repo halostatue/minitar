@@ -28,6 +28,7 @@ spec = Hoe.spec 'minitar' do
   extra_dev_deps << ['minitest', '~> 5.3']
   extra_dev_deps << ['minitest-autotest', ['>= 1.0.b', '<2']]
   extra_dev_deps << ['rake', '~> 10.0']
+  extra_dev_deps << ['rdoc', '>= 0.0']
 end
 
 if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
