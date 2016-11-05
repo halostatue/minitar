@@ -32,6 +32,8 @@ module Archive::Tar::Minitar; end
 # POSIX indicates that "A POSIX-compliant implementation must treat any
 # unrecognized typeflag value as a regular file."
 class Archive::Tar::Minitar::PosixHeader
+  BLOCK_SIZE = 512
+
   # Fields that must be set in a POSIX tar(1) header.
   REQUIRED_FIELDS = [ :name, :size, :prefix, :mode ].freeze
   # Fields that may be set in a POSIX tar(1) header.
@@ -46,7 +48,7 @@ class Archive::Tar::Minitar::PosixHeader
   FIELDS.each { |f| attr_reader f.to_sym unless f.to_sym == :name }
 
   # The name of the file. By default, limited to 100 bytes. Required. May be
-  # longer (up to 512 bytes) if using the GNU long name tar extension.
+  # longer (up to BLOCK_SIZE bytes) if using the GNU long name tar extension.
   attr_accessor :name
 
   # The pack format passed to Array#pack for encoding a header.
@@ -57,7 +59,7 @@ class Archive::Tar::Minitar::PosixHeader
   class << self
     # Creates a new PosixHeader from a data stream.
     def from_stream(stream)
-      from_data(stream.read(512))
+      from_data(stream.read(BLOCK_SIZE))
     end
 
     # Creates a new PosixHeader from a data stream. Deprecated; use
@@ -67,7 +69,7 @@ class Archive::Tar::Minitar::PosixHeader
       from_stream(stream)
     end
 
-    # Creates a new PosixHeader from a 512-byte data buffer.
+    # Creates a new PosixHeader from a BLOCK_SIZE-byte data buffer.
     def from_data(data)
       fields    = data.unpack(HEADER_UNPACK_FORMAT)
       name      = fields.shift
@@ -87,7 +89,7 @@ class Archive::Tar::Minitar::PosixHeader
       devminor  = fields.shift.oct
       prefix    = fields.shift
 
-      empty = (data == "\0" * 512)
+      empty = !data.each_byte.any?(&:nonzero?)
 
       new(
         :name => name,
@@ -171,7 +173,7 @@ class Archive::Tar::Minitar::PosixHeader
            oct(mtime, 11), chksum, " ", typeflag, linkname, magic, version,
            uname, gname, oct(devmajor, 7), oct(devminor, 7), prefix]
     str = arr.pack(HEADER_PACK_FORMAT)
-    str + "\0" * ((512 - str.size) % 512)
+    str + "\0" * ((BLOCK_SIZE - str.size) % BLOCK_SIZE)
   end
 
   ##
