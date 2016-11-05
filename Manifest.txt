@@ -16,6 +16,7 @@ lib/archive/tar/minitar/reader.rb
 lib/archive/tar/minitar/writer.rb
 lib/minitar.rb
 test/minitest_helper.rb
+test/support/tar_test_helpers.rb
 test/test_tar_header.rb
 test/test_tar_input.rb
 test/test_tar_output.rb

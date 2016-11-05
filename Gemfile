@@ -14,6 +14,10 @@ mime_version =
     '3.0'
   end
 
+if RUBY_VERSION < '1.9'
+  gem 'rdoc', '< 4.0'
+end
+
 gem 'mime-types', "~> #{mime_version}"
 
 if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
