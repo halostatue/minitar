@@ -1,30 +1,28 @@
 # -*- ruby -*-
 
 # NOTE: This file is present to keep Travis CI happy. Edits to it will not
-# be accepted.
+# be accepted, except to remove all of this crap later.
 
 source 'https://rubygems.org/'
 
 mime_version =
   if RUBY_VERSION < '1.9'
+    gem 'rdoc', '< 4.0'
+    gem 'ruby-debug' if RUBY_ENGINE == 'ruby'
     '1.25'
   elsif RUBY_VERSION < '2.0'
+    gem 'debugger' if RUBY_ENGINE == 'ruby'
     '2.0'
-  else
+  elsif RUBY_VERSION >= '2.0'
+    if RUBY_ENGINE == 'ruby'
+      gem 'byebug'
+      gem 'simplecov', '~> 0.7'
+      gem 'coveralls', '~> 0.7'
+    end
     '3.0'
   end
 
-if RUBY_VERSION < '1.9'
-  gem 'rdoc', '< 4.0'
-end
-
 gem 'mime-types', "~> #{mime_version}"
-
-if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
-  gem 'byebug'
-  gem 'simplecov', '~> 0.7'
-  gem 'coveralls', '~> 0.7'
-end
 
 gemspec :name => 'minitar'
 

@@ -1,51 +1,60 @@
 # frozen_string_literal: true
 
+if RUBY_VERSION < '1.9'
+  require 'ruby-debug'
+  Debugger.start
+end
+
 module TarTestHelpers
   private
 
-  module Constants
-    FIELDS = {
-      'name' => 100,
-      'mode' => 8,
-      'uid' => 8,
-      'gid' => 8,
-      'size' => 12,
-      'mtime' => 12,
-      'checksum' => 8,
-      'typeflag' => 1,
-      'linkname' => 100,
-      'magic' => 6,
-      'version' => 2,
-      'uname' => 32,
-      'gname' => 32,
-      'devmajor' => 8,
-      'devminor' => 8,
-      'prefix' => 155
-    }
+  FIELDS = {}
+  FIELD_ORDER = []
 
-    BLANK_CHECKSUM = " " * 8
-    CHECKSUM_OFFSET = FIELDS.keys.inject(0) { |length, field|
-      break length if field == 'checksum'
-      length + FIELDS[field]
-    }
-
-    NULL_100 = "\0" * 100
-    USTAR = "ustar\0"
-    DOUBLE_ZERO = "00"
+  Field = Struct.new(:name, :offset, :length)
+  def self.Field(name, length)
+    @offset ||= 0
+    field = Field.new(name, @offset, length)
+    @offset += length
+    FIELDS[name] = field
+    FIELD_ORDER << name
+    field
   end
 
+  Field('name', 100)
+  Field('mode', 8)
+  Field('uid', 8)
+  Field('gid', 8)
+  Field('size', 12)
+  Field('mtime', 12)
+  Field('checksum', 8)
+  Field('typeflag', 1)
+  Field('linkname', 100)
+  Field('magic', 6)
+  Field('version', 2)
+  Field('uname', 32)
+  Field('gname', 32)
+  Field('devmajor', 8)
+  Field('devminor', 8)
+  Field('prefix', 155)
+
+  BLANK_CHECKSUM = " " * 8
+  NULL_100 = "\0" * 100
+  USTAR = "ustar\0"
+  DOUBLE_ZERO = "00"
+
   def assert_headers_equal(expected, actual)
-    offset = 0
-    Constants::FIELDS.each do |field, length|
+    FIELD_ORDER.each do |field|
       message = if field == 'checksum'
                   "Header checksums are expected to match."
                 else
                   "Header field #{field} is expected to match."
                 end
 
-      assert_equal(expected[offset, length], actual[offset, length], message)
+      offset = FIELDS[field].offset
+      length = FIELDS[field].length
 
-      offset += length
+      assert_equal(expected[offset, length], actual[offset, length], message)
     end
   end
 
@@ -68,13 +77,12 @@ module TarTestHelpers
   end
 
   def header(type, fname, dname, length, mode)
-    checksum ||= Constants::BLANK_CHECKSUM
+    checksum ||= BLANK_CHECKSUM
     arr = [
       asciiz(fname, 100), z(to_oct(mode, 7)), z(to_oct(nil, 7)),
       z(to_oct(nil, 7)), z(to_oct(length, 11)), z(to_oct(0, 11)),
-      Constants::BLANK_CHECKSUM, type, Constants::NULL_100, Constants::USTAR,
-      Constants::DOUBLE_ZERO, asciiz("", 32), asciiz("", 32),
-      z(to_oct(nil, 7)), z(to_oct(nil, 7)), asciiz(dname, 155)
+      BLANK_CHECKSUM, type, NULL_100, USTAR, DOUBLE_ZERO, asciiz("", 32),
+      asciiz("", 32), z(to_oct(nil, 7)), z(to_oct(nil, 7)), asciiz(dname, 155)
     ]
     h = arr.join.bytes.to_a.pack("C100C8C8C8C12C12C8CC100C6C2C32C32C8C8C155")
     ret = h + "\0" * (512 - h.size)
@@ -83,7 +91,7 @@ module TarTestHelpers
   end
 
   def update_checksum(header)
-    header[Constants::CHECKSUM_OFFSET, Constants::FIELDS['checksum']] =
+    header[FIELDS['checksum'].offset, FIELDS['checksum'].length] =
       # inject(:+) was introduced in which version?
       sp(z(to_oct(header.unpack("C*").inject { |s, a| s + a }, 6)))
     header

@@ -8,11 +8,11 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Austin Ziegler"]
-  s.date = "2016-11-05"
+  s.date = "2016-11-08"
   s.description = "The minitar library is a pure-Ruby library that provides the ability to deal\nwith POSIX tar(1) archive files.\n\nThis is release 0.6, \u{2026}\n\nminitar (previously called Archive::Tar::Minitar) is based heavily on code\noriginally written by Mauricio Julio Fern\u{e1}ndez Pradier for the rpa-base\nproject."
   s.email = ["halostatue@gmail.com"]
   s.extra_rdoc_files = ["Code-of-Conduct.md", "Contributing.md", "History.md", "Licence.md", "Manifest.txt", "README.rdoc", "docs/bsdl.txt", "docs/ruby.txt"]
-  s.files = ["Code-of-Conduct.md", "Contributing.md", "History.md", "Licence.md", "Manifest.txt", "README.rdoc", "Rakefile", "docs/bsdl.txt", "docs/ruby.txt", "lib/archive-tar-minitar.rb", "lib/archive/tar/minitar.rb", "lib/archive/tar/minitar/input.rb", "lib/archive/tar/minitar/output.rb", "lib/archive/tar/minitar/posix_header.rb", "lib/archive/tar/minitar/reader.rb", "lib/archive/tar/minitar/writer.rb", "lib/minitar.rb", "test/minitest_helper.rb", "test/test_tar_header.rb", "test/test_tar_input.rb", "test/test_tar_output.rb", "test/test_tar_reader.rb", "test/test_tar_writer.rb"]
+  s.files = ["Code-of-Conduct.md", "Contributing.md", "History.md", "Licence.md", "Manifest.txt", "README.rdoc", "Rakefile", "docs/bsdl.txt", "docs/ruby.txt", "lib/archive-tar-minitar.rb", "lib/archive/tar/minitar.rb", "lib/archive/tar/minitar/input.rb", "lib/archive/tar/minitar/output.rb", "lib/archive/tar/minitar/posix_header.rb", "lib/archive/tar/minitar/reader.rb", "lib/archive/tar/minitar/writer.rb", "lib/minitar.rb", "test/minitest_helper.rb", "test/support/tar_test_helpers.rb", "test/test_tar_header.rb", "test/test_tar_input.rb", "test/test_tar_output.rb", "test/test_tar_reader.rb", "test/test_tar_writer.rb"]
   s.homepage = "https://github.com/halostatue/minitar/"
   s.licenses = ["Ruby", "BSD-2-Clause"]
   s.rdoc_options = ["--main", "README.rdoc"]
