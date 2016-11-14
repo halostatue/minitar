@@ -73,6 +73,7 @@ UTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIwCUgAAGnyo6wAoAAA=
 
         outer += 1
       end
+
       assert_equal(2, outer)
     end
   end
@@ -129,6 +130,40 @@ UTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIwCUgAAGnyo6wAoAAA=
       end
 
       assert_equal(2, outer_count)
+    end
+  end
+
+  def test_extract_entry_breaks_symlinks
+    return if Minitar.windows?
+
+    IO.respond_to?(:write) &&
+      IO.write('data__/file4', '') ||
+      File.open('data__/file4', 'w') { |f| f.write '' }
+
+    File.symlink('data__/file4', 'data__/file3')
+    File.symlink('data__/file4', 'data__/data')
+
+    Minitar.unpack(Zlib::GzipReader.new(StringIO.new(TEST_TGZ)), 'data__')
+    Minitar.unpack(Zlib::GzipReader.new(File.open('data__/data.tar.gz', 'rb')),
+                   'data__')
+
+    refute File.symlink?('data__/file3')
+    refute File.symlink?('data__/data')
+  end
+
+  RELATIVE_DIRECTORY_TGZ = Base64.decode64 <<-EOS
+H4sICIIoKVgCA2JhZC1kaXIudGFyANPT0y8sTy0qqWSgHTAwMDAzMVEA0eZmpmDawAjChwEFQ2MDQyMg
+MDUzVDAwNDY0N2VQMGCgAygtLkksAjolEcjIzMOtDqgsLQ2/J0H+gNOjYBSMglEwyAEA2LchrwAGAAA=
+  EOS
+
+  def test_extract_entry_fails_with_relative_directory
+    reader = Zlib::GzipReader.new(StringIO.new(RELATIVE_DIRECTORY_TGZ))
+    Minitar::Input.open(reader) do |stream|
+      stream.each do |entry|
+        assert_raises Archive::Tar::Minitar::SecureRelativePathError do
+          stream.extract_entry("data__", entry)
+        end
+      end
     end
   end
 end

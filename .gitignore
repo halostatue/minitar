@@ -1,3 +1,4 @@
+*.md
 *.swp
 *~
 .rake_tasks~
@@ -10,7 +11,6 @@ doc
 html
 pkg
 publish
-ri
 test/cache.tst
 tmp/
 .byebug_history

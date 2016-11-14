@@ -36,6 +36,8 @@ exclude: !ruby/regexp '/
   |
   [gG]emfile(?:\.lock)?
   |
+  support\/hoe\/
+  |
   \.gemspec$
   |
   Vagrantfile

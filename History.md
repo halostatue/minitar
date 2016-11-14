@@ -8,6 +8,14 @@
         `archive-tar-minitar` will install both `minitar` and `minitar-cli`, at
         least until version 1.0.)
 
+    *   Minitar extraction before 0.6 traverses directories if the tarball
+        includes a relative directory reference, as reported in [#16][] by
+        @ecneladis. This has been disallowed entirely and will throw a
+        SecureRelativePathError when found. Additionally, if the final
+        destination of an entry is an already-existing symbolic link, the
+        existing symbolic link will be removed and the file will be written
+        correctly (on platforms that support symblic links).
+
 *   Enhancements:
 
     *   Licence change. After speaking with Mauricio Fernández, we have changed
@@ -51,18 +59,16 @@
 
 *   Bugs:
 
-    *   Fix [#2](https://github.com/halostatue/minitar/issues/2) to handle IO
-        streams that are not seekable, such as pipes, STDIN, or STDOUT.
-    *   Fix [#3](https://github.com/halostatue/minitar/issues/3) to make the
-        test timezone resilient.
-    *   Fix [#4](https://github.com/halostatue/minitar/issues/4) for supporting
-        the reading of tar files with filenames in the GNU long filename
-        extension format. Ported from @atoulme’s fork, originally provided by
-        Curtis Sampson.
-    *   Fix [#6](https://github.com/halostatue/minitar/issues/6) by making it
-        raise the correct error for a long filename with no path components.
-    *   Fix [#14](https://github.com/halostatue/minitar/pull/6) provided by
-        @kzys should fix Windows detection issues.
+    *   Fix [#2][] to handle IO streams that are not seekable, such as pipes,
+        STDIN, or STDOUT.
+    *   Fix [#3][] to make the test timezone resilient.
+    *   Fix [#4][] for supporting the reading of tar files with filenames in
+        the GNU long filename extension format. Ported from @atoulme’s fork,
+        originally provided by Curtis Sampson.
+    *   Fix [#6][] by making it raise the correct error for a long filename
+        with no path components.
+    *   Fix [#14][] provided by @kzys should fix Windows detection issues.
+    *   Fix [#16][] as specified above.
 
 *   Development:
 
@@ -83,3 +89,10 @@
 
 * Initial release. Does files and directories. Command does create, extract,
   and list.
+
+[#2]: https://github.com/halostatue/minitar/issues/2
+[#3]: https://github.com/halostatue/minitar/issues/3
+[#4]: https://github.com/halostatue/minitar/issues/4
+[#6]: https://github.com/halostatue/minitar/issues/6
+[#14]: https://github.com/halostatue/minitar/issues/14
+[#16]: https://github.com/halostatue/minitar/issues/16

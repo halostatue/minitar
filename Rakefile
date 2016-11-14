@@ -4,17 +4,20 @@ require 'rubygems'
 require 'hoe'
 require 'rake/clean'
 
+$LOAD_PATH.unshift('support')
+
 Hoe.plugin :doofus
 Hoe.plugin :gemspec2
 Hoe.plugin :git
 Hoe.plugin :minitest
 Hoe.plugin :travis
+Hoe.plugin :deprecated_gem
 Hoe.plugin :email unless ENV['CI'] or ENV['TRAVIS']
 
 spec = Hoe.spec 'minitar' do
   developer('Austin Ziegler', 'halostatue@gmail.com')
 
-  self.require_ruby_version '>= 1.8'
+  require_ruby_version '>= 1.8'
 
   self.history_file = 'History.md'
   self.readme_file = 'README.rdoc'
@@ -26,8 +29,8 @@ spec = Hoe.spec 'minitar' do
   extra_dev_deps << ['hoe-rubygems', '~> 1.0']
   extra_dev_deps << ['hoe-travis', '~> 1.2']
   extra_dev_deps << ['minitest', '~> 5.3']
-  extra_dev_deps << ['minitest-autotest', ['>= 1.0.b', '<2']]
-  extra_dev_deps << ['rake', '~> 10.0']
+  extra_dev_deps << ['minitest-autotest', ['>= 1.0', '<2']]
+  extra_dev_deps << ['rake', '>= 10.0', '< 12']
   extra_dev_deps << ['rdoc', '>= 0.0']
 end
 
