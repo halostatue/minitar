@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Austin Ziegler"]
-  s.date = "2016-11-08"
+  s.date = "2017-02-06"
   s.description = "The minitar library is a pure-Ruby library that provides the ability to deal\nwith POSIX tar(1) archive files.\n\nThis is release 0.6, \u{2026}\n\nminitar (previously called Archive::Tar::Minitar) is based heavily on code\noriginally written by Mauricio Julio Fern\u{e1}ndez Pradier for the rpa-base\nproject."
   s.email = ["halostatue@gmail.com"]
   s.extra_rdoc_files = ["Code-of-Conduct.md", "Contributing.md", "History.md", "Licence.md", "Manifest.txt", "README.rdoc", "docs/bsdl.txt", "docs/ruby.txt"]
@@ -30,10 +30,10 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<hoe-git>, ["~> 1.6"])
       s.add_development_dependency(%q<hoe-rubygems>, ["~> 1.0"])
       s.add_development_dependency(%q<hoe-travis>, ["~> 1.2"])
-      s.add_development_dependency(%q<minitest-autotest>, ["< 2", ">= 1.0.b"])
-      s.add_development_dependency(%q<rake>, ["~> 10.0"])
+      s.add_development_dependency(%q<minitest-autotest>, ["< 2", ">= 1.0"])
+      s.add_development_dependency(%q<rake>, ["< 12", ">= 10.0"])
       s.add_development_dependency(%q<rdoc>, [">= 0.0"])
-      s.add_development_dependency(%q<hoe>, ["~> 3.15"])
+      s.add_development_dependency(%q<hoe>, ["~> 3.16"])
     else
       s.add_dependency(%q<minitest>, ["~> 5.9"])
       s.add_dependency(%q<hoe-doofus>, ["~> 1.0"])
@@ -41,10 +41,10 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<hoe-git>, ["~> 1.6"])
       s.add_dependency(%q<hoe-rubygems>, ["~> 1.0"])
       s.add_dependency(%q<hoe-travis>, ["~> 1.2"])
-      s.add_dependency(%q<minitest-autotest>, ["< 2", ">= 1.0.b"])
-      s.add_dependency(%q<rake>, ["~> 10.0"])
+      s.add_dependency(%q<minitest-autotest>, ["< 2", ">= 1.0"])
+      s.add_dependency(%q<rake>, ["< 12", ">= 10.0"])
       s.add_dependency(%q<rdoc>, [">= 0.0"])
-      s.add_dependency(%q<hoe>, ["~> 3.15"])
+      s.add_dependency(%q<hoe>, ["~> 3.16"])
     end
   else
     s.add_dependency(%q<minitest>, ["~> 5.9"])
@@ -53,9 +53,9 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<hoe-git>, ["~> 1.6"])
     s.add_dependency(%q<hoe-rubygems>, ["~> 1.0"])
     s.add_dependency(%q<hoe-travis>, ["~> 1.2"])
-    s.add_dependency(%q<minitest-autotest>, ["< 2", ">= 1.0.b"])
-    s.add_dependency(%q<rake>, ["~> 10.0"])
+    s.add_dependency(%q<minitest-autotest>, ["< 2", ">= 1.0"])
+    s.add_dependency(%q<rake>, ["< 12", ">= 10.0"])
     s.add_dependency(%q<rdoc>, [">= 0.0"])
-    s.add_dependency(%q<hoe>, ["~> 3.15"])
+    s.add_dependency(%q<hoe>, ["~> 3.16"])
   end
 end

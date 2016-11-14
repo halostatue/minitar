@@ -73,17 +73,22 @@ end
 module Archive::Tar::Minitar
   VERSION = '0.6' # :nodoc:
 
+  # The base class for any minitar error.
+  Error = Class.new(StandardError)
   # Raised when a wrapped data stream class is not seekable.
-  NonSeekableStream = Class.new(StandardError)
+  NonSeekableStream = Class.new(Error)
   # The exception raised when operations are performed on a stream that has
   # previously been closed.
-  ClosedStream = Class.new(StandardError)
+  ClosedStream = Class.new(Error)
   # The exception raised when a filename exceeds 256 bytes in length, the
   # maximum supported by the standard Tar format.
-  FileNameTooLong = Class.new(StandardError)
+  FileNameTooLong = Class.new(Error)
   # The exception raised when a data stream ends before the amount of data
   # expected in the archive's PosixHeader.
   UnexpectedEOF = Class.new(StandardError)
+  # The exception raised when a file contains a relative path in secure mode
+  # (the default for this version).
+  SecureRelativePathError = Class.new(Error)
 
   class << self
     # Tests if +path+ refers to a directory. Fixes an apparently

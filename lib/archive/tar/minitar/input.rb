@@ -97,10 +97,25 @@ module Archive::Tar::Minitar
         :entry    => entry
       }
 
-      if entry.directory?
-        dest = File.join(destdir, entry.full_name)
+      # extract_entry is not vulnerable to prefix '/' vulnerabilities, but it
+      # is vulnerable to relative path directories. This code will break this
+      # vulnerability. For this version, we are breaking relative paths HARD by
+      # throwing an exception.
+      #
+      # Future versions may permit relative paths as long as the file does not
+      # leave +destdir+.
+      #
+      # However, squeeze consecutive '/' characters together.
+      full_name = entry.full_name.squeeze('/')
 
-        yield :dir, entry.full_name, stats if block_given?
+      if full_name =~ /\.{2}(?:\/|\z)/
+        raise SecureRelativePathError, %q(Path contains '..')
+      end
+
+      if entry.directory?
+        dest = File.join(destdir, full_name)
+
+        yield :dir, full_name, stats if block_given?
 
         if Archive::Tar::Minitar.dir?(dest)
           begin
@@ -109,6 +124,8 @@ module Archive::Tar::Minitar
             nil
           end
         else
+          File.unlink(dest.chomp('/')) if File.symlink?(dest.chomp('/'))
+
           FileUtils.mkdir_p(dest, :mode => entry.mode)
           FileUtils.chmod(entry.mode, dest)
         end
@@ -117,13 +134,16 @@ module Archive::Tar::Minitar
         fsync_dir(File.join(dest, ".."))
         return
       else # it's a file
-        destdir = File.join(destdir, File.dirname(entry.full_name))
+        destdir = File.join(destdir, File.dirname(full_name))
         FileUtils.mkdir_p(destdir, :mode => 0755)
 
-        destfile = File.join(destdir, File.basename(entry.full_name))
+        destfile = File.join(destdir, File.basename(full_name))
+
+        File.unlink(destfile) if File.symlink?(destfile)
+
         FileUtils.chmod(0600, destfile) rescue nil  # Errno::ENOENT
 
-        yield :file_start, entry.full_name, stats if block_given?
+        yield :file_start, full_name, stats if block_given?
 
         File.open(destfile, "wb", entry.mode) do |os|
           loop do
@@ -133,7 +153,7 @@ module Archive::Tar::Minitar
             stats[:currinc] = os.write(data)
             stats[:current] += stats[:currinc]
 
-            yield :file_progress, entry.full_name, stats if block_given?
+            yield :file_progress, full_name, stats if block_given?
           end
           os.fsync
         end
@@ -142,7 +162,7 @@ module Archive::Tar::Minitar
         fsync_dir(File.dirname(destfile))
         fsync_dir(File.join(File.dirname(destfile), ".."))
 
-        yield :file_done, entry.full_name, stats if block_given?
+        yield :file_done, full_name, stats if block_given?
       end
     end
 

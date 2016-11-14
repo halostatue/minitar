@@ -1,14 +1,14 @@
 # -*- ruby -*-
 
 # NOTE: This file is present to keep Travis CI happy. Edits to it will not
-# be accepted, except to remove all of this crap later.
+# be accepted.
 
 source 'https://rubygems.org/'
 
 mime_version =
   if RUBY_VERSION < '1.9'
     gem 'rdoc', '< 4.0'
-    # gem 'ruby-debug'
+    gem 'rake', '~> 10.0'
     '1.25'
   elsif RUBY_VERSION < '2.0'
     # gem 'debugger' if RUBY_ENGINE == 'ruby'
