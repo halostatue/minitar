@@ -74,7 +74,7 @@ module Archive::Tar::Minitar
   VERSION = '0.6' # :nodoc:
 
   # The base class for any minitar error.
-  Error = Class.new(StandardError)
+  Error = Class.new(::StandardError)
   # Raised when a wrapped data stream class is not seekable.
   NonSeekableStream = Class.new(Error)
   # The exception raised when operations are performed on a stream that has

@@ -4,8 +4,6 @@ require 'minitar'
 require 'minitest_helper'
 
 class TestTarWriter < Minitest::Test
-  include TarTester
-
   class DummyIO
     attr_reader :data
 
