@@ -1,4 +1,4 @@
-## 0.6 / YYYY-MM-DD
+## 0.6 / 2017-02-06
 
 *   Breaking Changes:
 
@@ -56,6 +56,8 @@
     *   Methods that require blocks are no longer required, so the
         Archive::Tar::Minitar::BlockRequired exception has been removed with a
         warning.
+    *   Dramatically reduced the number of strings created when creating a
+        POSIX tarball header.
 
 *   Bugs:
 

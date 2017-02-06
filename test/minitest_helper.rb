@@ -9,6 +9,3 @@ require 'minitest/autorun'
 Dir.glob(File.join(File.dirname(__FILE__), 'support/*.rb')).each do |support|
   require support
 end
-
-module TarTester
-end

@@ -4,8 +4,6 @@ require 'minitar'
 require 'minitest_helper'
 
 class TestTarOutput < Minitest::Test
-  include TarTester
-
   def setup
     FileUtils.mkdir_p("data__")
     %w(a b c).each do |filename|

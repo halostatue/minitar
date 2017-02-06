@@ -4,8 +4,6 @@ require 'minitar'
 require 'minitest_helper'
 
 class TestTarReader < Minitest::Test
-  include TarTester
-
   def test_multiple_entries
     str = tar_file_header("lib/foo", "", 010644, 10) + "\0" * 512
     str += tar_file_header("bar", "baz", 0644, 0)

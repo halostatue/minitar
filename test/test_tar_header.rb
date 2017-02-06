@@ -1,11 +1,8 @@
-#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-require 'archive/tar/minitar'
 require 'minitest_helper'
 
 class TestTarHeader < Minitest::Test
-  include TarTester
-
   def test_arguments_are_checked
     assert_raises(ArgumentError) {
       Archive::Tar::Minitar::PosixHeader.new(:name => "", :size => "", :mode => "")

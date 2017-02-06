@@ -6,8 +6,6 @@ require 'base64'
 require 'zlib'
 
 class TestTarInput < Minitest::Test
-  include TarTester
-
   TEST_TGZ = Base64.decode64 <<-EOS
 H4sIAKJpllQAA0tJLEnUK0ks0kuvYqAVMDAwMDMxUQDR5mbmYNrACMIHA2MjIwUDc3NzEzMz
 QxMDAwUDQ2NTczMGBQOauQgJlBYDfQ90SiKQkZmHWx1QWVoaHnMgXlGA00MEyHdzMMzOnBbC
