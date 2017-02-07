@@ -76,6 +76,7 @@ Thanks to everyone who has contributed to minitar:
 *   Matthew Kent
 *   Michal Suchanek
 *   Mike Furr
+*   Pete Fritchman
 *   Zach Dennis
 
 [Minitest]: https://github.com/seattlerb/minitest

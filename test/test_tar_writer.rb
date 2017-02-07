@@ -67,15 +67,35 @@ class TestTarWriter < Minitest::Test
   def test_file_name_is_split_correctly
     # test insane file lengths, and: a{100}/b{155}, etc
     @dummyos.reset
-    names = [ "#{'a' * 155}/#{'b' * 100}", "#{'a' * 151}/#{'qwer/' * 19}bla" ]
-    o_names = [ 'b' * 100, "#{'qwer/' * 19}bla" ]
-    o_prefixes = [ 'a' * 155, 'a' * 151 ]
+    names = [
+      "#{'a' * 155}/#{'b' * 100}",
+      "#{'a' * 151}/#{'qwer/' * 19}bla",
+      "/#{'a' * 49}/#{'b' * 50}",
+      "#{'a' * 49}/#{'b' * 50}x",
+      "#{'a' * 49}x/#{'b' * 50}"
+    ]
+    o_names = [
+      'b' * 100,
+      "#{'qwer/' * 19}bla",
+      'b' * 50,
+      "#{'b' * 50}x",
+      'b' * 50
+    ]
+    o_prefixes = [
+      'a' * 155,
+      'a' * 151,
+      "/#{'a' * 49}",
+      'a' * 49,
+      "#{'a' * 49}x"
+    ]
     names.each do |name|
       @os.add_file_simple(name, :mode => 0o644, :size => 10) {}
     end
-    o_names.each_with_index do |nam, i|
-      assert_headers_equal(tar_file_header(nam, o_prefixes[i], 0o644, 10),
-        @dummyos.data[2 * i * 512, 512])
+    names.each_index do |i|
+      assert_headers_equal(
+        tar_file_header(o_names[i], o_prefixes[i], 0o644, 10),
+        @dummyos.data[2 * i * 512, 512]
+      )
     end
     assert_raises(Minitar::FileNameTooLong) do
       @os.add_file_simple(File.join('a' * 152, 'b' * 10, 'a' * 92),
