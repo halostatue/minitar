@@ -23,6 +23,11 @@ spec = Hoe.spec 'minitar' do
   self.readme_file = 'README.rdoc'
   self.licenses = ['Ruby', 'BSD-2-Clause']
 
+  self.post_install_message = <<-EOS
+The `minitar` executable is no longer bundled with `minitar`. If you are
+expecting this executable, make sure you also install `minitar-cli`.
+  EOS
+
   extra_dev_deps << ['hoe-doofus', '~> 1.0']
   extra_dev_deps << ['hoe-gemspec2', '~> 1.1']
   extra_dev_deps << ['hoe-git', '~> 1.6']
