@@ -1,7 +1,10 @@
 # coding: utf-8
 
+##
 module Archive; end
+##
 module Archive::Tar; end
+##
 module Archive::Tar::Minitar; end
 
 # Implements the POSIX tar header as a Ruby class. The structure of
@@ -45,16 +48,18 @@ class Archive::Tar::Minitar::PosixHeader
   # All fields available in a POSIX tar(1) header.
   FIELDS = (REQUIRED_FIELDS + OPTIONAL_FIELDS).freeze
 
-  FIELDS.each { |f| attr_reader f.to_sym unless f.to_sym == :name }
+  FIELDS.each do |f|
+    attr_reader f.to_sym unless f.to_sym == :name
+  end
 
   # The name of the file. By default, limited to 100 bytes. Required. May be
   # longer (up to BLOCK_SIZE bytes) if using the GNU long name tar extension.
   attr_accessor :name
 
   # The pack format passed to Array#pack for encoding a header.
-  HEADER_PACK_FORMAT    = "a100a8a8a8a12a12a7aaa100a6a2a32a32a8a8a155"
+  HEADER_PACK_FORMAT    = 'a100a8a8a8a12a12a7aaa100a6a2a32a32a8a8a155'.freeze
   # The unpack format passed to String#unpack for decoding a header.
-  HEADER_UNPACK_FORMAT  = "Z100A8A8A8A12A12A8aZ100A6A2Z32Z32A8A8Z155"
+  HEADER_UNPACK_FORMAT  = 'Z100A8A8A8A12A12A8aZ100A6A2Z32Z32A8A8Z155'.freeze
 
   class << self
     # Creates a new PosixHeader from a data stream.
@@ -120,13 +125,15 @@ class Archive::Tar::Minitar::PosixHeader
       raise ArgumentError, "Field #{f} is required." unless v.key?(f)
     end
 
-    v[:mtime]    = v[:mtime].to_i
-    v[:checksum] ||= ""
-    v[:typeflag] ||= "0"
-    v[:magic]    ||= "ustar"
-    v[:version]  ||= "00"
+    v[:mtime] = v[:mtime].to_i
+    v[:checksum] ||= ''
+    v[:typeflag] ||= '0'
+    v[:magic]    ||= 'ustar'
+    v[:version]  ||= '00'
 
-    FIELDS.each { |f| instance_variable_set("@#{f}", v[f]) }
+    FIELDS.each do |f|
+      instance_variable_set("@#{f}", v[f])
+    end
 
     @empty = v[:empty]
   end
@@ -151,11 +158,12 @@ class Archive::Tar::Minitar::PosixHeader
 
   # Update the checksum field.
   def update_checksum
-    hh = header(" " * 8)
+    hh = header(' ' * 8)
     @checksum = oct(calculate_checksum(hh), 6)
   end
 
   private
+
   def oct(num, len)
     if num.nil?
       "\0" * (len + 1)
@@ -165,12 +173,12 @@ class Archive::Tar::Minitar::PosixHeader
   end
 
   def calculate_checksum(hdr)
-    hdr.unpack("C*").inject { |aa, bb| aa + bb }
+    hdr.unpack('C*').inject { |a, e| a + e }
   end
 
   def header(chksum)
     arr = [name, oct(mode, 7), oct(uid, 7), oct(gid, 7), oct(size, 11),
-           oct(mtime, 11), chksum, " ", typeflag, linkname, magic, version,
+           oct(mtime, 11), chksum, ' ', typeflag, linkname, magic, version,
            uname, gname, oct(devmajor, 7), oct(devminor, 7), prefix]
     str = arr.pack(HEADER_PACK_FORMAT)
     str + "\0" * ((BLOCK_SIZE - str.size) % BLOCK_SIZE)
@@ -248,5 +256,4 @@ class Archive::Tar::Minitar::PosixHeader
   ##
   # :attr_reader: devminor
   # The minor device ID. Not currently used.
-
 end

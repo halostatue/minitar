@@ -1,16 +1,22 @@
-module Hoe::Deprecated_Gem
+
+# A Hoe plug-in to provide a second, linked gemspec, for a gem that has been
+# deprecated in favour of a modern name. (The name is an artifact of Hoe's
+# plugin loading.)
+module Hoe::Deprecated_Gem # rubocop:disable Style/ClassAndModuleCamelCase
   def linked_spec(spec)
     atm = YAML.load(YAML.dump(spec))
     atm.name = 'archive-tar-minitar'
     d = %Q('#{atm.name}' has been deprecated; just install '#{spec.name}'.)
     atm.description = "#{d} #{spec.description}"
     atm.summary = atm.post_install_message = d
-    atm.files.delete_if { |f| f !~ %r{lib/archive-tar-minitar\.rb} }
+    atm.files.delete_if do |f|
+      f !~ %r{lib/archive-tar-minitar\.rb}
+    end
     atm.extra_rdoc_files.clear
     atm.rdoc_options.clear
     atm.dependencies.clear
-    atm.add_dependency(%Q(#{spec.name}), "~> #{spec.version}")
-    atm.add_dependency(%Q(#{spec.name}-cli), "<= 1.0")
+    atm.add_dependency(spec.name, "~> #{spec.version}")
+    atm.add_dependency(%Q(#{spec.name}-cli), '<= 1.0')
 
     unless @include_all
       [ :signing_key, :cert_chain ].each { |name|

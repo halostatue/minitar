@@ -42,11 +42,11 @@ module Archive::Tar::Minitar
     #    Archive::Tar::Minitar::Input.new(io) -> input
     #    Archive::Tar::Minitar::Input.new(path) -> input
     def initialize(input)
-      if input.respond_to?(:read)
-        @io = input
-      else
-        @io = ::Kernel.open(input, "rb")
-      end
+      @io = if input.respond_to?(:read)
+              input
+            else
+              ::Kernel.open(input, 'rb')
+            end
 
       unless Archive::Tar::Minitar.seekable?(@io, :rewind)
         raise Archive::Tar::Minitar::NonSeekableStream
@@ -62,7 +62,9 @@ module Archive::Tar::Minitar
     def each
       if block_given?
         begin
-          @tar.each { |entry| yield entry }
+          @tar.each do |entry|
+            yield entry
+          end
         ensure
           @tar.rewind
         end
@@ -120,7 +122,7 @@ module Archive::Tar::Minitar
         if Archive::Tar::Minitar.dir?(dest)
           begin
             FileUtils.chmod(entry.mode, dest)
-          rescue Exception
+          rescue
             nil
           end
         else
@@ -131,21 +133,24 @@ module Archive::Tar::Minitar
         end
 
         fsync_dir(dest)
-        fsync_dir(File.join(dest, ".."))
+        fsync_dir(File.join(dest, '..'))
         return
       else # it's a file
         destdir = File.join(destdir, File.dirname(full_name))
-        FileUtils.mkdir_p(destdir, :mode => 0755)
+        FileUtils.mkdir_p(destdir, :mode => 0o755)
 
         destfile = File.join(destdir, File.basename(full_name))
 
         File.unlink(destfile) if File.symlink?(destfile)
 
-        FileUtils.chmod(0600, destfile) rescue nil  # Errno::ENOENT
+        # Errno::ENOENT
+        # rubocop:disable Style/RescueModifier
+        FileUtils.chmod(0o600, destfile) rescue nil
+        # rubocop:enable Style/RescueModifier
 
         yield :file_start, full_name, stats if block_given?
 
-        File.open(destfile, "wb", entry.mode) do |os|
+        File.open(destfile, 'wb', entry.mode) do |os|
           loop do
             data = entry.read(4096)
             break unless data
@@ -160,7 +165,7 @@ module Archive::Tar::Minitar
 
         FileUtils.chmod(entry.mode, destfile)
         fsync_dir(File.dirname(destfile))
-        fsync_dir(File.join(File.dirname(destfile), ".."))
+        fsync_dir(File.join(File.dirname(destfile), '..'))
 
         yield :file_done, full_name, stats if block_given?
       end
@@ -184,7 +189,7 @@ module Archive::Tar::Minitar
     rescue # ignore IOError if it's an unpatched (old) Ruby
       nil
     ensure
-      dir.close if dir rescue nil
+      dir.close if dir rescue nil # rubocop:disable Style/RescueModifier
     end
   end
 end
