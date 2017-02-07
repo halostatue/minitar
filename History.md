@@ -58,6 +58,8 @@
         warning.
     *   Dramatically reduced the number of strings created when creating a
         POSIX tarball header.
+    *   Added a helper, Input.each_entry that iterates over each entry in an
+        opened entry object.
 
 *   Bugs:
 

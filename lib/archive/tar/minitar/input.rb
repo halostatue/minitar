@@ -30,6 +30,29 @@ module Archive::Tar::Minitar
       res
     end
 
+    # Iterates over each entry in the provided input. This wraps the common
+    # pattern of:
+    #
+    #     Archive::Tar::Minitar::Input.open(io) do |i|
+    #       inp.each do |entry|
+    #         # ...
+    #       end
+    #     end
+    #
+    # call-seq:
+    #    Archive::Tar::Minitar::Input.each_entry(io) { |input| block } -> obj
+    def self.each_entry(input)
+      stream = new(input)
+
+      begin
+        res = stream.each { |entry| yield entry }
+      ensure
+        stream.close
+      end
+
+      res
+    end
+
     # Creates a new Input object. If +input+ is a stream object that responds
     # to #read, then it will simply be wrapped. Otherwise, one will be created
     # and opened using Kernel#open. When Input#close is called, the stream
