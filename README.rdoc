@@ -4,6 +4,7 @@ home :: https://github.com/halostatue/minitar/
 code :: https://github.com/halostatue/minitar/
 bugs :: https://github.com/halostatue/minitar/issues
 rdoc :: http://rdoc.info/gems/minitar/
+cli  :: https://github.com/halostatue/minitar-cli
 continuous integration :: {<img src="https://travis-ci.org/halostatue/minitar.svg" />}[https://travis-ci.org/halostatue/minitar]
                           {<img src="https://ci.appveyor.com/api/projects/status/bj4gqn3gp3gu45sa?svg=true" />}[https://ci.appveyor.com/project/halostatue/minitar]
 test coverage :: {<img src="https://coveralls.io/repos/halostatue/minitar/badge.svg" alt="Coverage Status" />}[https://coveralls.io/r/halostatue/minitar]
