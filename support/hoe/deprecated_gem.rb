@@ -16,7 +16,7 @@ module Hoe::Deprecated_Gem # rubocop:disable Style/ClassAndModuleCamelCase
     atm.rdoc_options.clear
     atm.dependencies.clear
     atm.add_dependency(spec.name, "~> #{spec.version}")
-    atm.add_dependency(%Q(#{spec.name}-cli), '<= 1.0')
+    atm.add_dependency(%Q(#{spec.name}-cli), '~> 0.6')
 
     unless @include_all
       [ :signing_key, :cert_chain ].each { |name|
