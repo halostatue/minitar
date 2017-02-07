@@ -69,6 +69,8 @@
         originally provided by Curtis Sampson.
     *   Fix [#6][] by making it raise the correct error for a long filename
         with no path components.
+    *   Fix [#13][] provided by @fetep fixes an off-by-one error on filename
+        splitting.
     *   Fix [#14][] provided by @kzys should fix Windows detection issues.
     *   Fix [#16][] as specified above.
     *   Fix an issue where Minitar.pack would not include Unix hidden files
@@ -98,5 +100,6 @@
 [#3]: https://github.com/halostatue/minitar/issues/3
 [#4]: https://github.com/halostatue/minitar/issues/4
 [#6]: https://github.com/halostatue/minitar/issues/6
+[#13]: https://github.com/halostatue/minitar/issues/13
 [#14]: https://github.com/halostatue/minitar/issues/14
 [#16]: https://github.com/halostatue/minitar/issues/16
