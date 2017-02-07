@@ -83,16 +83,10 @@ module Archive::Tar::Minitar
     #    end
     def self.open(io) # :yields Writer:
       writer = new(io)
-
       return writer unless block_given?
-
-      begin
-        res = yield writer
-      ensure
-        writer.close
-      end
-
-      res
+      yield writer
+    ensure
+      writer.close
     end
 
     # Creates and returns a new Writer object.

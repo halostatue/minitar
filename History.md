@@ -55,7 +55,7 @@
         Writer#add_file_simple in this case.
     *   Methods that require blocks are no longer required, so the
         Archive::Tar::Minitar::BlockRequired exception has been removed with a
-        warning.
+        warning (this may not work on Ruby 1.8).
     *   Dramatically reduced the number of strings created when creating a
         POSIX tarball header.
     *   Added a helper, Input.each_entry that iterates over each entry in an

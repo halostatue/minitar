@@ -20,14 +20,9 @@ module Archive::Tar::Minitar
     def self.open(input)
       stream = new(input)
       return stream unless block_given?
-
-      begin
-        res = yield stream
-      ensure
-        stream.close
-      end
-
-      res
+      yield stream
+    ensure
+      stream.close
     end
 
     # Iterates over each entry in the provided input. This wraps the common
@@ -39,18 +34,20 @@ module Archive::Tar::Minitar
     #       end
     #     end
     #
+    # If a block is not provided, an enumerator will be created with the same
+    # behaviour.
+    #
     # call-seq:
-    #    Archive::Tar::Minitar::Input.each_entry(io) { |input| block } -> obj
+    #    Archive::Tar::Minitar::Input.each_entry(io) -> enumerator
+    #    Archive::Tar::Minitar::Input.each_entry(io) { |entry| block } -> obj
     def self.each_entry(input)
-      stream = new(input)
+      return to_enum(__method__, input) unless block_given?
 
-      begin
-        res = stream.each { |entry| yield entry }
-      ensure
-        stream.close
+      open(input) do |stream|
+        stream.each do |entry|
+          yield entry
+        end
       end
-
-      res
     end
 
     # Creates a new Input object. If +input+ is a stream object that responds
@@ -82,19 +79,16 @@ module Archive::Tar::Minitar
     # finished, rewinds to the beginning of the stream.
     #
     # If not provided a block, creates an enumerator with the same semantics.
-    def each
-      if block_given?
-        begin
-          @tar.each do |entry|
-            yield entry
-          end
-        ensure
-          @tar.rewind
-        end
-      else
-        enum_for(:each)
+    def each_entry
+      return to_enum unless block_given?
+
+      @tar.each do |entry|
+        yield entry
       end
+    ensure
+      @tar.rewind
     end
+    alias each each_entry
 
     # Extracts the current +entry+ to +destdir+. If a block is provided, it
     # yields an +action+ Symbol, the full name of the file being extracted
