@@ -20,14 +20,24 @@ module Archive::Tar::Minitar
     def self.open(output)
       stream = new(output)
       return stream unless block_given?
+      yield stream
+    ensure
+      stream.close
+    end
 
-      begin
-        res = yield stream
-      ensure
-        stream.close
+    # Output.tar is a wrapper for Output.open that yields the owned tar object
+    # instead of the Output object. If a block is not provided, an enumerator
+    # will be created with the same behaviour.
+    #
+    # call-seq:
+    #    Archive::Tar::Minitar::Output.tar(io) -> enumerator
+    #    Archive::Tar::Minitar::Output.tar(io) { |tar| block } -> obj
+    def self.tar(output)
+      return to_enum(__method__, output) unless block_given?
+
+      open(output) do |stream|
+        yield stream.tar
       end
-
-      res
     end
 
     # Creates a new Output object. If +output+ is a stream object that responds

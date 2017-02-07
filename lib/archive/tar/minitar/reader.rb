@@ -134,27 +134,41 @@ module Archive::Tar::Minitar
     # +Reader::open+ returns the value of the block.
     def self.open(io)
       reader = new(io)
-
       return reader unless block_given?
+      yield reader
+    ensure
+      reader.close
+    end
 
-      begin
-        res = yield reader
-      ensure
-        reader.close
+    # Iterates over each entry in the provided input. This wraps the common
+    # pattern of:
+    #
+    #     Archive::Tar::Minitar::Input.open(io) do |i|
+    #       inp.each do |entry|
+    #         # ...
+    #       end
+    #     end
+    #
+    # If a block is not provided, an enumerator will be created with the same
+    # behaviour.
+    #
+    # call-seq:
+    #    Archive::Tar::Minitar::Reader.each_entry(io) -> enumerator
+    #    Archive::Tar::Minitar::Reader.each_entry(io) { |entry| block } -> obj
+    def self.each_entry(io)
+      return to_enum(__method__, io) unless block_given?
+
+      open(io) do |reader|
+        reader.each_entry do |entry|
+          yield entry
+        end
       end
-
-      res
     end
 
     # Creates and returns a new Reader object.
     def initialize(io)
       @io = io
       @init_pos = io.pos
-    end
-
-    # Iterates through each entry in the data stream.
-    def each(&block)
-      each_entry(&block)
     end
 
     # Resets the read pointer to the beginning of data stream. Do not call
@@ -176,6 +190,8 @@ module Archive::Tar::Minitar
 
     # Iterates through each entry in the data stream.
     def each_entry
+      return to_enum unless block_given?
+
       loop do
         return if @io.eof?
 
@@ -213,6 +229,7 @@ module Archive::Tar::Minitar
         entry.close
       end
     end
+    alias each each_entry
 
     def close
     end
