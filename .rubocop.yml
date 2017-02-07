@@ -3,6 +3,8 @@ AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
   ExtraDetails: true
+  Exclude:
+    - '*.gemspec'
 
 Style/AlignHash:
   EnforcedColonStyle: key
@@ -28,6 +30,9 @@ Style/BlockDelimiters:
   EnforcedStyle: semantic
   IgnoredMethods:
     - assert_raises
+    - add_file_simple
+    - add_file
+    - times
   ProceduralMethods:
     - spec
 
@@ -60,10 +65,15 @@ Style/Encoding: # For a gem that is using Ruby 1.9, change this to true.
 
 Style/FileName:
   Exclude:
-    - lib/mime-types.rb
+    - lib/archive-tar-minitar.rb
 
 Style/FormatString:
   EnforcedStyle: percent
+
+# minitar supports Ruby 1.8, still. Old-style symbol hash literals are
+# required.
+Style/HashSyntax:
+  Enabled: false
 
 Style/MultilineBlockChain:
   Enabled: false
@@ -87,6 +97,9 @@ Style/UnneededPercentQ:
 Metrics/AbcSize:
   Enabled: false
 
+Metrics/BlockLength:
+  Enabled: false
+
 # This is one of the hobgoblins.
 Metrics/ClassLength:
   Enabled: false
@@ -100,6 +113,9 @@ Metrics/LineLength:
 
 # This is one of the hobgoblins.
 Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ModuleLength:
   Enabled: false
 
 Metrics/PerceivedComplexity:

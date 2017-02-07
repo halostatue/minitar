@@ -26,8 +26,10 @@ module Archive::Tar::Minitar
       def self.const_missing(c)
         case c
         when :FileOverflow
-          warn "Writer::BoundedWriteStream::FileOverflow has been renamed to Writer::WriteBoundaryOverflow"
-          const_set(:FileOverflow, Archive::Tar::Minitar::Writer::WriteBoundaryOverflow)
+          warn 'Writer::BoundedWriteStream::FileOverflow has been renamed ' \
+            'to Writer::WriteBoundaryOverflow'
+          const_set :FileOverflow,
+            Archive::Tar::Minitar::Writer::WriteBoundaryOverflow
         else
           super
         end
@@ -58,7 +60,7 @@ module Archive::Tar::Minitar
     def self.const_missing(c)
       case c
       when :BoundedStream
-        warn "BoundedStream has been renamed to BoundedWriteStream"
+        warn 'BoundedStream has been renamed to BoundedWriteStream'
         const_set(:BoundedStream, BoundedWriteStream)
       else
         super
@@ -136,10 +138,10 @@ module Archive::Tar::Minitar
       header = {
         :prefix => prefix,
         :name   => name,
-        :mode   => opts.fetch(:mode, 0644),
+        :mode   => opts.fetch(:mode, 0o644),
         :mtime  => opts.fetch(:mtime, nil),
         :gid    => opts.fetch(:gid, nil),
-        :uid    => opts.fetch(:uid, nil),
+        :uid    => opts.fetch(:uid, nil)
       }
 
       data = opts.fetch(:data, nil)
@@ -148,12 +150,12 @@ module Archive::Tar::Minitar
       if block_given?
         if data
           raise ArgumentError,
-            "Too much data (opts[:data] and block_given?)."
+            'Too much data (opts[:data] and block_given?).'
         end
 
-        raise ArgumentError, "No size provided" unless size
+        raise ArgumentError, 'No size provided' unless size
       else
-        raise ArgumentError, "No data provided" unless data
+        raise ArgumentError, 'No data provided' unless data
 
         size = data.size if size < data.size
       end
@@ -212,7 +214,7 @@ module Archive::Tar::Minitar
       init_pos = @io.pos
       @io.write("\0" * 512) # placeholder for the header
 
-      block.call(WriteOnlyStream.new(@io), opts)
+      yield WriteOnlyStream.new(@io), opts
 
       size      = @io.pos - (init_pos + 512)
       remainder = (512 - (size % 512)) % 512
@@ -241,7 +243,7 @@ module Archive::Tar::Minitar
       header = {
         :name => name,
         :mode => opts[:mode],
-        :typeflag => "5",
+        :typeflag => '5',
         :size => 0,
         :gid => opts[:gid],
         :uid => opts[:uid],
@@ -275,26 +277,24 @@ module Archive::Tar::Minitar
       raise FileNameTooLong if name.size > 256
 
       if name.size <= 100
-        prefix = ""
+        prefix = ''
       else
         parts = name.split(/\//)
         newname = parts.pop
 
-        nxt = ""
+        nxt = ''
 
         loop do
-          nxt = parts.pop || ""
+          nxt = parts.pop || ''
           break if newname.size + 1 + nxt.size > 100
           newname = "#{nxt}/#{newname}"
         end
 
-        prefix = (parts + [nxt]).join("/")
+        prefix = (parts + [nxt]).join('/')
 
         name = newname
 
-        if name.size > 100 || prefix.size > 155
-          raise FileNameTooLong
-        end
+        raise FileNameTooLong if name.size > 100 || prefix.size > 155
       end
 
       [ name, prefix ]

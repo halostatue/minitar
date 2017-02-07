@@ -8,9 +8,13 @@ module Archive::Tar::Minitar
     # This marks the EntryStream closed for reading without closing the
     # actual data stream.
     module InvalidEntryStream
+      # rubocop:disable Style/SingleLineMethods
+      # rubocop:disable Style/EmptyLineBetweenDefs
       def read(*); raise ClosedStream; end
-      def getc; raise ClosedStream;  end
-      def rewind; raise ClosedStream;  end
+      def getc; raise ClosedStream; end
+      def rewind; raise ClosedStream; end
+      # rubocop:enable Style/EmptyLineBetweenDefs
+      # rubocop:enable Style/SingleLineMethods Style/EmptyLineBetweenDefs
     end
 
     # EntryStreams are pseudo-streams on top of the main data stream.
@@ -68,13 +72,13 @@ module Archive::Tar::Minitar
 
       # Returns +true+ if the entry represents a directory.
       def directory?
-        @typeflag == "5"
+        @typeflag == '5'
       end
       alias directory directory?
 
       # Returns +true+ if the entry represents a plain file.
       def file?
-        @typeflag == "0" || @typeflag == "\0"
+        @typeflag == '0' || @typeflag == "\0"
       end
       alias file file?
 
@@ -104,7 +108,7 @@ module Archive::Tar::Minitar
 
       # Returns the full and proper name of the entry.
       def full_name
-        if @prefix != ""
+        if @prefix != ''
           File.join(@prefix, @name)
         else
           @name
@@ -117,6 +121,7 @@ module Archive::Tar::Minitar
       end
 
       private
+
       def invalidate
         extend InvalidEntryStream
       end
@@ -156,7 +161,7 @@ module Archive::Tar::Minitar
     # this during a #each or #each_entry iteration. This only works with
     # random access data streams that respond to #rewind and #pos.
     def rewind
-      if @init_pos == 0
+      if @init_pos.zero?
         unless Archive::Tar::Minitar.seekable?(@io, :rewind)
           raise Archive::Tar::Minitar::NonSeekableStream
         end

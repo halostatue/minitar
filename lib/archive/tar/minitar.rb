@@ -1,6 +1,8 @@
 # coding: utf-8
 
+##
 module Archive; end
+##
 module Archive::Tar; end
 
 require 'fileutils'
@@ -10,8 +12,9 @@ class << Archive::Tar #:nodoc:
   def const_missing(const) #:nodoc:
     case const
     when :PosixHeader
-      warn "Archive::Tar::PosixHeader has been renamed to Archive::Tar::Minitar::PosixHeader"
-      const_set(:PosixHeader, Archive::Tar::Minitar::PosixHeader)
+      warn 'Archive::Tar::PosixHeader has been renamed to ' \
+        'Archive::Tar::Minitar::PosixHeader'
+      const_set :PosixHeader, Archive::Tar::Minitar::PosixHeader
     else
       super
     end
@@ -20,10 +23,9 @@ class << Archive::Tar #:nodoc:
   private
 
   def included(mod)
-    unless modules.include?(mod)
-      warn "Including Minitar via the #{self} namespace is deprecated."
-      modules.add mod
-    end
+    return if modules.include?(mod)
+    warn "Including Minitar via the #{self} namespace is deprecated."
+    modules.add mod
   end
 
   def modules
@@ -71,7 +73,7 @@ end
 #       tar.close
 #     end
 module Archive::Tar::Minitar
-  VERSION = '0.6' # :nodoc:
+  VERSION = '0.6'.freeze # :nodoc:
 
   # The base class for any minitar error.
   Error = Class.new(::StandardError)
@@ -94,27 +96,29 @@ module Archive::Tar::Minitar
     # Tests if +path+ refers to a directory. Fixes an apparently
     # corrupted <tt>stat()</tt> call on Windows.
     def dir?(path)
-      File.directory?((path[-1] == ?/) ? path : "#{path}/")
+      # rubocop:disable Style/CharacterLiteral
+      File.directory?(path[-1] == ?/ ? path : "#{path}/")
+      # rubocop:enable Style/CharacterLiteral
     end
 
     # A convenience method for wrapping Archive::Tar::Minitar::Input.open
     # (mode +r+) and Archive::Tar::Minitar::Output.open (mode +w+). No other
     # modes are currently supported.
-    def open(dest, mode = "r", &block)
+    def open(dest, mode = 'r', &block)
       case mode
       when 'r'
         Input.open(dest, &block)
       when 'w'
         Output.open(dest, &block)
       else
-        raise "Unknown open mode for Archive::Tar::Minitar.open."
+        raise 'Unknown open mode for Archive::Tar::Minitar.open.'
       end
     end
 
     def const_missing(c) #:nodoc:
       case c
       when :BlockRequired
-        warn "This constant has been removed."
+        warn 'This constant has been removed.'
         const_set(:BlockRequired, Class.new(StandardError))
       else
         super
@@ -122,7 +126,7 @@ module Archive::Tar::Minitar
     end
 
     def windows? #:nodoc:
-      RbConfig::CONFIG["host_os"] =~ /^(mswin|mingw|cygwin)/
+      RbConfig::CONFIG['host_os'] =~ /^(mswin|mingw|cygwin)/
     end
 
     # A convenience method to pack the file provided. +entry+ may either be a
@@ -160,7 +164,9 @@ module Archive::Tar::Minitar
     # <tt>:gid</tt>::     The group owner of the file. (+nil+ on Windows.)
     # <tt>:mtime</tt>::   The modification Time of the file.
     def pack_file(entry, outputter) #:yields action, name, stats:
-      outputter = outputter.tar if outputter.kind_of?(Archive::Tar::Minitar::Output)
+      if outputter.kind_of?(Archive::Tar::Minitar::Output)
+        outputter = outputter.tar
+      end
 
       stats = {}
 
@@ -175,7 +181,7 @@ module Archive::Tar::Minitar
       stat = File.stat(name)
       stats[:mode]   ||= stat.mode
       stats[:mtime]  ||= stat.mtime
-      stats[:size]   = stat.size
+      stats[:size] = stat.size
 
       if windows?
         stats[:uid]  = nil
@@ -185,12 +191,11 @@ module Archive::Tar::Minitar
         stats[:gid]  ||= stat.gid
       end
 
-      case
-      when File.file?(name)
+      if File.file?(name)
         outputter.add_file_simple(name, stats) do |os|
           stats[:current] = 0
           yield :file_start, name, stats if block_given?
-          File.open(name, "rb") do |ff|
+          File.open(name, 'rb') do |ff|
             until ff.eof?
               stats[:currinc] = os.write(ff.read(4096))
               stats[:current] += stats[:currinc]
@@ -199,11 +204,11 @@ module Archive::Tar::Minitar
           end
           yield :file_done, name, stats if block_given?
         end
-      when dir?(name)
+      elsif dir?(name)
         yield :dir, name, stats if block_given?
         outputter.mkdir(name, stats)
       else
-        raise "Don't yet know how to pack this type of file."
+        raise %q(Don't yet know how to pack this type of file.)
       end
     end
 
@@ -240,11 +245,11 @@ module Archive::Tar::Minitar
     # will be extracted.
     def unpack(src, dest, files = [], &block)
       Input.open(src) do |inp|
-        if File.exist?(dest) and (not dir?(dest))
-          raise "Can't unpack to a non-directory."
-        elsif not File.exist?(dest)
-          FileUtils.mkdir_p(dest)
+        if File.exist?(dest) and !dir?(dest)
+          raise %q(Can't unpack to a non-directory.)
         end
+
+        FileUtils.mkdir_p(dest) unless File.exist?(dest)
 
         inp.each do |entry|
           if files.empty? or files.include?(entry.full_name)
@@ -269,11 +274,11 @@ module Archive::Tar::Minitar
     end
 
     private
+
     def included(mod)
-      unless modules.include?(mod)
-        warn "Including #{self} has been deprecated."
-        modules << mod
-      end
+      return if modules.include?(mod)
+      warn "Including #{self} has been deprecated."
+      modules << mod
     end
 
     def modules
