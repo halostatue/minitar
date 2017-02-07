@@ -215,18 +215,19 @@ module Archive::Tar::Minitar
     # If +src+ is an Array, it will be treated as the result of Find.find; all
     # files matching will be packed.
     def pack(src, dest, recurse_dirs = true, &block)
+      require 'find'
       Output.open(dest) do |outp|
         if src.kind_of?(Array)
           src.each do |entry|
-            pack_file(entry, outp, &block)
             if dir?(entry) and recurse_dirs
-              Dir["#{entry}/**/**"].each do |ee|
+              Find.find(entry) do |ee|
                 pack_file(ee, outp, &block)
               end
+            else
+              pack_file(entry, outp, &block)
             end
           end
         else
-          require 'find'
           Find.find(src) do |entry|
             pack_file(entry, outp, &block)
           end

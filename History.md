@@ -71,6 +71,8 @@
         with no path components.
     *   Fix [#14][] provided by @kzys should fix Windows detection issues.
     *   Fix [#16][] as specified above.
+    *   Fix an issue where Minitar.pack would not include Unix hidden files
+        when creating a tarball.
 
 *   Development:
 
