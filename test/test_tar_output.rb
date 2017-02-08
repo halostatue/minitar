@@ -19,6 +19,14 @@ class TestTarOutput < Minitest::Test
     FileUtils.rm_rf('data__')
   end
 
+  def test_open_no_block
+    output = Minitar::Output.open(@tarfile)
+    refute output.closed?
+  ensure
+    output.close
+    assert output.closed?
+  end
+
   def test_file_looks_good
     Minitar::Output.open(@tarfile) do |os|
       Dir.chdir('data__') do

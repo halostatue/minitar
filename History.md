@@ -1,3 +1,11 @@
+## 0.6.1 / 2017-02-07
+
+*   Fixed issue [#24][] where streams were being improperly closed immediately
+    on open unless there was a block provided.
+
+*   Hopefully fixes issue [#23][] by releasing archive-tar-minitar after
+    minitar-cli is available.
+
 ## 0.6 / 2017-02-07
 
 *   Breaking Changes:
@@ -105,3 +113,5 @@
 [#13]: https://github.com/halostatue/minitar/issues/13
 [#14]: https://github.com/halostatue/minitar/issues/14
 [#16]: https://github.com/halostatue/minitar/issues/16
+[#23]: https://github.com/halostatue/minitar/issues/23
+[#24]: https://github.com/halostatue/minitar/issues/24

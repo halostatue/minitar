@@ -15,7 +15,10 @@ module Hoe::Deprecated_Gem # rubocop:disable Style/ClassAndModuleCamelCase
     atm.extra_rdoc_files.clear
     atm.rdoc_options.clear
     atm.dependencies.clear
-    atm.add_dependency(spec.name, "~> #{spec.version}")
+
+    version = Gem::Version.new(spec.version.segments.first(2).join('.'))
+
+    atm.add_dependency(spec.name, "~> #{version}")
     atm.add_dependency(%Q(#{spec.name}-cli), '~> 0.6')
 
     unless @include_all

@@ -4,6 +4,19 @@ require 'minitar'
 require 'minitest_helper'
 
 class TestTarReader < Minitest::Test
+  def test_open_no_block
+    str = tar_file_header('lib/foo', '', 0o10644, 10) + "\0" * 512
+    str += tar_file_header('bar', 'baz', 0o644, 0)
+    str += tar_dir_header('foo', 'bar', 0o12345)
+    str += "\0" * 1024
+
+    reader = Minitar::Reader.open(StringIO.new(str))
+    refute reader.closed?
+  ensure
+    reader.close
+    refute reader.closed? # Reader doesn't actually close anything
+  end
+
   def test_multiple_entries
     str = tar_file_header('lib/foo', '', 0o10644, 10) + "\0" * 512
     str += tar_file_header('bar', 'baz', 0o644, 0)

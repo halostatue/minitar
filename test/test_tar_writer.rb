@@ -31,6 +31,15 @@ class TestTarWriter < Minitest::Test
     @os.close
   end
 
+  def test_open_no_block
+    writer = Minitar::Writer.open(@dummyos)
+    refute writer.closed?
+  ensure
+    writer.close
+    assert writer.closed?
+  end
+
+
   def test_add_file_simple
     @dummyos.reset
 

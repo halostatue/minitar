@@ -13,6 +13,7 @@ module Archive::Tar::Minitar
       def read(*); raise ClosedStream; end
       def getc; raise ClosedStream; end
       def rewind; raise ClosedStream; end
+      def closed?; true; end
       # rubocop:enable Style/EmptyLineBetweenDefs
       # rubocop:enable Style/SingleLineMethods Style/EmptyLineBetweenDefs
     end
@@ -115,6 +116,11 @@ module Archive::Tar::Minitar
         end
       end
 
+      # Returns false if the entry stream is valid.
+      def closed?
+        false
+      end
+
       # Closes the entry.
       def close
         invalidate
@@ -135,9 +141,14 @@ module Archive::Tar::Minitar
     def self.open(io)
       reader = new(io)
       return reader unless block_given?
-      yield reader
-    ensure
-      reader.close
+
+      # This exception context must remain, otherwise the stream closes on open
+      # even if a block is not given.
+      begin
+        yield reader
+      ensure
+        reader.close
+      end
     end
 
     # Iterates over each entry in the provided input. This wraps the common
@@ -230,6 +241,11 @@ module Archive::Tar::Minitar
       end
     end
     alias each each_entry
+
+    # Returns false if the reader is open (it never closes).
+    def closed?
+      false
+    end
 
     def close
     end
