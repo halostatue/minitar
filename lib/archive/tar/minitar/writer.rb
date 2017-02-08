@@ -84,9 +84,14 @@ module Archive::Tar::Minitar
     def self.open(io) # :yields Writer:
       writer = new(io)
       return writer unless block_given?
-      yield writer
-    ensure
-      writer.close
+
+      # This exception context must remain, otherwise the stream closes on open
+      # even if a block is not given.
+      begin
+        yield writer
+      ensure
+        writer.close
+      end
     end
 
     # Creates and returns a new Writer object.
@@ -253,6 +258,11 @@ module Archive::Tar::Minitar
     def flush
       raise ClosedStream if @closed
       @io.flush if @io.respond_to?(:flush)
+    end
+
+    # Returns false if the writer is open.
+    def closed?
+      @closed
     end
 
     # Closes the Writer. This does not close the underlying wrapped output

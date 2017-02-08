@@ -20,9 +20,14 @@ module Archive::Tar::Minitar
     def self.open(output)
       stream = new(output)
       return stream unless block_given?
-      yield stream
-    ensure
-      stream.close
+
+      # This exception context must remain, otherwise the stream closes on open
+      # even if a block is not given.
+      begin
+        yield stream
+      ensure
+        stream.close
+      end
     end
 
     # Output.tar is a wrapper for Output.open that yields the owned tar object
@@ -59,6 +64,11 @@ module Archive::Tar::Minitar
 
     # Returns the Writer object for direct access.
     attr_reader :tar
+
+    # Returns false if the wrapped data stream is open.
+    def closed?
+      @io.closed?
+    end
 
     # Closes the Writer object and the wrapped data stream.
     def close

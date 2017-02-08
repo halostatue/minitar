@@ -38,6 +38,15 @@ UTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIwCUgAAGnyo6wAoAAA=
     FileUtils.rm_rf('data__')
   end
 
+  def test_open_no_block
+    reader = Zlib::GzipReader.new(StringIO.new(TEST_TGZ))
+    input = Minitar::Input.open(reader)
+    refute input.closed?
+  ensure
+    input.close
+    assert input.closed?
+  end
+
   def test_each_works
     reader = Zlib::GzipReader.new(StringIO.new(TEST_TGZ))
     Minitar::Input.open(reader) do |stream|

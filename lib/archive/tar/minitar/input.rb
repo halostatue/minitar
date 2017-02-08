@@ -20,9 +20,14 @@ module Archive::Tar::Minitar
     def self.open(input)
       stream = new(input)
       return stream unless block_given?
-      yield stream
-    ensure
-      stream.close
+
+      # This exception context must remain, otherwise the stream closes on open
+      # even if a block is not given.
+      begin
+        yield stream
+      ensure
+        stream.close
+      end
     end
 
     # Iterates over each entry in the provided input. This wraps the common
@@ -186,6 +191,11 @@ module Archive::Tar::Minitar
 
         yield :file_done, full_name, stats if block_given?
       end
+    end
+
+    # Returns false if the wrapped data stream is open.
+    def closed?
+      @io.closed?
     end
 
     # Returns the Reader object for direct access.
