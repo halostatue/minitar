@@ -132,11 +132,8 @@ module Archive::Tar::Minitar
     #    end
     def add_file_simple(name, opts = {}) # :yields BoundedWriteStream:
       raise ClosedStream if @closed
-      name, prefix = split_name(name)
 
       header = {
-        :prefix => prefix,
-        :name   => name,
         :mode   => opts.fetch(:mode, 0o644),
         :mtime  => opts.fetch(:mtime, nil),
         :gid    => opts.fetch(:gid, nil),
@@ -161,7 +158,7 @@ module Archive::Tar::Minitar
 
       header[:size] = size
 
-      @io.write(PosixHeader.new(header))
+      write_header(name, header)
 
       os = BoundedWriteStream.new(@io, opts[:size])
       if block_given?
@@ -208,8 +205,6 @@ module Archive::Tar::Minitar
         raise Archive::Tar::Minitar::NonSeekableStream
       end
 
-      name, prefix = split_name(name)
-
       init_pos = @io.pos
       @io.write("\0" * 512) # placeholder for the header
 
@@ -222,15 +217,13 @@ module Archive::Tar::Minitar
       final_pos, @io.pos = @io.pos, init_pos
 
       header = {
-        :name => name,
         :mode => opts[:mode],
         :mtime => opts[:mtime],
         :size => size,
         :gid => opts[:gid],
         :uid => opts[:uid],
-        :prefix => prefix
       }
-      @io.write(PosixHeader.new(header))
+      write_header(name, header)
       @io.pos = final_pos
     end
 
@@ -238,18 +231,15 @@ module Archive::Tar::Minitar
     def mkdir(name, opts = {})
       raise ClosedStream if @closed
 
-      name, prefix = split_name(name)
       header = {
-        :name => name,
         :mode => opts[:mode],
         :typeflag => '5',
         :size => 0,
         :gid => opts[:gid],
         :uid => opts[:uid],
         :mtime => opts[:mtime],
-        :prefix => prefix
       }
-      @io.write(PosixHeader.new(header))
+      write_header(name, header)
       nil
     end
 
@@ -275,11 +265,27 @@ module Archive::Tar::Minitar
 
     private
 
+    def write_header(long_name, header)
+      short_name, prefix, needs_long_name = split_name(long_name)
+
+      if needs_long_name
+        long_name_header = {
+          :prefix => '',
+          :name => PosixHeader::GNU_EXT_LONG_LINK,
+          :typeflag => 'L',
+          :size => long_name.length,
+          :mode => 0,
+        }
+        @io.write(PosixHeader.new(long_name_header))
+        @io.write(long_name)
+        @io.write("\0" * (512 - (long_name.length % 512)))
+      end
+
+      new_header = header.merge({ :name => short_name, :prefix => prefix })
+      @io.write(PosixHeader.new(new_header))
+    end
+
     def split_name(name)
-      # TODO: Enable long-filename write support.
-
-      raise FileNameTooLong if name.size > 256
-
       if name.size <= 100
         prefix = ''
       else
@@ -297,11 +303,9 @@ module Archive::Tar::Minitar
         prefix = (parts + [nxt]).join('/')
 
         name = newname
-
-        raise FileNameTooLong if name.size > 100 || prefix.size > 155
       end
 
-      [ name, prefix ]
+      [ name, prefix, (name.size > 100 || prefix.size > 155) ]
     end
   end
 end

@@ -5,6 +5,7 @@ module Archive::Tar::Minitar
   # stream may be sequential or random access, but certain features only work
   # with random access data streams.
   class Reader
+    include Enumerable
     # This marks the EntryStream closed for reading without closing the
     # actual data stream.
     module InvalidEntryStream

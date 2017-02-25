@@ -4,9 +4,11 @@ require 'minitar'
 require 'minitest_helper'
 
 class TestTarOutput < Minitest::Test
+  NAMES = ['a', 'b', 'c', 'd' * 200]
+
   def setup
     FileUtils.mkdir_p('data__')
-    %w(a b c).each do |filename|
+    NAMES.each do |filename|
       name = File.join('data__', filename)
       File.open(name, 'wb') { |f|
         f.puts "#{name}: 123456789012345678901234567890"
@@ -30,7 +32,7 @@ class TestTarOutput < Minitest::Test
   def test_file_looks_good
     Minitar::Output.open(@tarfile) do |os|
       Dir.chdir('data__') do
-        %w(a b c).each do |name|
+        NAMES.each do |name|
           stat = File.stat(name)
           opts = { :size => stat.size, :mode => 0o644 }
           os.tar.add_file_simple(name, opts) do |ss|
@@ -41,19 +43,10 @@ class TestTarOutput < Minitest::Test
     end
     ff = File.open(@tarfile, 'rb')
     Minitar::Reader.open(ff) do |is|
-      ii = 0
-      is.each do |entry|
-        case ii
-        when 0
-          assert_equal('a', entry.name)
-        when 1
-          assert_equal('b', entry.name)
-        when 2
-          assert_equal('c', entry.name)
-        end
-        ii += 1
+      names_from_tar = is.map do |entry|
+        entry.name
       end
-      assert_equal(3, ii)
+      assert_equal(NAMES, names_from_tar)
     end
   ensure
     ff.close if ff
