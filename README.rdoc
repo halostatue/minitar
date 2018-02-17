@@ -73,6 +73,12 @@ wrapped data stream object.
     tar.close
   end
 
+== Security
+
+Kernel.open is used for Minitar::Output and Minitar::Input.
+Ruby's Kernel.open has multiple behaviors.(ex command injection.)
+Refer: https://sakurity.com/blog/2015/02/28/openuri.html
+
 == minitar Semantic Versioning
 
 The minitar library uses a {Semantic Versioning}[http://semver.org/] scheme
