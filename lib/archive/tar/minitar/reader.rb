@@ -6,6 +6,8 @@ module Archive::Tar::Minitar
   # with random access data streams.
   class Reader
     include Enumerable
+    include Archive::Tar::Minitar::ByteSize
+
     # This marks the EntryStream closed for reading without closing the
     # actual data stream.
     module InvalidEntryStream
@@ -21,6 +23,8 @@ module Archive::Tar::Minitar
 
     # EntryStreams are pseudo-streams on top of the main data stream.
     class EntryStream
+      include Archive::Tar::Minitar::ByteSize
+
       Archive::Tar::Minitar::PosixHeader::FIELDS.each do |field|
         attr_reader field.to_sym
       end
@@ -59,7 +63,7 @@ module Archive::Tar::Minitar
         len ||= @size - @read
         max_read = [len, @size - @read].min
         ret = @io.read(max_read)
-        @read += ret.size
+        @read += bytesize(ret)
         ret
       end
 
@@ -233,7 +237,7 @@ module Archive::Tar::Minitar
         else
           pending = size - entry.bytes_read
           while pending > 0
-            bread = @io.read([pending, 4096].min).size
+            bread = bytesize(@io.read([pending, 4096].min))
             raise UnexpectedEOF if @io.eof?
             pending -= bread
           end

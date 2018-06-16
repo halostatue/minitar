@@ -1,3 +1,14 @@
+## 0.8 / 2019-01-05
+
+*   inkstak resolved an issue introduced in the fix for [#31][] by allowing
+    spaces to be considered valid characters in strict octal handling. Octal
+    conversion ignores leading spaces. Merged from a slightly modified version
+    of PR [#35][].
+
+*   dearblue contributed PR [#32][] providing an explicit call to #bytesize for
+    strings that include multibyte characters. The PR has been modified to be
+    compatible with older versions of Ruby and extend tests.
+
 ## 0.7 / 2018-02-19
 
 *   Fixed issue [#28][] with a modified version of PR [#29][] covering the
@@ -143,3 +154,4 @@
 [#29]: https://github.com/halostatue/minitar/issues/29
 [#30]: https://github.com/halostatue/minitar/issues/30
 [#33]: https://github.com/halostatue/minitar/issues/33
+[#35]: https://github.com/halostatue/minitar/issues/35

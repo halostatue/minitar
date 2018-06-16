@@ -179,6 +179,8 @@ class Archive::Tar::Minitar::PosixHeader
 
   private
 
+  include Archive::Tar::Minitar::ByteSize
+
   def oct(num, len)
     if num.nil?
       "\0" * (len + 1)
@@ -196,7 +198,7 @@ class Archive::Tar::Minitar::PosixHeader
            oct(mtime, 11), chksum, ' ', typeflag, linkname, magic, version,
            uname, gname, oct(devmajor, 7), oct(devminor, 7), prefix]
     str = arr.pack(HEADER_PACK_FORMAT)
-    str + "\0" * ((BLOCK_SIZE - str.size) % BLOCK_SIZE)
+    str + "\0" * ((BLOCK_SIZE - bytesize(str)) % BLOCK_SIZE)
   end
 
   ##

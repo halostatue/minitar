@@ -4,11 +4,15 @@ require 'minitar'
 require 'minitest_helper'
 
 class TestTarWriter < Minitest::Test
+  include Archive::Tar::Minitar::ByteSize
+
   class DummyIO
+    include Archive::Tar::Minitar::ByteSize
+
     attr_reader :data
 
     def initialize
-      @data = ''
+      reset
     end
 
     def write(dat)
@@ -18,11 +22,14 @@ class TestTarWriter < Minitest::Test
 
     def reset
       @data = ''
+      @data.force_encoding('ascii-8bit') if @data.respond_to?(:force_encoding)
     end
   end
 
   def setup
     @data = 'a' * 10
+    @unicode = [0xc3.chr, 0xa5.chr].join * 10
+    @unicode.force_encoding('utf-8') if @unicode.respond_to?(:force_encoding)
     @dummyos = DummyIO.new
     @os = Minitar::Writer.new(@dummyos)
   end
@@ -146,12 +153,12 @@ class TestTarWriter < Minitest::Test
     offset = 512 * 2
     [content1, content2, ''].each do |data|
       assert_headers_equal(tar_file_header('lib/bar/baz', '', 0o644,
-        data.size), dummyos[offset, 512])
+        bytesize(data)), dummyos[offset, 512])
       offset += 512
       until !data || data == ''
         chunk = data[0, 512]
         data[0, 512] = ''
-        assert_equal(chunk + "\0" * (512 - chunk.size),
+        assert_equal(chunk + "\0" * (512 - bytesize(chunk)),
           dummyos[offset, 512])
         offset += 512
       end
@@ -186,7 +193,26 @@ class TestTarWriter < Minitest::Test
       f.write @data
     end
     @os.flush
-    assert_equal(@data + ("\0" * (512 - @data.size)),
+    assert_equal(@data + ("\0" * (512 - bytesize(@data))),
+      @dummyos.data[512, 512])
+  end
+
+  def test_write_unicode_data
+    @dummyos.reset
+
+    if @unicode.respond_to?(:bytesize)
+      assert_equal 10, @unicode.size
+      assert_equal 20, @unicode.bytesize
+      @unicode.force_encoding('ascii-8bit')
+    end
+
+    file = ['lib/foo/b', 0xc3.chr, 0xa5.chr, 'r'].join
+
+    @os.add_file_simple(file, :mode => 0o644, :size => 20) do |f|
+      f.write @unicode
+    end
+    @os.flush
+    assert_equal(@unicode + ("\0" * (512 - bytesize(@unicode))),
       @dummyos.data[512, 512])
   end
 

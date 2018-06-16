@@ -3,6 +3,8 @@
 module Archive::Tar::Minitar
   # The class that writes a tar format archive to a data stream.
   class Writer
+    include Archive::Tar::Minitar::ByteSize
+
     # The exception raised when the user attempts to write more data to a
     # BoundedWriteStream than has been allocated.
     WriteBoundaryOverflow = Class.new(StandardError)
@@ -23,6 +25,8 @@ module Archive::Tar::Minitar
 
     # A WriteOnlyStream that also has a size limit.
     class BoundedWriteStream < WriteOnlyStream
+      include Archive::Tar::Minitar::ByteSize
+
       def self.const_missing(c)
         case c
         when :FileOverflow
@@ -48,10 +52,11 @@ module Archive::Tar::Minitar
       end
 
       def write(data)
-        raise WriteBoundaryOverflow if (data.size + @written) > @limit
+        size = bytesize(data)
+        raise WriteBoundaryOverflow if (size + @written) > @limit
         @io.write(data)
-        @written += data.size
-        data.size
+        @written += size
+        size
       end
     end
 
@@ -153,23 +158,24 @@ module Archive::Tar::Minitar
       else
         raise ArgumentError, 'No data provided' unless data
 
-        size = data.size if size < data.size
+        bytes = bytesize(data)
+        size = bytes if size.nil? || size < bytes
       end
 
       header[:size] = size
 
       write_header(name, header)
 
-      os = BoundedWriteStream.new(@io, opts[:size])
+      os = BoundedWriteStream.new(@io, size)
       if block_given?
         yield os
       else
         os.write(data)
       end
 
-      min_padding = opts[:size] - os.written
+      min_padding = size - os.written
       @io.write("\0" * min_padding)
-      remainder = (512 - (opts[:size] % 512)) % 512
+      remainder = (512 - (size % 512)) % 512
       @io.write("\0" * remainder)
     end
 
@@ -286,7 +292,7 @@ module Archive::Tar::Minitar
     end
 
     def split_name(name)
-      if name.size <= 100
+      if bytesize(name) <= 100
         prefix = ''
       else
         parts = name.split(/\//)
@@ -296,7 +302,7 @@ module Archive::Tar::Minitar
 
         loop do
           nxt = parts.pop || ''
-          break if newname.size + 1 + nxt.size >= 100
+          break if bytesize(newname) + 1 + bytesize(nxt) >= 100
           newname = "#{nxt}/#{newname}"
         end
 
@@ -305,7 +311,7 @@ module Archive::Tar::Minitar
         name = newname
       end
 
-      [ name, prefix, (name.size > 100 || prefix.size > 155) ]
+      [ name, prefix, (bytesize(name) > 100 || bytesize(prefix) > 155) ]
     end
   end
 end

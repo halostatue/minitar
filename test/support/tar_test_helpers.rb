@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module TarTestHelpers
+  include Archive::Tar::Minitar::ByteSize
+
   Field = Struct.new(:name, :offset, :length)
   def self.Field(name, length) # rubocop:disable Style/MethodName
     @offset ||= 0
@@ -89,8 +91,8 @@ module TarTestHelpers
     ]
 
     h = arr.join.bytes.to_a.pack('C100C8C8C8C12C12C8CC100C6C2C32C32C8C8C155')
-    ret = h + "\0" * (512 - h.size)
-    assert_equal(512, ret.size)
+    ret = h + "\0" * (512 - bytesize(h))
+    assert_equal(512, bytesize(ret))
     ret
   end
 
@@ -110,7 +112,7 @@ module TarTestHelpers
   end
 
   def asciiz(str, length)
-    str + "\0" * (length - str.length)
+    str + "\0" * (length - bytesize(str))
   end
 
   def sp(s)

@@ -2,7 +2,7 @@
 
 require 'archive/tar/minitar'
 
-if defined? ::Minitar
+if defined?(::Minitar) && ::Minitar != Archive::Tar::Minitar
   warn <<-EOS
 ::Minitar is already defined.
 This will conflict with future versions of minitar.

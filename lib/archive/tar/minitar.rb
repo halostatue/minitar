@@ -279,13 +279,28 @@ module Archive::Tar::Minitar
 
     def included(mod)
       return if modules.include?(mod)
-      warn "Including #{self} has been deprecated."
+      warn "Including #{self} has been deprecated (Minitar will become a class)."
       modules << mod
     end
 
     def modules
       require 'set'
       @modules ||= Set.new
+    end
+  end
+
+  # This exists to make bytesize implementations work across Ruby versions.
+  module ByteSize # :nodoc:
+    private
+
+    if ''.respond_to?(:bytesize)
+      def bytesize(item)
+        item.bytesize
+      end
+    else
+      def bytesize(item)
+        item.size
+      end
     end
   end
 end

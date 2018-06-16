@@ -4,6 +4,8 @@ require 'minitar'
 require 'minitest_helper'
 
 class TestTarReader < Minitest::Test
+  include Archive::Tar::Minitar::ByteSize
+
   def test_open_no_block
     str = tar_file_header('lib/foo', '', 0o10644, 10) + "\0" * 512
     str += tar_file_header('bar', 'baz', 0o644, 0)
@@ -51,15 +53,15 @@ class TestTarReader < Minitest::Test
 
   def test_rewind_entry_works
     content = ('a'..'z').to_a.join(' ')
-    str = tar_file_header('lib/foo', '', 0o10644, content.size) + content +
-      "\0" * (512 - content.size)
+    str = tar_file_header('lib/foo', '', 0o10644, bytesize(content)) +
+      content + "\0" * (512 - bytesize(content))
     str << "\0" * 1024
     Minitar::Reader.new(StringIO.new(str)) do |is|
       is.each_entry do |entry|
         3.times do
           entry.rewind
           assert_equal(content, entry.read)
-          assert_equal(content.size, entry.pos)
+          assert_equal(bytesize(content), entry.pos)
         end
       end
     end
@@ -67,8 +69,8 @@ class TestTarReader < Minitest::Test
 
   def test_rewind_works
     content = ('a'..'z').to_a.join(' ')
-    str = tar_file_header('lib/foo', '', 0o10644, content.size) + content +
-      "\0" * (512 - content.size)
+    str = tar_file_header('lib/foo', '', 0o10644, bytesize(content)) +
+      content + "\0" * (512 - bytesize(content))
     str << "\0" * 1024
     Minitar::Reader.new(StringIO.new(str)) do |is|
       3.times do
@@ -85,12 +87,12 @@ class TestTarReader < Minitest::Test
 
   def test_read_works
     contents = ('a'..'z').inject('') { |a, e| a << e * 100 }
-    str = tar_file_header('lib/foo', '', 0o10644, contents.size) + contents
-    str += "\0" * (512 - (str.size % 512))
+    str = tar_file_header('lib/foo', '', 0o10644, bytesize(contents)) + contents
+    str += "\0" * (512 - (bytesize(str) % 512))
     Minitar::Reader.new(StringIO.new(str)) do |is|
       is.each_entry do |entry|
         assert_kind_of(Minitar::Reader::EntryStream, entry)
-        data = entry.read(3000) # bigger than contents.size
+        data = entry.read(3000) # bigger than bytesize(contents)
         assert_equal(contents, data)
         assert_equal(true, entry.eof?)
       end
@@ -99,7 +101,7 @@ class TestTarReader < Minitest::Test
       is.each_entry do |entry|
         assert_kind_of(Minitar::Reader::EntryStream, entry)
         data = entry.read(100)
-        (entry.size - data.size).times { data << entry.getc.chr }
+        (entry.size - bytesize(data)).times { data << entry.getc.chr }
         assert_equal(contents, data)
         assert_equal(nil, entry.read(10))
         assert_equal(true, entry.eof?)
