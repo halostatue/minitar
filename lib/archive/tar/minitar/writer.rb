@@ -156,23 +156,23 @@ module Archive::Tar::Minitar
       else
         raise ArgumentError, 'No data provided' unless data
 
-        size = data.size if size < data.size
+        size = data.size if size.nil? || size < data.size
       end
 
       header[:size] = size
 
       @io.write(PosixHeader.new(header))
 
-      os = BoundedWriteStream.new(@io, opts[:size])
+      os = BoundedWriteStream.new(@io, size)
       if block_given?
         yield os
       else
         os.write(data)
       end
 
-      min_padding = opts[:size] - os.written
+      min_padding = size - os.written
       @io.write("\0" * min_padding)
-      remainder = (512 - (opts[:size] % 512)) % 512
+      remainder = (512 - (size % 512)) % 512
       @io.write("\0" * remainder)
     end
 
