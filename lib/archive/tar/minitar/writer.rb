@@ -48,10 +48,10 @@ module Archive::Tar::Minitar
       end
 
       def write(data)
-        raise WriteBoundaryOverflow if (data.size + @written) > @limit
+        raise WriteBoundaryOverflow if (data.bytesize + @written) > @limit
         @io.write(data)
-        @written += data.size
-        data.size
+        @written += data.bytesize
+        data.bytesize
       end
     end
 
@@ -156,7 +156,7 @@ module Archive::Tar::Minitar
       else
         raise ArgumentError, 'No data provided' unless data
 
-        size = data.size if size.nil? || size < data.size
+        size = data.bytesize if size.nil? || size < data.bytesize
       end
 
       header[:size] = size
@@ -278,9 +278,9 @@ module Archive::Tar::Minitar
     def split_name(name)
       # TODO: Enable long-filename write support.
 
-      raise FileNameTooLong if name.size > 256
+      raise FileNameTooLong if name.bytesize > 256
 
-      if name.size <= 100
+      if name.bytesize <= 100
         prefix = ''
       else
         parts = name.split(/\//)
@@ -290,7 +290,7 @@ module Archive::Tar::Minitar
 
         loop do
           nxt = parts.pop || ''
-          break if newname.size + 1 + nxt.size >= 100
+          break if newname.bytesize + 1 + nxt.bytesize >= 100
           newname = "#{nxt}/#{newname}"
         end
 
@@ -298,7 +298,7 @@ module Archive::Tar::Minitar
 
         name = newname
 
-        raise FileNameTooLong if name.size > 100 || prefix.size > 155
+        raise FileNameTooLong if name.bytesize > 100 || prefix.bytesize > 155
       end
 
       [ name, prefix ]

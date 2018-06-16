@@ -58,7 +58,7 @@ module Archive::Tar::Minitar
         len ||= @size - @read
         max_read = [len, @size - @read].min
         ret = @io.read(max_read)
-        @read += ret.size
+        @read += ret.bytesize
         ret
       end
 
@@ -229,7 +229,7 @@ module Archive::Tar::Minitar
         else
           pending = size - entry.bytes_read
           while pending > 0
-            bread = @io.read([pending, 4096].min).size
+            bread = @io.read([pending, 4096].min).bytesize
             raise UnexpectedEOF if @io.eof?
             pending -= bread
           end

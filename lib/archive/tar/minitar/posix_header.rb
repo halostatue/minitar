@@ -181,7 +181,7 @@ class Archive::Tar::Minitar::PosixHeader
            oct(mtime, 11), chksum, ' ', typeflag, linkname, magic, version,
            uname, gname, oct(devmajor, 7), oct(devminor, 7), prefix]
     str = arr.pack(HEADER_PACK_FORMAT)
-    str + "\0" * ((BLOCK_SIZE - str.size) % BLOCK_SIZE)
+    str + "\0" * ((BLOCK_SIZE - str.bytesize) % BLOCK_SIZE)
   end
 
   ##
