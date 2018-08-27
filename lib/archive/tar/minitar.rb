@@ -91,6 +91,7 @@ module Archive::Tar::Minitar
   # The exception raised when a file contains a relative path in secure mode
   # (the default for this version).
   SecureRelativePathError = Class.new(Error)
+  InvalidTarStream = Class.new(Error)
 
   class << self
     # Tests if +path+ refers to a directory. Fixes an apparently
