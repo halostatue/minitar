@@ -73,6 +73,34 @@ wrapped data stream object.
     tar.close
   end
 
+== Minitar and Security
+
+Minitar aims to be secure by default for the data *inside* of a tarfile. If
+there are any security issues discovered, please feel free to open an issue.
+Should you wish to make a more confidential report, you can find my PGP key
+information at {Keybase}[https://keybase.io/halostatue]. Bear with me: I do not
+use PGP regularly, so it may take some time to remember the command invocations
+required to successfully handle this.
+
+Minitar does *not* perform validation of path names provided to the convenience
+calsses Minitar::Output and Minitar::Input, which use Kernel.open for their
+underlying implementations when not given an IO-like object.
+
+Improper use of these classes with arbitrary input filenames may leave your
+your software to the same class of vulnerability as reported for Net::FTP
+({CVE-2017-17405}[https://nvd.nist.gov/vuln/detail/CVE-2017-17405]). Of
+particular note, "if the localfile argument starts with the '|' pipe character,
+the command following the pipe character is executed."
+
+Additionally, the use of the `open-uri` library (which extends Kernel.open with
+transparent implementations of Net::HTTP, Net::HTTPS, and Net::FTP), there are
+other possible vulnerabilities when accepting arbitrary input, as
+{detailed}[https://sakurity.com/blog/2015/02/28/openuri.html] by Egor Homakov.
+
+These security vulnerabilities may be avoided, even with the Minitar::Output
+and Minitar::Input convenience classes, by providing IO-like objects instead of
+pathname-like objects as the source or destination of these classes.
+
 == minitar Semantic Versioning
 
 The minitar library uses a {Semantic Versioning}[http://semver.org/] scheme

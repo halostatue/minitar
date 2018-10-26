@@ -1,3 +1,9 @@
+## NEXT / 2018-02-19
+
+*   Fixed issue [#28][] with a modified version of PR [#29][] covering the
+    security policy and position for Minitar. Thanks so much to ooooooo\_q for
+    the report and an initial patch.
+
 ## 0.6.1 / 2017-02-07
 
 *   Fixed issue [#24][] where streams were being improperly closed immediately
@@ -115,3 +121,5 @@
 [#16]: https://github.com/halostatue/minitar/issues/16
 [#23]: https://github.com/halostatue/minitar/issues/23
 [#24]: https://github.com/halostatue/minitar/issues/24
+[#28]: https://github.com/halostatue/minitar/issues/28
+[#29]: https://github.com/halostatue/minitar/issues/29
