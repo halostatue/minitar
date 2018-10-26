@@ -158,4 +158,14 @@ class TestTarReader < Minitest::Test
       end
     end
   end
+
+  def test_read_invalid_tar_file
+    assert_raises Archive::Tar::Minitar::InvalidTarStream do
+      Minitar::Reader.open(StringIO.new("testing")) do |r|
+        r.each_entry do |entry|
+          fail "invalid tar file should not read files"
+        end
+      end
+    end
+  end
 end

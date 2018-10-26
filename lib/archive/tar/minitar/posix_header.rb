@@ -36,6 +36,7 @@ module Archive::Tar::Minitar; end
 # unrecognized typeflag value as a regular file."
 class Archive::Tar::Minitar::PosixHeader
   BLOCK_SIZE = 512
+  MAGIC_BYTES = 'ustar'.freeze
 
   GNU_EXT_LONG_LINK = '././@LongLink'
 
@@ -130,7 +131,7 @@ class Archive::Tar::Minitar::PosixHeader
     v[:mtime] = v[:mtime].to_i
     v[:checksum] ||= ''
     v[:typeflag] ||= '0'
-    v[:magic]    ||= 'ustar'
+    v[:magic]    ||= MAGIC_BYTES
     v[:version]  ||= '00'
 
     FIELDS.each do |f|
@@ -143,6 +144,12 @@ class Archive::Tar::Minitar::PosixHeader
   # Indicates if the header was an empty header.
   def empty?
     @empty
+  end
+
+  # Indicates if the header has a valid magic value.
+  def valid?
+    return true if empty?
+    @magic == MAGIC_BYTES
   end
 
   # Returns +true+ if the header is a long name special header which indicates

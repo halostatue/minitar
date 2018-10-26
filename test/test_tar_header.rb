@@ -71,4 +71,19 @@ class TestTarHeader < Minitest::Test
     h = Archive::Tar::Minitar::PosixHeader.from_stream header
     assert_equal('a ', h.name)
   end
+
+  def test_valid_with_valid_header
+    header = tar_file_header('a' * 100, '', 0o12345, 10)
+    header = StringIO.new(header)
+    h = Archive::Tar::Minitar::PosixHeader.from_stream header
+
+    assert(h.valid?)
+  end
+
+  def test_valid_with_invalid_header
+    header = StringIO.new("testing")
+    h = Archive::Tar::Minitar::PosixHeader.from_stream header
+
+    refute(h.valid?)
+  end
 end
