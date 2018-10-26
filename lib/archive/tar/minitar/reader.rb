@@ -180,7 +180,7 @@ module Archive::Tar::Minitar
     # Creates and returns a new Reader object.
     def initialize(io)
       @io = io
-      @init_pos = io.pos
+      @init_pos = io.pos rescue nil
     end
 
     # Resets the read pointer to the beginning of data stream. Do not call
