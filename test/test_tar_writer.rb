@@ -106,21 +106,24 @@ class TestTarWriter < Minitest::Test
         @dummyos.data[2 * i * 512, 512]
       )
     end
-    assert_raises(Minitar::FileNameTooLong) do
-      @os.add_file_simple(File.join('a' * 152, 'b' * 10, 'a' * 92),
-        :mode => 0o644, :size => 10) {}
-    end
-    assert_raises(Minitar::FileNameTooLong) do
-      @os.add_file_simple(File.join('a' * 162, 'b' * 10),
-        :mode => 0o644, :size => 10) {}
-    end
-    assert_raises(Minitar::FileNameTooLong) do
-      @os.add_file_simple(File.join('a' * 10, 'b' * 110),
-        :mode => 0o644, :size => 10) {}
-    end
+  end
+
+  def test_file_name_is_long
+    @dummyos.reset
+
+    @os.add_file_simple(File.join('a' * 152, 'b' * 10, 'c' * 92),
+                        :mode => 0o644, :size => 10) {}
+    @os.add_file_simple(File.join('d' * 162, 'e' * 10),
+                        :mode => 0o644, :size => 10) {}
+    @os.add_file_simple(File.join('f' * 10, 'g' * 110),
+                        :mode => 0o644, :size => 10) {}
     # Issue #6.
-    assert_raises(Minitar::FileNameTooLong) do
-      @os.add_file_simple('a' * 114, :mode => 0o644, :size => 10) {}
+    @os.add_file_simple('a' * 114, :mode => 0o644, :size => 10) {}
+
+    # "././@LongLink", a file name, its actual header, its data, ...
+    4.times do |i|
+      assert_equal(Minitar::PosixHeader::GNU_EXT_LONG_LINK,
+                   @dummyos.data[4 * i * 512, 32].rstrip)
     end
   end
 

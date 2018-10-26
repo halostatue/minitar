@@ -37,6 +37,8 @@ module Archive::Tar::Minitar; end
 class Archive::Tar::Minitar::PosixHeader
   BLOCK_SIZE = 512
 
+  GNU_EXT_LONG_LINK = '././@LongLink'
+
   # Fields that must be set in a POSIX tar(1) header.
   REQUIRED_FIELDS = [ :name, :size, :prefix, :mode ].freeze
   # Fields that may be set in a POSIX tar(1) header.
@@ -146,7 +148,7 @@ class Archive::Tar::Minitar::PosixHeader
   # Returns +true+ if the header is a long name special header which indicates
   # that the next block of data is the filename.
   def long_name?
-    typeflag == 'L' && name == '././@LongLink'
+    typeflag == 'L' && name == GNU_EXT_LONG_LINK
   end
 
   # A string representation of the header.
