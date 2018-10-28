@@ -14,9 +14,12 @@ coveralls :: {<img src="https://coveralls.io/repos/halostatue/minitar/badge.svg"
 The minitar library is a pure-Ruby library that provides the ability to deal
 with POSIX tar(1) archive files.
 
-This is release 0.6, providing a number of bug fixes including a directory
-traversal vulnerability, CVE-2016-10173. This release starts the migration and
-modernization of the code:
+This is release 0.7, providing fixes for several issues and clarifying the
+Minitar security stance. There are two minor breaking changes in this version
+so that exceptions will be thrown if a negative size is provided in a tar
+stream header or if the tar stream header is otherwise invalid.
+
+This release continues the migration and modernization of the code:
 
 *   the licence has been changed to match the modern Ruby licensing scheme
     (Ruby and Simplified BSD instead of Ruby and GNU GPL);

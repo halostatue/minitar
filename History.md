@@ -1,8 +1,25 @@
-## NEXT / 2018-02-19
+## 0.7 / 2018-02-19
 
 *   Fixed issue [#28][] with a modified version of PR [#29][] covering the
     security policy and position for Minitar. Thanks so much to ooooooo\_q for
-    the report and an initial patch.
+    the report and an initial patch. Additional information was added as
+    [#30][].
+
+*   dearblue contributed PR [#33][] providing a fix for Minitar::Reader when
+    the IO-like object does not have a `#pos` method.
+
+*   Kevin McDermott contributed PR [#34][] so that an InvalidTarStream is
+    raised if the tar header is not valid, preventing incorrect streaming of
+    files from a non-tarfile. This is a minor breaking change, so the version
+    has been bumped accordingly.
+
+*   Kazuyoshi Kato contributed PR [#26][] providing support for the GNU tar
+    long filename extension.
+
+*   Addressed a potential DOS with negative size fields in tar headers
+    ([#31][]). This has been handled in two ways: the size field in a tar
+    header is interpreted as a strict octal value and the Minitar reader will
+    raise an InvalidTarStream if the size ends up being negative anyway.
 
 ## 0.6.1 / 2017-02-07
 
@@ -121,5 +138,8 @@
 [#16]: https://github.com/halostatue/minitar/issues/16
 [#23]: https://github.com/halostatue/minitar/issues/23
 [#24]: https://github.com/halostatue/minitar/issues/24
+[#26]: https://github.com/halostatue/minitar/issues/26
 [#28]: https://github.com/halostatue/minitar/issues/28
 [#29]: https://github.com/halostatue/minitar/issues/29
+[#30]: https://github.com/halostatue/minitar/issues/30
+[#33]: https://github.com/halostatue/minitar/issues/33

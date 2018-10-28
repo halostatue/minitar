@@ -211,6 +211,8 @@ module Archive::Tar::Minitar
         raise Archive::Tar::Minitar::InvalidTarStream unless header.valid?
         return if header.empty?
 
+        raise Archive::Tar::Minitar::InvalidTarStream if header.size.negative?
+
         if header.long_name?
           name = @io.read(512).rstrip
           header = PosixHeader.from_stream(@io)

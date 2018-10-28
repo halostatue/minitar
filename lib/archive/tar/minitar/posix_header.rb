@@ -84,7 +84,7 @@ class Archive::Tar::Minitar::PosixHeader
       mode      = fields.shift.oct
       uid       = fields.shift.oct
       gid       = fields.shift.oct
-      size      = fields.shift.oct
+      size      = strict_oct(fields.shift)
       mtime     = fields.shift.oct
       checksum  = fields.shift.oct
       typeflag  = fields.shift
@@ -119,6 +119,13 @@ class Archive::Tar::Minitar::PosixHeader
         :linkname => linkname
       )
     end
+
+    private
+
+    def strict_oct(string)
+      return string.oct if string =~ /\A[0-7]*\z/
+      raise ArgumentError, "#{string.inspect} is not a valid octal string"
+    end
   end
 
   # Creates a new PosixHeader. A PosixHeader cannot be created unless
@@ -148,8 +155,7 @@ class Archive::Tar::Minitar::PosixHeader
 
   # Indicates if the header has a valid magic value.
   def valid?
-    return true if empty?
-    @magic == MAGIC_BYTES
+    empty? || @magic == MAGIC_BYTES
   end
 
   # Returns +true+ if the header is a long name special header which indicates

@@ -73,7 +73,7 @@ end
 #       tar.close
 #     end
 module Archive::Tar::Minitar
-  VERSION = '0.6.1'.freeze # :nodoc:
+  VERSION = '0.7'.freeze # :nodoc:
 
   # The base class for any minitar error.
   Error = Class.new(::StandardError)
