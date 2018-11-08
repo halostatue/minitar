@@ -173,4 +173,31 @@ MDUzVDAwNDY0N2VQMGCgAygtLkksAjolEcjIzMOtDqgsLQ2/J0H+gNOjYBSMglEwyAEA2LchrwAGAAA=
       end
     end
   end
+
+  NON_STRICT_OCTAL_TGZ = Base64.decode64(<<-EOS).freeze
+H4sIAOQg5FsAA0tJLEnUK0ks0kuvYqAVMDAwMDMxUQDR5mbmYNrACMhXgAJj
+IyMFA3NzcxMzM0MTAwMFA0NjU3MzBgUDmrkICZQWA30PdFIikJGZh1sdUFla
+Gh5zDMBAAU4PESDfzcEwO3NaCAPz28v3uZoMRI4Xrq/usnU8u9Ne/9JfiRkm
+HXpb7u3PTBJRETkzYZ98i3HAnYv3/WT1EsOfqC4tOdaxMMo8ZOWXvX0tJecy
+s73vrvde2qvVcvLO9Qe3Yp1mR3FmCp5/P9+73/Tsmepj72e88rpS++/e9Y1f
+7a5b/rCpn/tu8n+htj+zK6ym/Pzm8f9wlu3k/VVn969ao9ly5vqlw/Of77c/
+5rdktT3Tojt5dXf5p5me3X9q+/Hwz/kz/6vanN2f9I8R7o2EtXlrf/bUMGgM
+YFAOSZCWmZNqTGM7QPne1BQz/xvAAEb+NzIxMx7N//QAIRmZxQpABEoHCsZ6
+CrxcA+2iUTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIyC
+UTAKRsEoGAWjYBSMglFACgAAuUHUvwAoAAA=
+  EOS
+
+  def test_extract_with_non_strict_octal
+    reader = Zlib::GzipReader.new(StringIO.new(NON_STRICT_OCTAL_TGZ))
+    header = Archive::Tar::Minitar::PosixHeader.from_stream(reader, use_strict_octal: false)
+    assert_equal(210, header.size)
+
+    assert_raises(ArgumentError) do
+      reader = Zlib::GzipReader.new(StringIO.new(NON_STRICT_OCTAL_TGZ))
+      Minitar.unpack(reader, 'data__')
+    end
+
+    reader = Zlib::GzipReader.new(StringIO.new(NON_STRICT_OCTAL_TGZ))
+    Minitar.unpack(reader, 'data__', [], use_strict_octal: false)
+  end
 end
