@@ -78,7 +78,9 @@ class Archive::Tar::Minitar::PosixHeader
     end
 
     # Creates a new PosixHeader from a BLOCK_SIZE-byte data buffer.
-    def from_data(data, use_strict_octal: true)
+    def from_data(data, options={})
+      use_strict_octal = options.key?(:use_strict_octal) ? options[:use_strict_octal] : true
+
       fields    = data.unpack(HEADER_UNPACK_FORMAT)
       name      = fields.shift
       mode      = fields.shift.oct
