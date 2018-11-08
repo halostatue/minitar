@@ -245,8 +245,8 @@ module Archive::Tar::Minitar
     # A convenience method to unpack files from +src+ into the directory
     # specified by +dest+. Only those files named explicitly in +files+
     # will be extracted.
-    def unpack(src, dest, files = [], &block)
-      Input.open(src) do |inp|
+    def unpack(src, dest, files = [], options={}, &block)
+      Input.open(src, options) do |inp|
         if File.exist?(dest) and !dir?(dest)
           raise %q(Can't unpack to a non-directory.)
         end

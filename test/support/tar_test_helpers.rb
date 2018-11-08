@@ -72,12 +72,22 @@ module TarTestHelpers
   end
 
   def header(type, fname, dname, length, mode)
+    raw_header(type,
+      asciiz(fname, 100),
+      asciiz(dname, 155),
+      z(to_oct(length, 11)),
+      z(to_oct(mode, 7))
+    )
+  end
+
+  def raw_header(type, fname, dname, length, mode)
     arr = [
-      asciiz(fname, 100), z(to_oct(mode, 7)), z(to_oct(nil, 7)),
-      z(to_oct(nil, 7)), z(to_oct(length, 11)), z(to_oct(0, 11)),
-      BLANK_CHECKSUM, type, NULL_100, USTAR, DOUBLE_ZERO, asciiz('', 32),
-      asciiz('', 32), z(to_oct(nil, 7)), z(to_oct(nil, 7)), asciiz(dname, 155)
+      fname, mode, z(to_oct(nil, 7)), z(to_oct(nil, 7)),
+      length, z(to_oct(0, 11)), BLANK_CHECKSUM, type,
+      NULL_100, USTAR, DOUBLE_ZERO, asciiz('', 32), asciiz('', 32),
+      z(to_oct(nil, 7)), z(to_oct(nil, 7)), dname
     ]
+
     h = arr.join.bytes.to_a.pack('C100C8C8C8C12C12C8CC100C6C2C32C32C8C8C155')
     ret = h + "\0" * (512 - h.size)
     assert_equal(512, ret.size)

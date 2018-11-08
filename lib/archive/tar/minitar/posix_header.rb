@@ -66,25 +66,25 @@ class Archive::Tar::Minitar::PosixHeader
 
   class << self
     # Creates a new PosixHeader from a data stream.
-    def from_stream(stream)
-      from_data(stream.read(BLOCK_SIZE))
+    def from_stream(stream, *args)
+      from_data(stream.read(BLOCK_SIZE), *args)
     end
 
     # Creates a new PosixHeader from a data stream. Deprecated; use
     # PosixHeader.from_stream instead.
-    def new_from_stream(stream)
+    def new_from_stream(stream, *args)
       warn "#{__method__} has been deprecated; use from_stream instead."
-      from_stream(stream)
+      from_stream(stream, *args)
     end
 
     # Creates a new PosixHeader from a BLOCK_SIZE-byte data buffer.
-    def from_data(data)
+    def from_data(data, use_strict_octal: true)
       fields    = data.unpack(HEADER_UNPACK_FORMAT)
       name      = fields.shift
       mode      = fields.shift.oct
       uid       = fields.shift.oct
       gid       = fields.shift.oct
-      size      = strict_oct(fields.shift)
+      size      = use_strict_octal ? strict_oct(fields.shift) : fields.shift.oct
       mtime     = fields.shift.oct
       checksum  = fields.shift.oct
       typeflag  = fields.shift

@@ -80,6 +80,36 @@ class TestTarHeader < Minitest::Test
     assert(h.valid?)
   end
 
+  def test_from_stream_with_no_strict_octal
+    header = tar_file_header('a' * 100, '', 0o12345, -1213)
+    io     = StringIO.new(header)
+
+    assert_raises(ArgumentError) do
+      Archive::Tar::Minitar::PosixHeader.from_stream(io)
+    end
+
+    io  = StringIO.new(header)
+    h   = Archive::Tar::Minitar::PosixHeader.from_stream(io, use_strict_octal: false)
+
+    assert(h.valid?)
+    assert_equal(0, h.size)
+  end
+
+  def test_from_stream_with_octal_wrapped_by_spaces
+    header = raw_header(0,
+      asciiz('a' * 100, 100),
+      asciiz('', 155),
+      "       1213\0",
+      z(to_oct(0o12345, 7))
+    )
+
+    header = update_checksum(header)
+    io     = StringIO.new(header)
+    header = Archive::Tar::Minitar::PosixHeader.from_stream(io, use_strict_octal: false)
+
+    assert_equal(651, header.size)
+  end
+
   def test_valid_with_invalid_header
     header = StringIO.new("testing")
     h = Archive::Tar::Minitar::PosixHeader.from_stream header
