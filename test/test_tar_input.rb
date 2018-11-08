@@ -175,6 +175,27 @@ MDUzVDAwNDY0N2VQMGCgAygtLkksAjolEcjIzMOtDqgsLQ2/J0H+gNOjYBSMglEwyAEA2LchrwAGAAA=
   end
 
   NON_STRICT_OCTAL_TGZ = Base64.decode64(<<-EOS).freeze
+H4sIAEk55FsAA0tJLEnUK0ks0kuvYqAVMDAwMDMxUQDR5mbmYNrACMjX0zMH
+AzMDUwUDIG1iZmZoYmCgYGBobGpuxqBgQDMXIYHSYqDvgU5KBDIy83CrAypL
+S8NjjgEYKMDpIQLkuzkYZmdOC2Fgfnv5PleTgcjxwvXVXbaOZ3fa61/6KzHD
+pENvy739mUkiKiJnJuyTbzEOuHPxvp+sXmL4E9WlJcc6FkaZh6z8srevpeRc
+Zrb33fXeS3u1Wk7euf7gVqzT7CjOTMHz7+d795uePVN97P2MV15Xav/du77x
+q911yx829XPfTf4v1PZndoXVlJ/fPP4fzrKdvL/q7P5VazRbzly/dHj+8/32
+x/yWrLZnWnQnr+4u/zTTs/tPbT8e/jl/5n9Vm7P7k/4xwr2RsDZv7c+eGgaN
+AQzKIQnSMnNSjWlsByjfm5pi5n8DGDAyQsv/RiZmxqP5nx4gJCOzWAGIQOlA
+wVhPgZdroF00CkbBKBgFo2AUjIJRMApGwSgYBaNgFIyCUTAKRsEoGAWjYBSM
+glEwCkbBKBgFo2AUjIJRMApIAQD0DyzXACgAAA==
+  EOS
+
+  def test_extract_with_non_strict_octal
+    reader = Zlib::GzipReader.new(StringIO.new(NON_STRICT_OCTAL_TGZ))
+
+    assert_raises(ArgumentError) do
+      Minitar.unpack(reader, 'data__')
+    end
+  end
+
+  OCTAL_WRAPPED_BY_SPACE_TGZ = Base64.decode64(<<-EOS).freeze
 H4sIAOQg5FsAA0tJLEnUK0ks0kuvYqAVMDAwMDMxUQDR5mbmYNrACMhXgAJj
 IyMFA3NzcxMzM0MTAwMFA0NjU3MzBgUDmrkICZQWA30PdFIikJGZh1sdUFla
 Gh5zDMBAAU4PESDfzcEwO3NaCAPz28v3uZoMRI4Xrq/usnU8u9Ne/9JfiRkm
@@ -187,17 +208,12 @@ CrxcA+2iUTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIyC
 UTAKRsEoGAWjYBSMglFACgAAuUHUvwAoAAA=
   EOS
 
-  def test_extract_with_non_strict_octal
-    reader = Zlib::GzipReader.new(StringIO.new(NON_STRICT_OCTAL_TGZ))
-    header = Archive::Tar::Minitar::PosixHeader.from_stream(reader, use_strict_octal: false)
+  def test_extract_octal_wrapped_by_space
+    reader = Zlib::GzipReader.new(StringIO.new(OCTAL_WRAPPED_BY_SPACE_TGZ))
+    header = Archive::Tar::Minitar::PosixHeader.from_stream(reader)
     assert_equal(210, header.size)
 
-    assert_raises(ArgumentError) do
-      reader = Zlib::GzipReader.new(StringIO.new(NON_STRICT_OCTAL_TGZ))
-      Minitar.unpack(reader, 'data__')
-    end
-
-    reader = Zlib::GzipReader.new(StringIO.new(NON_STRICT_OCTAL_TGZ))
-    Minitar.unpack(reader, 'data__', [], use_strict_octal: false)
+    reader = Zlib::GzipReader.new(StringIO.new(OCTAL_WRAPPED_BY_SPACE_TGZ))
+    Minitar.unpack(reader, 'data__', [])
   end
 end

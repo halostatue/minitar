@@ -87,12 +87,6 @@ class TestTarHeader < Minitest::Test
     assert_raises(ArgumentError) do
       Archive::Tar::Minitar::PosixHeader.from_stream(io)
     end
-
-    io  = StringIO.new(header)
-    h   = Archive::Tar::Minitar::PosixHeader.from_stream(io, use_strict_octal: false)
-
-    assert(h.valid?)
-    assert_equal(0, h.size)
   end
 
   def test_from_stream_with_octal_wrapped_by_spaces
@@ -105,7 +99,7 @@ class TestTarHeader < Minitest::Test
 
     header = update_checksum(header)
     io     = StringIO.new(header)
-    header = Archive::Tar::Minitar::PosixHeader.from_stream(io, use_strict_octal: false)
+    header = Archive::Tar::Minitar::PosixHeader.from_stream(io)
 
     assert_equal(651, header.size)
   end

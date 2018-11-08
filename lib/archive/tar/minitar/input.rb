@@ -17,8 +17,8 @@ module Archive::Tar::Minitar
     # call-seq:
     #    Archive::Tar::Minitar::Input.open(io) -> input
     #    Archive::Tar::Minitar::Input.open(io) { |input| block } -> obj
-    def self.open(input, *args)
-      stream = new(input, *args)
+    def self.open(input)
+      stream = new(input)
       return stream unless block_given?
 
       # This exception context must remain, otherwise the stream closes on open
@@ -66,7 +66,7 @@ module Archive::Tar::Minitar
     # call-seq:
     #    Archive::Tar::Minitar::Input.new(io) -> input
     #    Archive::Tar::Minitar::Input.new(path) -> input
-    def initialize(input, options={})
+    def initialize(input)
       @io = if input.respond_to?(:read)
               input
             else
@@ -77,7 +77,7 @@ module Archive::Tar::Minitar
         raise Archive::Tar::Minitar::NonSeekableStream
       end
 
-      @tar = Reader.new(@io, options)
+      @tar = Reader.new(@io)
     end
 
     # When provided a block, iterates through each entry in the archive. When

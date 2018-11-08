@@ -178,10 +178,9 @@ module Archive::Tar::Minitar
     end
 
     # Creates and returns a new Reader object.
-    def initialize(io, options={})
+    def initialize(io)
       @io = io
       @init_pos = io.pos rescue nil
-      @options = options
     end
 
     # Resets the read pointer to the beginning of data stream. Do not call
@@ -208,7 +207,7 @@ module Archive::Tar::Minitar
       loop do
         return if @io.eof?
 
-        header = Archive::Tar::Minitar::PosixHeader.from_stream(@io, @options)
+        header = Archive::Tar::Minitar::PosixHeader.from_stream(@io)
         raise Archive::Tar::Minitar::InvalidTarStream unless header.valid?
         return if header.empty?
 

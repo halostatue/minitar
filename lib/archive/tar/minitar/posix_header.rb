@@ -66,27 +66,25 @@ class Archive::Tar::Minitar::PosixHeader
 
   class << self
     # Creates a new PosixHeader from a data stream.
-    def from_stream(stream, *args)
-      from_data(stream.read(BLOCK_SIZE), *args)
+    def from_stream(stream)
+      from_data(stream.read(BLOCK_SIZE))
     end
 
     # Creates a new PosixHeader from a data stream. Deprecated; use
     # PosixHeader.from_stream instead.
-    def new_from_stream(stream, *args)
+    def new_from_stream(stream)
       warn "#{__method__} has been deprecated; use from_stream instead."
-      from_stream(stream, *args)
+      from_stream(stream)
     end
 
     # Creates a new PosixHeader from a BLOCK_SIZE-byte data buffer.
-    def from_data(data, options={})
-      use_strict_octal = options.key?(:use_strict_octal) ? options[:use_strict_octal] : true
-
+    def from_data(data)
       fields    = data.unpack(HEADER_UNPACK_FORMAT)
       name      = fields.shift
       mode      = fields.shift.oct
       uid       = fields.shift.oct
       gid       = fields.shift.oct
-      size      = use_strict_octal ? strict_oct(fields.shift) : fields.shift.oct
+      size      = strict_oct(fields.shift)
       mtime     = fields.shift.oct
       checksum  = fields.shift.oct
       typeflag  = fields.shift
@@ -125,7 +123,7 @@ class Archive::Tar::Minitar::PosixHeader
     private
 
     def strict_oct(string)
-      return string.oct if string =~ /\A[0-7]*\z/
+      return string.oct if string =~ /\A[0-7 ]*\z/
       raise ArgumentError, "#{string.inspect} is not a valid octal string"
     end
   end
