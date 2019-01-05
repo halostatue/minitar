@@ -11,6 +11,7 @@ mime_version =
     gem 'rake', '~> 10.0'
     '1.25'
   elsif RUBY_VERSION < '2.0'
+    gem 'rdoc', '< 6.0'
     '2.0'
   elsif RUBY_VERSION >= '2.0'
     if RUBY_ENGINE == 'ruby'

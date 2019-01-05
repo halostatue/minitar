@@ -23,13 +23,14 @@ class TestTarReader < Minitest::Test
     str = tar_file_header('lib/foo', '', 0o10644, 10) + "\0" * 512
     str += tar_file_header('bar', 'baz', 0o644, 0)
     str += tar_dir_header('foo', 'bar', 0o12345)
+    str += tar_file_header('src/', '', 0o755, 0) # "file" with a trailing slash
     str += "\0" * 1024
-    names = %w(lib/foo bar foo)
-    prefixes = ['', 'baz', 'bar']
-    modes = [0o10644, 0o644, 0o12345]
-    sizes = [10, 0, 0]
-    isdir = [false, false, true]
-    isfile = [true, true, false]
+    names = %w(lib/foo bar foo src/)
+    prefixes = ['', 'baz', 'bar', '']
+    modes = [0o10644, 0o644, 0o12345, 0o755]
+    sizes = [10, 0, 0, 0]
+    isdir = [false, false, true, true]
+    isfile = [true, true, false, false]
     Minitar::Reader.new(StringIO.new(str)) do |is|
       i = 0
       is.each_entry do |entry|
