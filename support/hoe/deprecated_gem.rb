@@ -19,7 +19,7 @@ module Hoe::Deprecated_Gem # rubocop:disable Style/ClassAndModuleCamelCase
     version = Gem::Version.new(spec.version.segments.first(2).join('.'))
 
     atm.add_dependency(spec.name, "~> #{version}")
-    atm.add_dependency(%Q(#{spec.name}-cli), '~> 0.6')
+    atm.add_dependency(%Q(#{spec.name}-cli), "~> #{version}")
 
     unless @include_all
       [ :signing_key, :cert_chain ].each { |name|

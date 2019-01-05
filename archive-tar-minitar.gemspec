@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
-# stub: archive-tar-minitar 0.7 ruby lib
+# stub: archive-tar-minitar 0.8 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "archive-tar-minitar".freeze
-  s.version = "0.7"
+  s.version = "0.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze]
-  s.date = "2018-10-28"
+  s.date = "2019-01-05"
   s.description = "'archive-tar-minitar' has been deprecated; just install 'minitar'. The minitar library is a pure-Ruby library that provides the ability to deal\nwith POSIX tar(1) archive files.\n\nThis is release 0.7, providing fixes for several issues and clarifying the\nMinitar security stance. There are two minor breaking changes in this version\nso that exceptions will be thrown if a negative size is provided in a tar\nstream header or if the tar stream header is otherwise invalid.\n\nThis release continues the migration and modernization of the code:\n\n*   the licence has been changed to match the modern Ruby licensing scheme\n    (Ruby and Simplified BSD instead of Ruby and GNU GPL);\n*   the +minitar+ command-line program has been separated into the\n    +minitar-cli+ gem; and\n*   the +archive-tar-minitar+ gem now points to the +minitar+ and +minitar-cli+\n    gems and discourages its installation.\n\nSome of these changes may break existing programs that depend on the internal\nstructure of the minitar library, but every effort has been made to ensure\ncompatibility; inasmuch as is possible, this compatibility will be maintained\nthrough the release of minitar 1.0 (which will have strong breaking changes).\n\nminitar (previously called Archive::Tar::Minitar) is based heavily on code\noriginally written by Mauricio Julio Fern\u00E1ndez Pradier for the rpa-base\nproject.".freeze
   s.email = ["halostatue@gmail.com".freeze]
   s.files = ["lib/archive-tar-minitar.rb".freeze]
@@ -23,14 +23,14 @@ Gem::Specification.new do |s|
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<minitar>.freeze, ["~> 0.7"])
-      s.add_runtime_dependency(%q<minitar-cli>.freeze, ["~> 0.6"])
+      s.add_runtime_dependency(%q<minitar>.freeze, ["~> 0.8"])
+      s.add_runtime_dependency(%q<minitar-cli>.freeze, ["~> 0.8"])
     else
-      s.add_dependency(%q<minitar>.freeze, ["~> 0.7"])
-      s.add_dependency(%q<minitar-cli>.freeze, ["~> 0.6"])
+      s.add_dependency(%q<minitar>.freeze, ["~> 0.8"])
+      s.add_dependency(%q<minitar-cli>.freeze, ["~> 0.8"])
     end
   else
-    s.add_dependency(%q<minitar>.freeze, ["~> 0.7"])
-    s.add_dependency(%q<minitar-cli>.freeze, ["~> 0.6"])
+    s.add_dependency(%q<minitar>.freeze, ["~> 0.8"])
+    s.add_dependency(%q<minitar-cli>.freeze, ["~> 0.8"])
   end
 end
