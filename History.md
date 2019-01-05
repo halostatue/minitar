@@ -9,6 +9,10 @@
     strings that include multibyte characters. The PR has been modified to be
     compatible with older versions of Ruby and extend tests.
 
+*   Akinori MUSHA (knu) contributed PR [#36][] that treats certain badly
+    encoded regular files (with names ending in `/`) as if they were
+    directories on decode.
+
 ## 0.7 / 2018-02-19
 
 *   Fixed issue [#28][] with a modified version of PR [#29][] covering the
@@ -153,5 +157,7 @@
 [#28]: https://github.com/halostatue/minitar/issues/28
 [#29]: https://github.com/halostatue/minitar/issues/29
 [#30]: https://github.com/halostatue/minitar/issues/30
+[#32]: https://github.com/halostatue/minitar/issues/32
 [#33]: https://github.com/halostatue/minitar/issues/33
 [#35]: https://github.com/halostatue/minitar/issues/35
+[#36]: https://github.com/halostatue/minitar/issues/36
