@@ -216,4 +216,12 @@ UTAKRsEoGAWjYBSMglFACgAAuUHUvwAoAAA=
     reader = Zlib::GzipReader.new(StringIO.new(OCTAL_WRAPPED_BY_SPACE_TGZ))
     Minitar.unpack(reader, 'data__', [])
   end
+
+  def test_fsync_false
+    outer = 0
+    Minitar.unpack(Zlib::GzipReader.new(StringIO.new(TEST_TGZ)), 'data__', [], options = [:fsync => false]) do |label, path, stats| 
+      outer += 1
+      end
+    assert_equal(6, outer)
+  end
 end

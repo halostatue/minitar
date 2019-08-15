@@ -114,7 +114,7 @@ module Archive::Tar::Minitar
     #                     cycle.
     # <tt>:entry</tt>::   The entry being extracted; this is a
     #                     Reader::EntryStream, with all methods thereof.
-    def extract_entry(destdir, entry) # :yields action, name, stats:
+    def extract_entry(destdir, entry, options = []) # :yields action, name, stats:
       stats = {
         :current  => 0,
         :currinc  => 0,
@@ -154,8 +154,10 @@ module Archive::Tar::Minitar
           FileUtils.chmod(entry.mode, dest)
         end
 
-        fsync_dir(dest)
-        fsync_dir(File.join(dest, '..'))
+        unless options.include?(:fsync => false)
+          fsync_dir(dest)
+          fsync_dir(File.join(dest, '..'))
+        end
         return
       else # it's a file
         destdir = File.join(destdir, File.dirname(full_name))
@@ -182,12 +184,18 @@ module Archive::Tar::Minitar
 
             yield :file_progress, full_name, stats if block_given?
           end
-          os.fsync
+          unless options.include?(:fsync => false)
+            yield :file_fsync, full_name, stats if block_given?
+            os.fsync
+          end
         end
 
         FileUtils.chmod(entry.mode, destfile)
-        fsync_dir(File.dirname(destfile))
-        fsync_dir(File.join(File.dirname(destfile), '..'))
+        unless options.include?(:fsync => false)
+          yield :dir_fsync, full_name, stats if block_given?
+          fsync_dir(File.dirname(destfile))
+          fsync_dir(File.join(File.dirname(destfile), '..'))
+        end
 
         yield :file_done, full_name, stats if block_given?
       end
