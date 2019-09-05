@@ -69,21 +69,22 @@ Here's the most direct way to get your work merged into the project:
 
 Thanks to everyone who has contributed to minitar:
 
+*   Akinori MUSHA (knu)
 *   Antoine Toulme
 *   Curtis Sampson
 *   Daniel J. Berger
+*   Jorie Tappa
 *   Kazuyoshi Kato
+*   Kazuyoshi Kato
+*   Kevin McDermott
 *   Matthew Kent
 *   Michal Suchanek
 *   Mike Furr
 *   Pete Fritchman
 *   Zach Dennis
-*   ooooooo\_q
-*   Kazuyoshi Kato
 *   dearblue
-*   Kevin McDermott
 *   inkstak
-*   Akinori MUSHA (knu)
+*   ooooooo\_q
 
 [Minitest]: https://github.com/seattlerb/minitest
 [quality commit messages]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html

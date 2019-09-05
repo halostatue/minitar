@@ -219,9 +219,9 @@ UTAKRsEoGAWjYBSMglFACgAAuUHUvwAoAAA=
 
   def test_fsync_false
     outer = 0
-    Minitar.unpack(Zlib::GzipReader.new(StringIO.new(TEST_TGZ)), 'data__', [], options = [:fsync => false]) do |label, path, stats| 
+    Minitar.unpack(Zlib::GzipReader.new(StringIO.new(TEST_TGZ)), 'data__', [], :fsync => false) do |_label, _path, _stats|
       outer += 1
-      end
+    end
     assert_equal(6, outer)
   end
 end

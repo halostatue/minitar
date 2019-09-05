@@ -19,14 +19,17 @@ module Archive::Tar::Minitar
     #    Archive::Tar::Minitar::Input.open(io) { |input| block } -> obj
     def self.open(input)
       stream = new(input)
-      return stream unless block_given?
 
-      # This exception context must remain, otherwise the stream closes on open
-      # even if a block is not given.
-      begin
-        yield stream
-      ensure
-        stream.close
+      if block_given?
+        # This exception context must remain, otherwise the stream closes on
+        # open even if a block is not given.
+        begin
+          yield stream
+        ensure
+          stream.close
+        end
+      else
+        stream
       end
     end
 
@@ -114,7 +117,7 @@ module Archive::Tar::Minitar
     #                     cycle.
     # <tt>:entry</tt>::   The entry being extracted; this is a
     #                     Reader::EntryStream, with all methods thereof.
-    def extract_entry(destdir, entry, options = []) # :yields action, name, stats:
+    def extract_entry(destdir, entry, options = {}, &block) # :yields action, name, stats:
       stats = {
         :current  => 0,
         :currinc  => 0,
@@ -137,67 +140,9 @@ module Archive::Tar::Minitar
       end
 
       if entry.directory?
-        dest = File.join(destdir, full_name)
-
-        yield :dir, full_name, stats if block_given?
-
-        if Archive::Tar::Minitar.dir?(dest)
-          begin
-            FileUtils.chmod(entry.mode, dest)
-          rescue
-            nil
-          end
-        else
-          File.unlink(dest.chomp('/')) if File.symlink?(dest.chomp('/'))
-
-          FileUtils.mkdir_p(dest, :mode => entry.mode)
-          FileUtils.chmod(entry.mode, dest)
-        end
-
-        unless options.include?(:fsync => false)
-          fsync_dir(dest)
-          fsync_dir(File.join(dest, '..'))
-        end
-        return
+        extract_directory(destdir, full_name, entry, stats, options, &block)
       else # it's a file
-        destdir = File.join(destdir, File.dirname(full_name))
-        FileUtils.mkdir_p(destdir, :mode => 0o755)
-
-        destfile = File.join(destdir, File.basename(full_name))
-
-        File.unlink(destfile) if File.symlink?(destfile)
-
-        # Errno::ENOENT
-        # rubocop:disable Style/RescueModifier
-        FileUtils.chmod(0o600, destfile) rescue nil
-        # rubocop:enable Style/RescueModifier
-
-        yield :file_start, full_name, stats if block_given?
-
-        File.open(destfile, 'wb', entry.mode) do |os|
-          loop do
-            data = entry.read(4096)
-            break unless data
-
-            stats[:currinc] = os.write(data)
-            stats[:current] += stats[:currinc]
-
-            yield :file_progress, full_name, stats if block_given?
-          end
-          unless options.include?(:fsync => false)
-            yield :file_fsync, full_name, stats if block_given?
-            os.fsync
-          end
-        end
-
-        FileUtils.chmod(entry.mode, destfile)
-        unless options.include?(:fsync => false)
-          yield :dir_fsync, full_name, stats if block_given?
-          fsync_dir(File.dirname(destfile))
-          fsync_dir(File.join(File.dirname(destfile), '..'))
-        end
-
-        yield :file_done, full_name, stats if block_given?
+        extract_file(destdir, full_name, entry, stats, options, &block)
       end
     end
 
@@ -225,6 +170,74 @@ module Archive::Tar::Minitar
       nil
     ensure
       dir.close if dir rescue nil # rubocop:disable Style/RescueModifier
+    end
+
+    def extract_directory(destdir, full_name, entry, stats, options)
+      dest = File.join(destdir, full_name)
+
+      yield :dir, full_name, stats if block_given?
+
+      if Archive::Tar::Minitar.dir?(dest)
+        begin
+          FileUtils.chmod(entry.mode, dest)
+        rescue
+          nil
+        end
+      else
+        File.unlink(dest.chomp('/')) if File.symlink?(dest.chomp('/'))
+
+        FileUtils.mkdir_p(dest, :mode => entry.mode)
+        FileUtils.chmod(entry.mode, dest)
+      end
+
+      if options.fetch(:fsync, true)
+        fsync_dir(dest)
+        fsync_dir(File.join(dest, '..'))
+      end
+    end
+
+    def extract_file(destdir, full_name, entry, stats, options)
+      destdir = File.join(destdir, File.dirname(full_name))
+      FileUtils.mkdir_p(destdir, :mode => 0o755)
+
+      destfile = File.join(destdir, File.basename(full_name))
+
+      File.unlink(destfile) if File.symlink?(destfile)
+
+      # Errno::ENOENT
+      # rubocop:disable Style/RescueModifier
+      FileUtils.chmod(0o600, destfile) rescue nil
+      # rubocop:enable Style/RescueModifier
+
+      yield :file_start, full_name, stats if block_given?
+
+      File.open(destfile, 'wb', entry.mode) do |os|
+        loop do
+          data = entry.read(4096)
+          break unless data
+
+          stats[:currinc] = os.write(data)
+          stats[:current] += stats[:currinc]
+
+          yield :file_progress, full_name, stats if block_given?
+        end
+
+        if options.fetch(:fsync, true)
+          yield :file_fsync, full_name, stats if block_given?
+          os.fsync
+        end
+      end
+
+      FileUtils.chmod(entry.mode, destfile)
+
+      if options.fetch(:fsync, true)
+        yield :dir_fsync, full_name, stats if block_given?
+
+        fsync_dir(File.dirname(destfile))
+        fsync_dir(File.join(File.dirname(destfile), '..'))
+      end
+
+      yield :file_done, full_name, stats if block_given?
     end
   end
 end

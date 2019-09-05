@@ -14,24 +14,9 @@ coveralls :: {<img src="https://coveralls.io/repos/halostatue/minitar/badge.svg"
 The minitar library is a pure-Ruby library that provides the ability to deal
 with POSIX tar(1) archive files.
 
-This is release 0.7, providing fixes for several issues and clarifying the
-Minitar security stance. There are two minor breaking changes in this version
-so that exceptions will be thrown if a negative size is provided in a tar
-stream header or if the tar stream header is otherwise invalid.
-
-This release continues the migration and modernization of the code:
-
-*   the licence has been changed to match the modern Ruby licensing scheme
-    (Ruby and Simplified BSD instead of Ruby and GNU GPL);
-*   the +minitar+ command-line program has been separated into the
-    +minitar-cli+ gem; and
-*   the +archive-tar-minitar+ gem now points to the +minitar+ and +minitar-cli+
-    gems and discourages its installation.
-
-Some of these changes may break existing programs that depend on the internal
-structure of the minitar library, but every effort has been made to ensure
-compatibility; inasmuch as is possible, this compatibility will be maintained
-through the release of minitar 1.0 (which will have strong breaking changes).
+This is release 0.9, adding a minor feature to Minitar.unpack and
+Minitar::Input#extract_entry that when <tt>:fsync => false</tt> is provided,
+fsync will be skipped.
 
 minitar (previously called Archive::Tar::Minitar) is based heavily on code
 originally written by Mauricio Julio Fernández Pradier for the rpa-base

@@ -1,3 +1,9 @@
+## 0.9 / 2019-09-04
+
+*   jtappa added the ability to skip fsync with a new option to Minitar.unpack
+    and Minitar::Input#extract_entry. Provide `:fsync => false` as the last
+    parameter to enable. Merged from a modified version of PR [#37][].
+
 ## 0.8 / 2019-01-05
 
 *   inkstak resolved an issue introduced in the fix for [#31][] by allowing
@@ -161,3 +167,4 @@
 [#33]: https://github.com/halostatue/minitar/issues/33
 [#35]: https://github.com/halostatue/minitar/issues/35
 [#36]: https://github.com/halostatue/minitar/issues/36
+[#37]: https://github.com/halostatue/minitar/issues/37
