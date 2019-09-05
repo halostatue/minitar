@@ -73,7 +73,7 @@ end
 #       tar.close
 #     end
 module Archive::Tar::Minitar
-  VERSION = '0.8'.freeze # :nodoc:
+  VERSION = '0.9'.freeze # :nodoc:
 
   # The base class for any minitar error.
   Error = Class.new(::StandardError)
@@ -245,7 +245,7 @@ module Archive::Tar::Minitar
     # A convenience method to unpack files from +src+ into the directory
     # specified by +dest+. Only those files named explicitly in +files+
     # will be extracted.
-    def unpack(src, dest, files = [], &block)
+    def unpack(src, dest, files = [], options = {}, &block)
       Input.open(src) do |inp|
         if File.exist?(dest) and !dir?(dest)
           raise %q(Can't unpack to a non-directory.)
@@ -255,7 +255,7 @@ module Archive::Tar::Minitar
 
         inp.each do |entry|
           if files.empty? or files.include?(entry.full_name)
-            inp.extract_entry(dest, entry, &block)
+            inp.extract_entry(dest, entry, options, &block)
           end
         end
       end
