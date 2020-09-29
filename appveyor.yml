@@ -4,8 +4,6 @@ clone_depth: 10
 init: []
 environment:
   matrix:
-  - ruby_version: 200
-  - ruby_version: 200-x64
   - ruby_version: 21
   - ruby_version: 21-x64
   - ruby_version: 22
