@@ -33,7 +33,7 @@ expecting this executable, make sure you also install `minitar-cli`.
   extra_dev_deps << ['hoe-rubygems', '~> 1.0']
   extra_dev_deps << ['minitest', '~> 5.3']
   extra_dev_deps << ['minitest-autotest', ['>= 1.0', '<2']]
-  extra_dev_deps << ['rake', '>= 10.0', '< 12']
+  extra_dev_deps << ['rake', '>= 10.0', '< 14']
   extra_dev_deps << ['rdoc', '>= 0.0']
 end
 

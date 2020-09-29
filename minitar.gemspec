@@ -19,33 +19,23 @@ Gem::Specification.new do |s|
   s.post_install_message = "The `minitar` executable is no longer bundled with `minitar`. If you are\nexpecting this executable, make sure you also install `minitar-cli`.\n".freeze
   s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
   s.required_ruby_version = Gem::Requirement.new(">= 1.8".freeze)
-  s.rubygems_version = "3.0.3".freeze
+  s.rubygems_version = "3.2.0.rc.1".freeze
   s.summary = "The minitar library is a pure-Ruby library that provides the ability to deal with POSIX tar(1) archive files".freeze
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
+  end
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<minitest>.freeze, ["~> 5.14"])
-      s.add_development_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
-      s.add_development_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
-      s.add_development_dependency(%q<hoe-git>.freeze, ["~> 1.6"])
-      s.add_development_dependency(%q<hoe-rubygems>.freeze, ["~> 1.0"])
-      s.add_development_dependency(%q<minitest-autotest>.freeze, [">= 1.0", "< 2"])
-      s.add_development_dependency(%q<rake>.freeze, [">= 10.0", "< 12"])
-      s.add_development_dependency(%q<rdoc>.freeze, [">= 0.0"])
-      s.add_development_dependency(%q<hoe>.freeze, ["~> 3.22"])
-    else
-      s.add_dependency(%q<minitest>.freeze, ["~> 5.14"])
-      s.add_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
-      s.add_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
-      s.add_dependency(%q<hoe-git>.freeze, ["~> 1.6"])
-      s.add_dependency(%q<hoe-rubygems>.freeze, ["~> 1.0"])
-      s.add_dependency(%q<minitest-autotest>.freeze, [">= 1.0", "< 2"])
-      s.add_dependency(%q<rake>.freeze, [">= 10.0", "< 12"])
-      s.add_dependency(%q<rdoc>.freeze, [">= 0.0"])
-      s.add_dependency(%q<hoe>.freeze, ["~> 3.22"])
-    end
+  if s.respond_to? :add_runtime_dependency then
+    s.add_development_dependency(%q<minitest>.freeze, ["~> 5.14"])
+    s.add_development_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
+    s.add_development_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
+    s.add_development_dependency(%q<hoe-git>.freeze, ["~> 1.6"])
+    s.add_development_dependency(%q<hoe-rubygems>.freeze, ["~> 1.0"])
+    s.add_development_dependency(%q<minitest-autotest>.freeze, [">= 1.0", "< 2"])
+    s.add_development_dependency(%q<rake>.freeze, [">= 10.0", "< 14"])
+    s.add_development_dependency(%q<rdoc>.freeze, [">= 0.0"])
+    s.add_development_dependency(%q<hoe>.freeze, ["~> 3.22"])
   else
     s.add_dependency(%q<minitest>.freeze, ["~> 5.14"])
     s.add_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
@@ -53,7 +43,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<hoe-git>.freeze, ["~> 1.6"])
     s.add_dependency(%q<hoe-rubygems>.freeze, ["~> 1.0"])
     s.add_dependency(%q<minitest-autotest>.freeze, [">= 1.0", "< 2"])
-    s.add_dependency(%q<rake>.freeze, [">= 10.0", "< 12"])
+    s.add_dependency(%q<rake>.freeze, [">= 10.0", "< 14"])
     s.add_dependency(%q<rdoc>.freeze, [">= 0.0"])
     s.add_dependency(%q<hoe>.freeze, ["~> 3.22"])
   end
