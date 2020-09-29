@@ -14,6 +14,10 @@ environment:
   - ruby_version: 24-x64
   - ruby_version: 25
   - ruby_version: 25-x64
+  - ruby_version: 26
+  - ruby_version: 26-x64
+  - ruby_version: 27
+  - ruby_version: 27-x64
 install:
 - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
 - ruby --version
