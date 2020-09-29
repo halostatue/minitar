@@ -10,9 +10,8 @@ Hoe.plugin :doofus
 Hoe.plugin :gemspec2
 Hoe.plugin :git
 Hoe.plugin :minitest
-Hoe.plugin :travis
 Hoe.plugin :deprecated_gem
-Hoe.plugin :email unless ENV['CI'] or ENV['TRAVIS']
+Hoe.plugin :email unless ENV['CI']
 
 spec = Hoe.spec 'minitar' do
   developer('Austin Ziegler', 'halostatue@gmail.com')
@@ -32,14 +31,13 @@ expecting this executable, make sure you also install `minitar-cli`.
   extra_dev_deps << ['hoe-gemspec2', '~> 1.1']
   extra_dev_deps << ['hoe-git', '~> 1.6']
   extra_dev_deps << ['hoe-rubygems', '~> 1.0']
-  extra_dev_deps << ['hoe-travis', '~> 1.2']
   extra_dev_deps << ['minitest', '~> 5.3']
   extra_dev_deps << ['minitest-autotest', ['>= 1.0', '<2']]
   extra_dev_deps << ['rake', '>= 10.0', '< 12']
   extra_dev_deps << ['rdoc', '>= 0.0']
 end
 
-if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
+if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby' && !ENV['CI']
   namespace :test do
     desc 'Run test coverage'
     task :coverage do
@@ -47,6 +45,4 @@ if RUBY_VERSION >= '2.0' && RUBY_ENGINE == 'ruby'
       Rake::Task['test'].execute
     end
   end
-
-  Rake::Task['travis'].prerequisites.replace(%w(test:coverage))
 end
