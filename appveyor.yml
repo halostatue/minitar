@@ -4,8 +4,6 @@ clone_depth: 10
 init: []
 environment:
   matrix:
-  - ruby_version: 200
-  - ruby_version: 200-x64
   - ruby_version: 21
   - ruby_version: 21-x64
   - ruby_version: 22
@@ -16,11 +14,15 @@ environment:
   - ruby_version: 24-x64
   - ruby_version: 25
   - ruby_version: 25-x64
+  - ruby_version: 26
+  - ruby_version: 26-x64
+  - ruby_version: 27
+  - ruby_version: 27-x64
 install:
 - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
 - ruby --version
 - gem --version
-- gem install bundler -v 1.17.3 --quiet --no-document
+- gem install bundler -v 1.17.3 --quiet
 - bundler --version
 - bundle install
 build: off
