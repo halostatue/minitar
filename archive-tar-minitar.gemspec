@@ -1,36 +1,34 @@
 # -*- encoding: utf-8 -*-
-# stub: archive-tar-minitar 0.8 ruby lib
+# stub: archive-tar-minitar 0.9 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "archive-tar-minitar".freeze
-  s.version = "0.8"
+  s.version = "0.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
+  s.metadata = { "bug_tracker_uri" => "https://github.com/halostatue/minitar/issues", "homepage_uri" => "https://github.com/halostatue/minitar/", "source_code_uri" => "https://github.com/halostatue/minitar/" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze]
-  s.date = "2019-01-05"
-  s.description = "'archive-tar-minitar' has been deprecated; just install 'minitar'. The minitar library is a pure-Ruby library that provides the ability to deal\nwith POSIX tar(1) archive files.\n\nThis is release 0.7, providing fixes for several issues and clarifying the\nMinitar security stance. There are two minor breaking changes in this version\nso that exceptions will be thrown if a negative size is provided in a tar\nstream header or if the tar stream header is otherwise invalid.\n\nThis release continues the migration and modernization of the code:\n\n*   the licence has been changed to match the modern Ruby licensing scheme\n    (Ruby and Simplified BSD instead of Ruby and GNU GPL);\n*   the +minitar+ command-line program has been separated into the\n    +minitar-cli+ gem; and\n*   the +archive-tar-minitar+ gem now points to the +minitar+ and +minitar-cli+\n    gems and discourages its installation.\n\nSome of these changes may break existing programs that depend on the internal\nstructure of the minitar library, but every effort has been made to ensure\ncompatibility; inasmuch as is possible, this compatibility will be maintained\nthrough the release of minitar 1.0 (which will have strong breaking changes).\n\nminitar (previously called Archive::Tar::Minitar) is based heavily on code\noriginally written by Mauricio Julio Fern\u00E1ndez Pradier for the rpa-base\nproject.".freeze
+  s.date = "2020-09-29"
+  s.description = "'archive-tar-minitar' has been deprecated; just install 'minitar'. The minitar library is a pure-Ruby library that provides the ability to deal\nwith POSIX tar(1) archive files.\n\nThis is release 0.9, adding a minor feature to Minitar.unpack and\nMinitar::Input#extract_entry that when <tt>:fsync => false</tt> is provided,\nfsync will be skipped.\n\nminitar (previously called Archive::Tar::Minitar) is based heavily on code\noriginally written by Mauricio Julio Fern\u00E1ndez Pradier for the rpa-base\nproject.".freeze
   s.email = ["halostatue@gmail.com".freeze]
   s.files = ["lib/archive-tar-minitar.rb".freeze]
   s.homepage = "https://github.com/halostatue/minitar/".freeze
   s.licenses = ["Ruby".freeze, "BSD-2-Clause".freeze]
   s.post_install_message = "'archive-tar-minitar' has been deprecated; just install 'minitar'.".freeze
   s.required_ruby_version = Gem::Requirement.new(">= 1.8".freeze)
-  s.rubygems_version = "2.7.7".freeze
+  s.rubygems_version = "3.2.0.rc.1".freeze
   s.summary = "'archive-tar-minitar' has been deprecated; just install 'minitar'.".freeze
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
+  end
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<minitar>.freeze, ["~> 0.8"])
-      s.add_runtime_dependency(%q<minitar-cli>.freeze, ["~> 0.8"])
-    else
-      s.add_dependency(%q<minitar>.freeze, ["~> 0.8"])
-      s.add_dependency(%q<minitar-cli>.freeze, ["~> 0.8"])
-    end
+  if s.respond_to? :add_runtime_dependency then
+    s.add_runtime_dependency(%q<minitar>.freeze, ["~> 0.9"])
+    s.add_runtime_dependency(%q<minitar-cli>.freeze, ["~> 0.9"])
   else
-    s.add_dependency(%q<minitar>.freeze, ["~> 0.8"])
-    s.add_dependency(%q<minitar-cli>.freeze, ["~> 0.8"])
+    s.add_dependency(%q<minitar>.freeze, ["~> 0.9"])
+    s.add_dependency(%q<minitar-cli>.freeze, ["~> 0.9"])
   end
 end
