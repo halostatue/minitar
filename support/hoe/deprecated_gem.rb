@@ -4,7 +4,15 @@
 # plugin loading.)
 module Hoe::Deprecated_Gem # rubocop:disable Style/ClassAndModuleCamelCase
   def linked_spec(spec)
-    atm = YAML.load(YAML.dump(spec))
+    permitted_classes = [
+      Gem::Specification, Gem::Version, Gem::Requirement, Time
+    ]
+    atm = if RUBY_VERSION >= '2.6'
+            YAML.safe_load(YAML.dump(spec),
+                           permitted_classes: permitted_classes)
+          else
+            YAML.safe_load(YAML.dump(spec), permitted_classes)
+          end
     atm.name = 'archive-tar-minitar'
     d = %Q('#{atm.name}' has been deprecated; just install '#{spec.name}'.)
     atm.description = "#{d} #{spec.description}"
