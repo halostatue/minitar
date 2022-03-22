@@ -211,12 +211,15 @@ module Archive::Tar::Minitar
         raise Archive::Tar::Minitar::NonSeekableStream
       end
 
+      _, _, needs_long_name = split_name(name)
+
+      data_offset = needs_long_name ? 3 * 512 : 512
       init_pos = @io.pos
-      @io.write("\0" * 512) # placeholder for the header
+      @io.write("\0" * data_offset) # placeholder for the header
 
       yield WriteOnlyStream.new(@io), opts
 
-      size      = @io.pos - (init_pos + 512)
+      size      = @io.pos - (init_pos + data_offset)
       remainder = (512 - (size % 512)) % 512
       @io.write("\0" * remainder)
 
