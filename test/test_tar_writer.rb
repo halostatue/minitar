@@ -145,6 +145,24 @@ class TestTarWriter < Minitest::Test
                  @dummyos.data[3 * 512, long_name_file_content.bytesize])
   end
 
+  def test_add_file_content_with_long_name
+    dummyos = StringIO.new
+    def dummyos.method_missing(meth, *a) # rubocop:disable Style/MethodMissing
+      string.send(meth, *a)
+    end
+
+    long_name_file_content = 'where_is_all_the_content_gone'
+
+    Minitar::Writer.open(dummyos) do |os|
+      os.add_file('a' * 114,  mode: 0o0644) do |f|
+        f.write(long_name_file_content)
+      end
+    end
+
+    assert_equal(long_name_file_content,
+                 dummyos[3 * 512, long_name_file_content.bytesize])
+  end
+
   def test_add_file
     dummyos = StringIO.new
     def dummyos.method_missing(meth, *a) # rubocop:disable Style/MethodMissing
