@@ -164,7 +164,8 @@ module Archive::Tar::Minitar
 
       header[:size] = size
 
-      write_header(name, header)
+      short_name, prefix, needs_long_name = split_name(name)
+      write_header(header, name, short_name, prefix, needs_long_name)
 
       os = BoundedWriteStream.new(@io, size)
       if block_given?
@@ -211,7 +212,7 @@ module Archive::Tar::Minitar
         raise Archive::Tar::Minitar::NonSeekableStream
       end
 
-      _, _, needs_long_name = split_name(name)
+      short_name, prefix, needs_long_name = split_name(name)
 
       data_offset = needs_long_name ? 3 * 512 : 512
       init_pos = @io.pos
@@ -232,7 +233,9 @@ module Archive::Tar::Minitar
         :gid => opts[:gid],
         :uid => opts[:uid],
       }
-      write_header(name, header)
+
+      write_header(header, name, short_name, prefix, needs_long_name)
+
       @io.pos = final_pos
     end
 
@@ -248,7 +251,10 @@ module Archive::Tar::Minitar
         :uid => opts[:uid],
         :mtime => opts[:mtime],
       }
-      write_header(name, header)
+
+      short_name, prefix, needs_long_name = split_name(name)
+      write_header(header, name, short_name, prefix, needs_long_name)
+
       nil
     end
 
@@ -274,9 +280,7 @@ module Archive::Tar::Minitar
 
     private
 
-    def write_header(long_name, header)
-      short_name, prefix, needs_long_name = split_name(long_name)
-
+    def write_header(header, long_name, short_name, prefix, needs_long_name)
       if needs_long_name
         long_name_header = {
           :prefix => '',
