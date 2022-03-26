@@ -1,7 +1,7 @@
 # A Hoe plug-in to provide a second, linked gemspec, for a gem that has been
 # deprecated in favour of a modern name. (The name is an artifact of Hoe's
 # plugin loading.)
-module Hoe::Deprecated_Gem
+module Hoe::Deprecated_Gem # standard:disable Naming/ClassAndModuleCamelCase
   def linked_spec(spec)
     permitted_classes = %w[
       Symbol Time Date Gem::Dependency Gem::Platform Gem::Requirement
@@ -51,7 +51,7 @@ module Hoe::Deprecated_Gem
     atmspec = "archive-tar-minitar.gemspec"
 
     file atmspec => gemspec do
-      open(atmspec, "w") { |f| f.write(linked_spec(spec).to_ruby) }
+      IO.open(atmspec, "w") { |f| f.write(linked_spec(spec).to_ruby) }
     end
 
     task :gemspec => atmspec

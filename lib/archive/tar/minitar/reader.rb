@@ -192,7 +192,7 @@ module Archive::Tar::Minitar
     def self.each_entry(io)
       return to_enum(__method__, io) unless block_given?
 
-      open(io) do |reader|
+      Input.open(io) do |reader|
         reader.each_entry do |entry|
           yield entry
         end

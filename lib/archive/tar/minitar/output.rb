@@ -40,7 +40,7 @@ module Archive::Tar::Minitar
     def self.tar(output)
       return to_enum(__method__, output) unless block_given?
 
-      open(output) do |stream|
+      Output.open(output) do |stream|
         yield stream.tar
       end
     end

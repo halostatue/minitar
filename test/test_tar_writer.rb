@@ -150,8 +150,8 @@ class TestTarWriter < Minitest::Test
       string.send(meth, *a)
     end
 
-    def dummyos.respond_to_missing?(meth)
-      string.respond_to?(meth)
+    def dummyos.respond_to_missing?(meth, all)
+      string.respond_to?(meth, all)
     end
 
     long_name_file_content = "where_is_all_the_content_gone"
@@ -172,8 +172,8 @@ class TestTarWriter < Minitest::Test
       string.send(meth, *a)
     end
 
-    def dummyos.respond_to_missing?(meth)
-      string.respond_to?(meth)
+    def dummyos.respond_to_missing?(meth, all)
+      string.respond_to?(meth, all)
     end
     content1 = ("a".."z").to_a.join("") # 26
     content2 = ("aa".."zz").to_a.join("") # 1352

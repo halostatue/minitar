@@ -51,7 +51,7 @@ module Archive::Tar::Minitar
     def self.each_entry(input)
       return to_enum(__method__, input) unless block_given?
 
-      open(input) do |stream|
+      Input.open(input) do |stream|
         stream.each do |entry|
           yield entry
         end
@@ -164,7 +164,7 @@ module Archive::Tar::Minitar
 
     def fsync_dir(dirname)
       # make sure this hits the disc
-      dir = open(dirname, "rb")
+      dir = IO.open(dirname, "rb")
       dir.fsync
     rescue # ignore IOError if it's an unpatched (old) Ruby
       nil
