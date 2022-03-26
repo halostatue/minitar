@@ -204,7 +204,7 @@ module Archive::Tar::Minitar
       @io = io
       @init_pos = begin
                     io.pos
-                  rescue
+      rescue
                     nil
                   end
     end

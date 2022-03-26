@@ -16,7 +16,7 @@ module Hoe::Deprecated_Gem
               :permitted_symbols => permitted_symbols,
               :aliases => true
             )
-          rescue
+    rescue
             YAML.safe_load(
               YAML.dump(spec), permitted_classes, permitted_symbols, true
             )
