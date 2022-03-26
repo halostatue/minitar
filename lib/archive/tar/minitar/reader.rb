@@ -11,13 +11,21 @@ module Archive::Tar::Minitar
     # This marks the EntryStream closed for reading without closing the
     # actual data stream.
     module InvalidEntryStream
-      def read(*); raise ClosedStream; end
+      def read(*); 
+        raise ClosedStream; 
+      end
 
-      def getc; raise ClosedStream; end
+      def getc; 
+        raise ClosedStream; 
+      end
 
-      def rewind; raise ClosedStream; end
+      def rewind; 
+        raise ClosedStream; 
+      end
 
-      def closed?; true; end
+      def closed?; 
+        true; 
+      end
     end
 
     # EntryStreams are pseudo-streams on top of the main data stream.
