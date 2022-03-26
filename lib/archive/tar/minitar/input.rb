@@ -119,9 +119,9 @@ module Archive::Tar::Minitar
     #                     Reader::EntryStream, with all methods thereof.
     def extract_entry(destdir, entry, options = {}, &block) # :yields action, name, stats:
       stats = {
-        :current  => 0,
-        :currinc  => 0,
-        :entry    => entry
+        :current => 0,
+        :currinc => 0,
+        :entry => entry
       }
 
       # extract_entry is not vulnerable to prefix '/' vulnerabilities, but it

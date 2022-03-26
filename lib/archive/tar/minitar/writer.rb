@@ -139,10 +139,10 @@ module Archive::Tar::Minitar
       raise ClosedStream if @closed
 
       header = {
-        :mode   => opts.fetch(:mode, 0o644),
-        :mtime  => opts.fetch(:mtime, nil),
-        :gid    => opts.fetch(:gid, nil),
-        :uid    => opts.fetch(:uid, nil)
+        :mode => opts.fetch(:mode, 0o644),
+        :mtime => opts.fetch(:mtime, nil),
+        :gid => opts.fetch(:gid, nil),
+        :uid => opts.fetch(:uid, nil)
       }
 
       data = opts.fetch(:data, nil)
