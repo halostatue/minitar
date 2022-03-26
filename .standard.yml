@@ -2,7 +2,5 @@ parallel: true
 ruby_version: 1.8.7
 ignore:
   - '*.gemspec'
-  - Rakefile:
+  - '**/*':
       - Layout/HeredocIndentation
-# Style/HashSyntax:
-#   Enabled: false

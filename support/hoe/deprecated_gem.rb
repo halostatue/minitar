@@ -12,9 +12,9 @@ module Hoe::Deprecated_Gem
     atm = begin
             YAML.safe_load(
               YAML.dump(spec),
-              permitted_classes: permitted_classes,
-              permitted_symbols: permitted_symbols,
-              aliases: true
+              :permitted_classes => permitted_classes,
+              :permitted_symbols => permitted_symbols,
+              :aliases => true
             )
           rescue
             YAML.safe_load(
