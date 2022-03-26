@@ -37,8 +37,8 @@ module TarTestHelpers
 
   BLANK_CHECKSUM = " " * 8
   NULL_100 = "\0" * 100
-  USTAR = "ustar\0".freeze
-  DOUBLE_ZERO = "00".freeze
+  USTAR = "ustar\0"
+  DOUBLE_ZERO = "00"
 
   def assert_headers_equal(expected, actual)
     FIELD_ORDER.each do |field|
