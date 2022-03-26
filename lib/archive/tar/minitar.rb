@@ -9,8 +9,8 @@ module Archive::Tar; end
 require "fileutils"
 require "rbconfig"
 
-class << Archive::Tar #:nodoc:
-  def const_missing(const) #:nodoc:
+class << Archive::Tar # :nodoc:
+  def const_missing(const) # :nodoc:
     case const
     when :PosixHeader
       warn "Archive::Tar::PosixHeader has been renamed to " \
@@ -118,7 +118,7 @@ module Archive::Tar::Minitar
       end
     end
 
-    def const_missing(c) #:nodoc:
+    def const_missing(c) # :nodoc:
       case c
       when :BlockRequired
         warn "This constant has been removed."
@@ -128,7 +128,7 @@ module Archive::Tar::Minitar
       end
     end
 
-    def windows? #:nodoc:
+    def windows? # :nodoc:
       RbConfig::CONFIG["host_os"] =~ /^(mswin|mingw|cygwin)/
     end
 
@@ -166,7 +166,7 @@ module Archive::Tar::Minitar
     # <tt>:uid</tt>::     The user owner of the file. (+nil+ on Windows.)
     # <tt>:gid</tt>::     The group owner of the file. (+nil+ on Windows.)
     # <tt>:mtime</tt>::   The modification Time of the file.
-    def pack_file(entry, outputter) #:yields action, name, stats:
+    def pack_file(entry, outputter) # :yields action, name, stats:
       if outputter.kind_of?(Archive::Tar::Minitar::Output)
         outputter = outputter.tar
       end
