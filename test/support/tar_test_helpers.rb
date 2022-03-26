@@ -44,7 +44,7 @@ module TarTestHelpers
     FIELD_ORDER.each do |field|
       message = if field == "checksum"
         "Header checksums are expected to match."
-                else
+      else
                   "Header field #{field} is expected to match."
                 end
 
