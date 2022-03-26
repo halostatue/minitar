@@ -147,7 +147,7 @@ class TestTarWriter < Minitest::Test
 
   def test_add_file_content_with_long_name
     dummyos = StringIO.new
-    def dummyos.method_missing(meth, *a) # rubocop:disable Style/MethodMissing
+    def dummyos.method_missing(meth, *a)
       string.send(meth, *a)
     end
 
@@ -165,7 +165,7 @@ class TestTarWriter < Minitest::Test
 
   def test_add_file
     dummyos = StringIO.new
-    def dummyos.method_missing(meth, *a) # rubocop:disable Style/MethodMissing
+    def dummyos.method_missing(meth, *a)
       string.send(meth, *a)
     end
     content1 = ("a".."z").to_a.join("") # 26

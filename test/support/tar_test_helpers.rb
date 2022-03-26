@@ -4,7 +4,7 @@ module TarTestHelpers
   include Archive::Tar::Minitar::ByteSize
 
   Field = Struct.new(:name, :offset, :length)
-  def self.Field(name, length) # rubocop:disable Style/MethodName
+  def self.Field(name, length)
     @offset ||= 0
     field = Field.new(name, @offset, length)
     @offset += length
@@ -15,8 +15,8 @@ module TarTestHelpers
 
   private
 
-  FIELDS = {} # rubocop:disable Style/MutableConstant
-  FIELD_ORDER = [] # rubocop:disable Style/MutableConstant
+  FIELDS = {}
+  FIELD_ORDER = []
 
   Field("name", 100)
   Field("mode", 8)

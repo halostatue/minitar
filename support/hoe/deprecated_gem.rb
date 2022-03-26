@@ -1,7 +1,7 @@
 # A Hoe plug-in to provide a second, linked gemspec, for a gem that has been
 # deprecated in favour of a modern name. (The name is an artifact of Hoe's
 # plugin loading.)
-module Hoe::Deprecated_Gem # rubocop:disable Style/ClassAndModuleCamelCase
+module Hoe::Deprecated_Gem
   def linked_spec(spec)
     permitted_classes = %w[
       Symbol Time Date Gem::Dependency Gem::Platform Gem::Requirement

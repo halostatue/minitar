@@ -11,14 +11,10 @@ module Archive::Tar::Minitar
     # This marks the EntryStream closed for reading without closing the
     # actual data stream.
     module InvalidEntryStream
-      # rubocop:disable Style/SingleLineMethods
-      # rubocop:disable Style/EmptyLineBetweenDefs
       def read(*); raise ClosedStream; end
       def getc; raise ClosedStream; end
       def rewind; raise ClosedStream; end
       def closed?; true; end
-      # rubocop:enable Style/EmptyLineBetweenDefs
-      # rubocop:enable Style/SingleLineMethods Style/EmptyLineBetweenDefs
     end
 
     # EntryStreams are pseudo-streams on top of the main data stream.
