@@ -25,7 +25,7 @@ class TestTarReader < Minitest::Test
     str += tar_dir_header("foo", "bar", 0o12345)
     str += tar_file_header("src/", "", 0o755, 0) # "file" with a trailing slash
     str += "\0" * 1024
-    names = %w(lib/foo bar foo src/)
+    names = %w[lib/foo bar foo src/]
     prefixes = ["", "baz", "bar", ""]
     modes = [0o10644, 0o644, 0o12345, 0o755]
     sizes = [10, 0, 0, 0]
