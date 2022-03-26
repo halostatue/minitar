@@ -84,25 +84,25 @@ class TestTarWriter < Minitest::Test
     # test insane file lengths, and: a{100}/b{155}, etc
     @dummyos.reset
     names = [
-      "#{'a' * 155}/#{'b' * 100}",
-      "#{'a' * 151}/#{'qwer/' * 19}bla",
-      "/#{'a' * 49}/#{'b' * 50}",
-      "#{'a' * 49}/#{'b' * 50}x",
-      "#{'a' * 49}x/#{'b' * 50}"
+      "#{"a" * 155}/#{"b" * 100}",
+      "#{"a" * 151}/#{"qwer/" * 19}bla",
+      "/#{"a" * 49}/#{"b" * 50}",
+      "#{"a" * 49}/#{"b" * 50}x",
+      "#{"a" * 49}x/#{"b" * 50}"
     ]
     o_names = [
       "b" * 100,
-      "#{'qwer/' * 19}bla",
+      "#{"qwer/" * 19}bla",
       "b" * 50,
-      "#{'b' * 50}x",
+      "#{"b" * 50}x",
       "b" * 50
     ]
     o_prefixes = [
       "a" * 155,
       "a" * 151,
-      "/#{'a' * 49}",
+      "/#{"a" * 49}",
       "a" * 49,
-      "#{'a' * 49}x"
+      "#{"a" * 49}x"
     ]
     names.each do |name|
       @os.add_file_simple(name, :mode => 0o644, :size => 10) {}
@@ -178,7 +178,7 @@ class TestTarWriter < Minitest::Test
     end
     assert_headers_equal(tar_file_header("lib/foo/bar", "", 0o644, 10),
       dummyos[0, 512])
-    assert_equal(%Q(#{'a' * 10}#{"\0" * 502}), dummyos[512, 512])
+    assert_equal(%Q(#{"a" * 10}#{"\0" * 502}), dummyos[512, 512])
     offset = 512 * 2
     [content1, content2, ""].each do |data|
       assert_headers_equal(tar_file_header("lib/bar/baz", "", 0o644,
