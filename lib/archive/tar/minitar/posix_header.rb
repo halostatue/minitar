@@ -60,9 +60,9 @@ class Archive::Tar::Minitar::PosixHeader
   attr_accessor :name
 
   # The pack format passed to Array#pack for encoding a header.
-  HEADER_PACK_FORMAT    = "a100a8a8a8a12a12a7aaa100a6a2a32a32a8a8a155".freeze
+  HEADER_PACK_FORMAT = "a100a8a8a8a12a12a7aaa100a6a2a32a32a8a8a155".freeze
   # The unpack format passed to String#unpack for decoding a header.
-  HEADER_UNPACK_FORMAT  = "Z100A8A8A8A12A12A8aZ100A6A2Z32Z32A8A8Z155".freeze
+  HEADER_UNPACK_FORMAT = "Z100A8A8A8A12A12A8aZ100A6A2Z32Z32A8A8Z155".freeze
 
   class << self
     # Creates a new PosixHeader from a data stream.
@@ -79,23 +79,23 @@ class Archive::Tar::Minitar::PosixHeader
 
     # Creates a new PosixHeader from a BLOCK_SIZE-byte data buffer.
     def from_data(data)
-      fields    = data.unpack(HEADER_UNPACK_FORMAT)
-      name      = fields.shift
-      mode      = fields.shift.oct
-      uid       = fields.shift.oct
-      gid       = fields.shift.oct
-      size      = strict_oct(fields.shift)
-      mtime     = fields.shift.oct
-      checksum  = fields.shift.oct
-      typeflag  = fields.shift
-      linkname  = fields.shift
-      magic     = fields.shift
-      version   = fields.shift.oct
-      uname     = fields.shift
-      gname     = fields.shift
-      devmajor  = fields.shift.oct
-      devminor  = fields.shift.oct
-      prefix    = fields.shift
+      fields = data.unpack(HEADER_UNPACK_FORMAT)
+      name = fields.shift
+      mode = fields.shift.oct
+      uid = fields.shift.oct
+      gid = fields.shift.oct
+      size = strict_oct(fields.shift)
+      mtime = fields.shift.oct
+      checksum = fields.shift.oct
+      typeflag = fields.shift
+      linkname = fields.shift
+      magic = fields.shift
+      version = fields.shift.oct
+      uname = fields.shift
+      gname = fields.shift
+      devmajor = fields.shift.oct
+      devminor = fields.shift.oct
+      prefix = fields.shift
 
       empty = !data.each_byte.any?(&:nonzero?)
 
@@ -138,8 +138,8 @@ class Archive::Tar::Minitar::PosixHeader
     v[:mtime] = v[:mtime].to_i
     v[:checksum] ||= ""
     v[:typeflag] ||= "0"
-    v[:magic]    ||= MAGIC_BYTES
-    v[:version]  ||= "00"
+    v[:magic] ||= MAGIC_BYTES
+    v[:version] ||= "00"
 
     FIELDS.each do |f|
       instance_variable_set("@#{f}", v[f])

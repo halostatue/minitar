@@ -26,24 +26,24 @@ module Archive::Tar::Minitar
       end
 
       def initialize(header, io)
-        @io       = io
-        @name     = header.name
-        @mode     = header.mode
-        @uid      = header.uid
-        @gid      = header.gid
-        @size     = header.size
-        @mtime    = header.mtime
+        @io = io
+        @name = header.name
+        @mode = header.mode
+        @uid = header.uid
+        @gid = header.gid
+        @size = header.size
+        @mtime = header.mtime
         @checksum = header.checksum
         @typeflag = header.typeflag
         @linkname = header.linkname
-        @magic    = header.magic
-        @version  = header.version
-        @uname    = header.uname
-        @gname    = header.gname
+        @magic = header.magic
+        @version = header.version
+        @uname = header.uname
+        @gname = header.gname
         @devmajor = header.devmajor
         @devminor = header.devminor
-        @prefix   = header.prefix
-        @read     = 0
+        @prefix = header.prefix
+        @read = 0
         @orig_pos =
           if Archive::Tar::Minitar.seekable?(@io)
             @io.pos
@@ -232,7 +232,7 @@ module Archive::Tar::Minitar
         end
 
         entry = EntryStream.new(header, @io)
-        size  = entry.size
+        size = entry.size
 
         yield entry
 

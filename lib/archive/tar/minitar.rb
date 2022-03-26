@@ -181,16 +181,16 @@ module Archive::Tar::Minitar
 
       name = name.sub(%r{\./}, "")
       stat = File.stat(name)
-      stats[:mode]   ||= stat.mode
-      stats[:mtime]  ||= stat.mtime
+      stats[:mode] ||= stat.mode
+      stats[:mtime] ||= stat.mtime
       stats[:size] = stat.size
 
       if windows?
-        stats[:uid]  = nil
-        stats[:gid]  = nil
+        stats[:uid] = nil
+        stats[:gid] = nil
       else
-        stats[:uid]  ||= stat.uid
-        stats[:gid]  ||= stat.gid
+        stats[:uid] ||= stat.uid
+        stats[:gid] ||= stat.gid
       end
 
       if File.file?(name)

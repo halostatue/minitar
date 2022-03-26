@@ -139,7 +139,7 @@ class TestTarWriter < Minitest::Test
 
     long_name_file_content = "where_is_all_the_content_gone"
 
-    @os.add_file_simple("a" * 114,  :mode => 0o0644, :data => long_name_file_content)
+    @os.add_file_simple("a" * 114, :mode => 0o0644, :data => long_name_file_content)
 
     assert_equal(long_name_file_content,
                  @dummyos.data[3 * 512, long_name_file_content.bytesize])
@@ -158,7 +158,7 @@ class TestTarWriter < Minitest::Test
     long_name_file_content = "where_is_all_the_content_gone"
 
     Minitar::Writer.open(dummyos) do |os|
-      os.add_file("a" * 114,  :mode => 0o0644) do |f|
+      os.add_file("a" * 114, :mode => 0o0644) do |f|
         f.write(long_name_file_content)
       end
     end

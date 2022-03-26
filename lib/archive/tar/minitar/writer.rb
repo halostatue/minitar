@@ -46,9 +46,9 @@ module Archive::Tar::Minitar
       attr_reader :written
 
       def initialize(io, limit)
-        @io       = io
-        @limit    = limit
-        @written  = 0
+        @io = io
+        @limit = limit
+        @written = 0
       end
 
       def write(data)
@@ -101,7 +101,7 @@ module Archive::Tar::Minitar
 
     # Creates and returns a new Writer object.
     def initialize(io)
-      @io     = io
+      @io = io
       @closed = false
     end
 
@@ -220,7 +220,7 @@ module Archive::Tar::Minitar
 
       yield WriteOnlyStream.new(@io), opts
 
-      size      = @io.pos - (init_pos + data_offset)
+      size = @io.pos - (init_pos + data_offset)
       remainder = (512 - (size % 512)) % 512
       @io.write("\0" * remainder)
 
