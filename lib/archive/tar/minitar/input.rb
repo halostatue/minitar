@@ -73,7 +73,7 @@ module Archive::Tar::Minitar
       @io = if input.respond_to?(:read)
         input
       else
-              ::Kernel.open(input, "rb")
+        ::Kernel.open(input, "rb")
       end
 
       unless Archive::Tar::Minitar.seekable?(@io, :rewind)

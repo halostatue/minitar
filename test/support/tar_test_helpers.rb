@@ -45,7 +45,7 @@ module TarTestHelpers
       message = if field == "checksum"
         "Header checksums are expected to match."
       else
-                  "Header field #{field} is expected to match."
+        "Header field #{field} is expected to match."
       end
 
       offset = FIELDS[field].offset
