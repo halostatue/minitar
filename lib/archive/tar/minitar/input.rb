@@ -1,6 +1,6 @@
 # coding: utf-8
 
-require 'archive/tar/minitar/reader'
+require "archive/tar/minitar/reader"
 
 module Archive::Tar::Minitar
   # Wraps a Archive::Tar::Minitar::Reader with convenience methods and wrapped
@@ -51,7 +51,7 @@ module Archive::Tar::Minitar
     def self.each_entry(input)
       return to_enum(__method__, input) unless block_given?
 
-      open(input) do |stream|
+      Input.open(input) do |stream|
         stream.each do |entry|
           yield entry
         end
@@ -71,10 +71,10 @@ module Archive::Tar::Minitar
     #    Archive::Tar::Minitar::Input.new(path) -> input
     def initialize(input)
       @io = if input.respond_to?(:read)
-              input
-            else
-              ::Kernel.open(input, 'rb')
-            end
+        input
+      else
+        ::Kernel.open(input, "rb")
+      end
 
       unless Archive::Tar::Minitar.seekable?(@io, :rewind)
         raise Archive::Tar::Minitar::NonSeekableStream
@@ -96,7 +96,7 @@ module Archive::Tar::Minitar
     ensure
       @tar.rewind
     end
-    alias each each_entry
+    alias_method :each, :each_entry
 
     # Extracts the current +entry+ to +destdir+. If a block is provided, it
     # yields an +action+ Symbol, the full name of the file being extracted
@@ -119,9 +119,9 @@ module Archive::Tar::Minitar
     #                     Reader::EntryStream, with all methods thereof.
     def extract_entry(destdir, entry, options = {}, &block) # :yields action, name, stats:
       stats = {
-        :current  => 0,
-        :currinc  => 0,
-        :entry    => entry
+        :current => 0,
+        :currinc => 0,
+        :entry => entry
       }
 
       # extract_entry is not vulnerable to prefix '/' vulnerabilities, but it
@@ -133,10 +133,10 @@ module Archive::Tar::Minitar
       # leave +destdir+.
       #
       # However, squeeze consecutive '/' characters together.
-      full_name = entry.full_name.squeeze('/')
+      full_name = entry.full_name.squeeze("/")
 
-      if full_name =~ /\.{2}(?:\/|\z)/
-        raise SecureRelativePathError, %q(Path contains '..')
+      if /\.{2}(?:\/|\z)/.match?(full_name)
+        raise SecureRelativePathError, "Path contains '..'"
       end
 
       if entry.directory?
@@ -164,7 +164,7 @@ module Archive::Tar::Minitar
 
     def fsync_dir(dirname)
       # make sure this hits the disc
-      dir = open(dirname, 'rb')
+      dir = IO.open(dirname, "rb")
       dir.fsync
     rescue # ignore IOError if it's an unpatched (old) Ruby
       nil
@@ -184,7 +184,7 @@ module Archive::Tar::Minitar
           nil
         end
       else
-        File.unlink(dest.chomp('/')) if File.symlink?(dest.chomp('/'))
+        File.unlink(dest.chomp("/")) if File.symlink?(dest.chomp("/"))
 
         FileUtils.mkdir_p(dest, :mode => entry.mode)
         FileUtils.chmod(entry.mode, dest)
@@ -192,7 +192,7 @@ module Archive::Tar::Minitar
 
       if options.fetch(:fsync, true)
         fsync_dir(dest)
-        fsync_dir(File.join(dest, '..'))
+        fsync_dir(File.join(dest, ".."))
       end
     end
 
@@ -211,7 +211,7 @@ module Archive::Tar::Minitar
 
       yield :file_start, full_name, stats if block_given?
 
-      File.open(destfile, 'wb', entry.mode) do |os|
+      File.open(destfile, "wb", entry.mode) do |os|
         loop do
           data = entry.read(4096)
           break unless data
@@ -234,7 +234,7 @@ module Archive::Tar::Minitar
         yield :dir_fsync, full_name, stats if block_given?
 
         fsync_dir(File.dirname(destfile))
-        fsync_dir(File.join(File.dirname(destfile), '..'))
+        fsync_dir(File.join(File.dirname(destfile), ".."))
       end
 
       yield :file_done, full_name, stats if block_given?

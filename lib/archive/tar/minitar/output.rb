@@ -1,6 +1,6 @@
 # coding: utf-8
 
-require 'archive/tar/minitar/writer'
+require "archive/tar/minitar/writer"
 
 module Archive::Tar::Minitar
   # Wraps a Archive::Tar::Minitar::Writer with convenience methods and wrapped
@@ -40,7 +40,7 @@ module Archive::Tar::Minitar
     def self.tar(output)
       return to_enum(__method__, output) unless block_given?
 
-      open(output) do |stream|
+      Output.open(output) do |stream|
         yield stream.tar
       end
     end
@@ -55,10 +55,10 @@ module Archive::Tar::Minitar
     #    Archive::Tar::Minitar::Output.new(path) -> output
     def initialize(output)
       @io = if output.respond_to?(:write)
-              output
-            else
-              ::Kernel.open(output, 'wb')
-            end
+        output
+      else
+        ::Kernel.open(output, "wb")
+      end
       @tar = Archive::Tar::Minitar::Writer.new(@io)
     end
 

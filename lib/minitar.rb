@@ -1,6 +1,6 @@
 # coding: utf-8
 
-require 'archive/tar/minitar'
+require "archive/tar/minitar"
 
 if defined?(::Minitar) && ::Minitar != Archive::Tar::Minitar
   warn <<-EOS

@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
-require 'minitar'
-require 'minitest_helper'
-require 'base64'
-require 'zlib'
+require "minitar"
+require "minitest_helper"
+require "base64"
+require "zlib"
 
 class TestTarInput < Minitest::Test
   TEST_TGZ = Base64.decode64(<<-EOS).freeze
@@ -19,23 +19,23 @@ UTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIwCUgAAGnyo6wAoAAA=
   FILETIMES = Time.utc(2004).to_i
 
   TEST_CONTENTS = {
-    'data.tar.gz' => { :size => 210, :mode => 0o644 },
-    'file3' => { :size => 18, :mode => 0o755 }
+    "data.tar.gz" => {:size => 210, :mode => 0o644},
+    "file3" => {:size => 18, :mode => 0o755}
   }.freeze
 
   TEST_DATA_CONTENTS = {
-    'data/' => { :size => 0, :mode => 0o755 },
-    'data/__dir__/' => { :size => 0, :mode => 0o755 },
-    'data/file1' => { :size => 16, :mode => 0o644 },
-    'data/file2' => { :size => 16, :mode => 0o644 }
+    "data/" => {:size => 0, :mode => 0o755},
+    "data/__dir__/" => {:size => 0, :mode => 0o755},
+    "data/file1" => {:size => 16, :mode => 0o644},
+    "data/file2" => {:size => 16, :mode => 0o644}
   }.freeze
 
   def setup
-    FileUtils.mkdir_p('data__')
+    FileUtils.mkdir_p("data__")
   end
 
   def teardown
-    FileUtils.rm_rf('data__')
+    FileUtils.rm_rf("data__")
   end
 
   def test_open_no_block
@@ -58,7 +58,7 @@ UTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIwCUgAAGnyo6wAoAAA=
         assert_equal(TEST_CONTENTS[entry.name][:size], entry.size, entry.name)
         assert_modes_equal(TEST_CONTENTS[entry.name][:mode],
           entry.mode, entry.name)
-        assert_equal(FILETIMES, entry.mtime, 'entry.mtime')
+        assert_equal(FILETIMES, entry.mtime, "entry.mtime")
 
         if i.zero?
           data_reader = Zlib::GzipReader.new(StringIO.new(entry.read))
@@ -90,8 +90,8 @@ UTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIwCUgAAGnyo6wAoAAA=
     Minitar::Input.open(reader) do |stream|
       outer_count = 0
       stream.each_with_index do |entry, i|
-        stream.extract_entry('data__', entry)
-        name = File.join('data__', entry.name)
+        stream.extract_entry("data__", entry)
+        name = File.join("data__", entry.name)
 
         assert TEST_CONTENTS.key?(entry.name)
 
@@ -108,12 +108,12 @@ UTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIwCUgAAGnyo6wAoAAA=
 
         if i.zero?
           begin
-            ff = File.open(name, 'rb')
+            ff = File.open(name, "rb")
             data_reader = Zlib::GzipReader.new(ff)
             Minitar::Input.open(data_reader) do |is2|
               is2.each_with_index do |entry2, _j|
-                is2.extract_entry('data__', entry2)
-                name2 = File.join('data__', entry2.name)
+                is2.extract_entry("data__", entry2)
+                name2 = File.join("data__", entry2.name)
 
                 assert TEST_DATA_CONTENTS.key?(entry2.name)
 
@@ -144,18 +144,18 @@ UTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIwCUgAAGnyo6wAoAAA=
     return if Minitar.windows?
 
     IO.respond_to?(:write) &&
-      IO.write('data__/file4', '') ||
-      File.open('data__/file4', 'w') { |f| f.write '' }
+      IO.write("data__/file4", "") ||
+      File.open("data__/file4", "w") { |f| f.write "" }
 
-    File.symlink('data__/file4', 'data__/file3')
-    File.symlink('data__/file4', 'data__/data')
+    File.symlink("data__/file4", "data__/file3")
+    File.symlink("data__/file4", "data__/data")
 
-    Minitar.unpack(Zlib::GzipReader.new(StringIO.new(TEST_TGZ)), 'data__')
-    Minitar.unpack(Zlib::GzipReader.new(File.open('data__/data.tar.gz', 'rb')),
-      'data__')
+    Minitar.unpack(Zlib::GzipReader.new(StringIO.new(TEST_TGZ)), "data__")
+    Minitar.unpack(Zlib::GzipReader.new(File.open("data__/data.tar.gz", "rb")),
+      "data__")
 
-    refute File.symlink?('data__/file3')
-    refute File.symlink?('data__/data')
+    refute File.symlink?("data__/file3")
+    refute File.symlink?("data__/data")
   end
 
   RELATIVE_DIRECTORY_TGZ = Base64.decode64 <<-EOS
@@ -168,7 +168,7 @@ MDUzVDAwNDY0N2VQMGCgAygtLkksAjolEcjIzMOtDqgsLQ2/J0H+gNOjYBSMglEwyAEA2LchrwAGAAA=
     Minitar::Input.open(reader) do |stream|
       stream.each do |entry|
         assert_raises Archive::Tar::Minitar::SecureRelativePathError do
-          stream.extract_entry('data__', entry)
+          stream.extract_entry("data__", entry)
         end
       end
     end
@@ -191,7 +191,7 @@ glEwCkbBKBgFo2AUjIJRMApIAQD0DyzXACgAAA==
     reader = Zlib::GzipReader.new(StringIO.new(NON_STRICT_OCTAL_TGZ))
 
     assert_raises(ArgumentError) do
-      Minitar.unpack(reader, 'data__')
+      Minitar.unpack(reader, "data__")
     end
   end
 
@@ -214,12 +214,12 @@ UTAKRsEoGAWjYBSMglFACgAAuUHUvwAoAAA=
     assert_equal(210, header.size)
 
     reader = Zlib::GzipReader.new(StringIO.new(OCTAL_WRAPPED_BY_SPACE_TGZ))
-    Minitar.unpack(reader, 'data__', [])
+    Minitar.unpack(reader, "data__", [])
   end
 
   def test_fsync_false
     outer = 0
-    Minitar.unpack(Zlib::GzipReader.new(StringIO.new(TEST_TGZ)), 'data__', [], :fsync => false) do |_label, _path, _stats|
+    Minitar.unpack(Zlib::GzipReader.new(StringIO.new(TEST_TGZ)), "data__", [], :fsync => false) do |_label, _path, _stats|
       outer += 1
     end
     assert_equal(6, outer)

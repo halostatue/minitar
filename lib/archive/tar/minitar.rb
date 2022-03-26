@@ -2,18 +2,19 @@
 
 ##
 module Archive; end
+
 ##
 module Archive::Tar; end
 
-require 'fileutils'
-require 'rbconfig'
+require "fileutils"
+require "rbconfig"
 
-class << Archive::Tar #:nodoc:
-  def const_missing(const) #:nodoc:
+class << Archive::Tar # :nodoc:
+  def const_missing(const) # :nodoc:
     case const
     when :PosixHeader
-      warn 'Archive::Tar::PosixHeader has been renamed to ' \
-        'Archive::Tar::Minitar::PosixHeader'
+      warn "Archive::Tar::PosixHeader has been renamed to " \
+        "Archive::Tar::Minitar::PosixHeader"
       const_set :PosixHeader, Archive::Tar::Minitar::PosixHeader
     else
       super
@@ -29,7 +30,7 @@ class << Archive::Tar #:nodoc:
   end
 
   def modules
-    require 'set'
+    require "set"
     @modules ||= Set.new
   end
 end
@@ -73,7 +74,7 @@ end
 #       tar.close
 #     end
 module Archive::Tar::Minitar
-  VERSION = '0.9'.freeze # :nodoc:
+  VERSION = "0.10".freeze # :nodoc:
 
   # The base class for any minitar error.
   Error = Class.new(::StandardError)
@@ -106,29 +107,29 @@ module Archive::Tar::Minitar
     # A convenience method for wrapping Archive::Tar::Minitar::Input.open
     # (mode +r+) and Archive::Tar::Minitar::Output.open (mode +w+). No other
     # modes are currently supported.
-    def open(dest, mode = 'r', &block)
+    def open(dest, mode = "r", &block)
       case mode
-      when 'r'
+      when "r"
         Input.open(dest, &block)
-      when 'w'
+      when "w"
         Output.open(dest, &block)
       else
-        raise 'Unknown open mode for Archive::Tar::Minitar.open.'
+        raise "Unknown open mode for Archive::Tar::Minitar.open."
       end
     end
 
-    def const_missing(c) #:nodoc:
+    def const_missing(c) # :nodoc:
       case c
       when :BlockRequired
-        warn 'This constant has been removed.'
+        warn "This constant has been removed."
         const_set(:BlockRequired, Class.new(StandardError))
       else
         super
       end
     end
 
-    def windows? #:nodoc:
-      RbConfig::CONFIG['host_os'] =~ /^(mswin|mingw|cygwin)/
+    def windows? # :nodoc:
+      RbConfig::CONFIG["host_os"] =~ /^(mswin|mingw|cygwin)/
     end
 
     # A convenience method to pack the file provided. +entry+ may either be a
@@ -165,39 +166,39 @@ module Archive::Tar::Minitar
     # <tt>:uid</tt>::     The user owner of the file. (+nil+ on Windows.)
     # <tt>:gid</tt>::     The group owner of the file. (+nil+ on Windows.)
     # <tt>:mtime</tt>::   The modification Time of the file.
-    def pack_file(entry, outputter) #:yields action, name, stats:
-      if outputter.kind_of?(Archive::Tar::Minitar::Output)
+    def pack_file(entry, outputter) # :yields action, name, stats:
+      if outputter.is_a?(Archive::Tar::Minitar::Output)
         outputter = outputter.tar
       end
 
       stats = {}
 
-      if entry.kind_of?(Hash)
+      if entry.is_a?(Hash)
         name = entry[:name]
         entry.each { |kk, vv| stats[kk] = vv unless vv.nil? }
       else
         name = entry
       end
 
-      name = name.sub(%r{\./}, '')
+      name = name.sub(%r{\./}, "")
       stat = File.stat(name)
-      stats[:mode]   ||= stat.mode
-      stats[:mtime]  ||= stat.mtime
+      stats[:mode] ||= stat.mode
+      stats[:mtime] ||= stat.mtime
       stats[:size] = stat.size
 
       if windows?
-        stats[:uid]  = nil
-        stats[:gid]  = nil
+        stats[:uid] = nil
+        stats[:gid] = nil
       else
-        stats[:uid]  ||= stat.uid
-        stats[:gid]  ||= stat.gid
+        stats[:uid] ||= stat.uid
+        stats[:gid] ||= stat.gid
       end
 
       if File.file?(name)
         outputter.add_file_simple(name, stats) do |os|
           stats[:current] = 0
           yield :file_start, name, stats if block_given?
-          File.open(name, 'rb') do |ff|
+          File.open(name, "rb") do |ff|
             until ff.eof?
               stats[:currinc] = os.write(ff.read(4096))
               stats[:current] += stats[:currinc]
@@ -210,7 +211,7 @@ module Archive::Tar::Minitar
         yield :dir, name, stats if block_given?
         outputter.mkdir(name, stats)
       else
-        raise %q(Don't yet know how to pack this type of file.)
+        raise "Don't yet know how to pack this type of file."
       end
     end
 
@@ -222,11 +223,11 @@ module Archive::Tar::Minitar
     # If +src+ is an Array, it will be treated as the result of Find.find; all
     # files matching will be packed.
     def pack(src, dest, recurse_dirs = true, &block)
-      require 'find'
+      require "find"
       Output.open(dest) do |outp|
-        if src.kind_of?(Array)
+        if src.is_a?(Array)
           src.each do |entry|
-            if dir?(entry) and recurse_dirs
+            if dir?(entry) && recurse_dirs
               Find.find(entry) do |ee|
                 pack_file(ee, outp, &block)
               end
@@ -247,14 +248,14 @@ module Archive::Tar::Minitar
     # will be extracted.
     def unpack(src, dest, files = [], options = {}, &block)
       Input.open(src) do |inp|
-        if File.exist?(dest) and !dir?(dest)
-          raise %q(Can't unpack to a non-directory.)
+        if File.exist?(dest) && !dir?(dest)
+          raise "Can't unpack to a non-directory."
         end
 
         FileUtils.mkdir_p(dest) unless File.exist?(dest)
 
         inp.each do |entry|
-          if files.empty? or files.include?(entry.full_name)
+          if files.empty? || files.include?(entry.full_name)
             inp.extract_entry(dest, entry, options, &block)
           end
         end
@@ -269,8 +270,8 @@ module Archive::Tar::Minitar
         io.stat.file?
       else
         # Duck-type the rest of this.
-        methods ||= [ :pos, :pos=, :seek, :rewind ]
-        methods = [ methods ] unless methods.kind_of?(Array)
+        methods ||= [:pos, :pos=, :seek, :rewind]
+        methods = [methods] unless methods.is_a?(Array)
         methods.all? { |m| io.respond_to?(m) }
       end
     end
@@ -284,7 +285,7 @@ module Archive::Tar::Minitar
     end
 
     def modules
-      require 'set'
+      require "set"
       @modules ||= Set.new
     end
   end
@@ -293,7 +294,7 @@ module Archive::Tar::Minitar
   module ByteSize # :nodoc:
     private
 
-    if ''.respond_to?(:bytesize)
+    if "".respond_to?(:bytesize)
       def bytesize(item)
         item.bytesize
       end
@@ -305,6 +306,6 @@ module Archive::Tar::Minitar
   end
 end
 
-require 'archive/tar/minitar/posix_header'
-require 'archive/tar/minitar/input'
-require 'archive/tar/minitar/output'
+require "archive/tar/minitar/posix_header"
+require "archive/tar/minitar/input"
+require "archive/tar/minitar/output"

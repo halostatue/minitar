@@ -11,14 +11,21 @@ module Archive::Tar::Minitar
     # This marks the EntryStream closed for reading without closing the
     # actual data stream.
     module InvalidEntryStream
-      # rubocop:disable Style/SingleLineMethods
-      # rubocop:disable Style/EmptyLineBetweenDefs
-      def read(*); raise ClosedStream; end
-      def getc; raise ClosedStream; end
-      def rewind; raise ClosedStream; end
-      def closed?; true; end
-      # rubocop:enable Style/EmptyLineBetweenDefs
-      # rubocop:enable Style/SingleLineMethods Style/EmptyLineBetweenDefs
+      def read(*)
+        raise ClosedStream
+      end
+
+      def getc
+        raise ClosedStream
+      end
+
+      def rewind
+        raise ClosedStream
+      end
+
+      def closed?
+        true
+      end
     end
 
     # EntryStreams are pseudo-streams on top of the main data stream.
@@ -30,24 +37,24 @@ module Archive::Tar::Minitar
       end
 
       def initialize(header, io)
-        @io       = io
-        @name     = header.name
-        @mode     = header.mode
-        @uid      = header.uid
-        @gid      = header.gid
-        @size     = header.size
-        @mtime    = header.mtime
+        @io = io
+        @name = header.name
+        @mode = header.mode
+        @uid = header.uid
+        @gid = header.gid
+        @size = header.size
+        @mtime = header.mtime
         @checksum = header.checksum
         @typeflag = header.typeflag
         @linkname = header.linkname
-        @magic    = header.magic
-        @version  = header.version
-        @uname    = header.uname
-        @gname    = header.gname
+        @magic = header.magic
+        @version = header.version
+        @uname = header.uname
+        @gname = header.gname
         @devmajor = header.devmajor
         @devminor = header.devminor
-        @prefix   = header.prefix
-        @read     = 0
+        @prefix = header.prefix
+        @read = 0
         @orig_pos =
           if Archive::Tar::Minitar.seekable?(@io)
             @io.pos
@@ -79,25 +86,25 @@ module Archive::Tar::Minitar
       # Returns +true+ if the entry represents a directory.
       def directory?
         case @typeflag
-        when '5'
+        when "5"
           true
-        when '0', "\0"
+        when "0", "\0"
           # If the name ends with a slash, treat it as a directory.
           # This is what other major tar implementations do for
           # interoperability and compatibility with older tar variants
           # and some new ones.
-          @name.end_with?('/')
+          @name.end_with?("/")
         else
           false
         end
       end
-      alias directory directory?
+      alias_method :directory, :directory?
 
       # Returns +true+ if the entry represents a plain file.
       def file?
-        (@typeflag == '0' || @typeflag == "\0") && !@name.end_with?('/')
+        (@typeflag == "0" || @typeflag == "\0") && !@name.end_with?("/")
       end
-      alias file file?
+      alias_method :file, :file?
 
       # Returns +true+ if the current read pointer is at the end of the
       # EntryStream data.
@@ -125,7 +132,7 @@ module Archive::Tar::Minitar
 
       # Returns the full and proper name of the entry.
       def full_name
-        if @prefix != ''
+        if @prefix != ""
           File.join(@prefix, @name)
         else
           @name
@@ -185,7 +192,7 @@ module Archive::Tar::Minitar
     def self.each_entry(io)
       return to_enum(__method__, io) unless block_given?
 
-      open(io) do |reader|
+      Input.open(io) do |reader|
         reader.each_entry do |entry|
           yield entry
         end
@@ -195,7 +202,11 @@ module Archive::Tar::Minitar
     # Creates and returns a new Reader object.
     def initialize(io)
       @io = io
-      @init_pos = io.pos rescue nil
+      @init_pos = begin
+        io.pos
+      rescue
+        nil
+      end
     end
 
     # Resets the read pointer to the beginning of data stream. Do not call
@@ -236,7 +247,7 @@ module Archive::Tar::Minitar
         end
 
         entry = EntryStream.new(header, @io)
-        size  = entry.size
+        size = entry.size
 
         yield entry
 
@@ -259,7 +270,7 @@ module Archive::Tar::Minitar
         entry.close
       end
     end
-    alias each each_entry
+    alias_method :each, :each_entry
 
     # Returns false if the reader is open (it never closes).
     def closed?

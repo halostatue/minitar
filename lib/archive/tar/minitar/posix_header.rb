@@ -2,8 +2,10 @@
 
 ##
 module Archive; end
+
 ##
 module Archive::Tar; end
+
 ##
 module Archive::Tar::Minitar; end
 
@@ -36,12 +38,12 @@ module Archive::Tar::Minitar; end
 # unrecognized typeflag value as a regular file."
 class Archive::Tar::Minitar::PosixHeader
   BLOCK_SIZE = 512
-  MAGIC_BYTES = 'ustar'.freeze
+  MAGIC_BYTES = "ustar".freeze
 
-  GNU_EXT_LONG_LINK = '././@LongLink'
+  GNU_EXT_LONG_LINK = "././@LongLink"
 
   # Fields that must be set in a POSIX tar(1) header.
-  REQUIRED_FIELDS = [ :name, :size, :prefix, :mode ].freeze
+  REQUIRED_FIELDS = [:name, :size, :prefix, :mode].freeze
   # Fields that may be set in a POSIX tar(1) header.
   OPTIONAL_FIELDS = [
     :uid, :gid, :mtime, :checksum, :typeflag, :linkname, :magic, :version,
@@ -60,9 +62,9 @@ class Archive::Tar::Minitar::PosixHeader
   attr_accessor :name
 
   # The pack format passed to Array#pack for encoding a header.
-  HEADER_PACK_FORMAT    = 'a100a8a8a8a12a12a7aaa100a6a2a32a32a8a8a155'.freeze
+  HEADER_PACK_FORMAT = "a100a8a8a8a12a12a7aaa100a6a2a32a32a8a8a155".freeze
   # The unpack format passed to String#unpack for decoding a header.
-  HEADER_UNPACK_FORMAT  = 'Z100A8A8A8A12A12A8aZ100A6A2Z32Z32A8A8Z155'.freeze
+  HEADER_UNPACK_FORMAT = "Z100A8A8A8A12A12A8aZ100A6A2Z32Z32A8A8Z155".freeze
 
   class << self
     # Creates a new PosixHeader from a data stream.
@@ -79,23 +81,23 @@ class Archive::Tar::Minitar::PosixHeader
 
     # Creates a new PosixHeader from a BLOCK_SIZE-byte data buffer.
     def from_data(data)
-      fields    = data.unpack(HEADER_UNPACK_FORMAT)
-      name      = fields.shift
-      mode      = fields.shift.oct
-      uid       = fields.shift.oct
-      gid       = fields.shift.oct
-      size      = strict_oct(fields.shift)
-      mtime     = fields.shift.oct
-      checksum  = fields.shift.oct
-      typeflag  = fields.shift
-      linkname  = fields.shift
-      magic     = fields.shift
-      version   = fields.shift.oct
-      uname     = fields.shift
-      gname     = fields.shift
-      devmajor  = fields.shift.oct
-      devminor  = fields.shift.oct
-      prefix    = fields.shift
+      fields = data.unpack(HEADER_UNPACK_FORMAT)
+      name = fields.shift
+      mode = fields.shift.oct
+      uid = fields.shift.oct
+      gid = fields.shift.oct
+      size = strict_oct(fields.shift)
+      mtime = fields.shift.oct
+      checksum = fields.shift.oct
+      typeflag = fields.shift
+      linkname = fields.shift
+      magic = fields.shift
+      version = fields.shift.oct
+      uname = fields.shift
+      gname = fields.shift
+      devmajor = fields.shift.oct
+      devminor = fields.shift.oct
+      prefix = fields.shift
 
       empty = !data.each_byte.any?(&:nonzero?)
 
@@ -123,7 +125,7 @@ class Archive::Tar::Minitar::PosixHeader
     private
 
     def strict_oct(string)
-      return string.oct if string =~ /\A[0-7 ]*\z/
+      return string.oct if /\A[0-7 ]*\z/.match?(string)
       raise ArgumentError, "#{string.inspect} is not a valid octal string"
     end
   end
@@ -136,10 +138,10 @@ class Archive::Tar::Minitar::PosixHeader
     end
 
     v[:mtime] = v[:mtime].to_i
-    v[:checksum] ||= ''
-    v[:typeflag] ||= '0'
-    v[:magic]    ||= MAGIC_BYTES
-    v[:version]  ||= '00'
+    v[:checksum] ||= ""
+    v[:typeflag] ||= "0"
+    v[:magic] ||= MAGIC_BYTES
+    v[:version] ||= "00"
 
     FIELDS.each do |f|
       instance_variable_set("@#{f}", v[f])
@@ -161,7 +163,7 @@ class Archive::Tar::Minitar::PosixHeader
   # Returns +true+ if the header is a long name special header which indicates
   # that the next block of data is the filename.
   def long_name?
-    typeflag == 'L' && name == GNU_EXT_LONG_LINK
+    typeflag == "L" && name == GNU_EXT_LONG_LINK
   end
 
   # A string representation of the header.
@@ -169,11 +171,11 @@ class Archive::Tar::Minitar::PosixHeader
     update_checksum
     header(@checksum)
   end
-  alias to_str to_s
+  alias_method :to_str, :to_s
 
   # Update the checksum field.
   def update_checksum
-    hh = header(' ' * 8)
+    hh = header(" " * 8)
     @checksum = oct(calculate_checksum(hh), 6)
   end
 
@@ -190,13 +192,13 @@ class Archive::Tar::Minitar::PosixHeader
   end
 
   def calculate_checksum(hdr)
-    hdr.unpack('C*').inject { |a, e| a + e }
+    hdr.unpack("C*").inject { |a, e| a + e }
   end
 
   def header(chksum)
     arr = [name, oct(mode, 7), oct(uid, 7), oct(gid, 7), oct(size, 11),
-           oct(mtime, 11), chksum, ' ', typeflag, linkname, magic, version,
-           uname, gname, oct(devmajor, 7), oct(devminor, 7), prefix]
+      oct(mtime, 11), chksum, " ", typeflag, linkname, magic, version,
+      uname, gname, oct(devmajor, 7), oct(devminor, 7), prefix]
     str = arr.pack(HEADER_PACK_FORMAT)
     str + "\0" * ((BLOCK_SIZE - bytesize(str)) % BLOCK_SIZE)
   end

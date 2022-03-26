@@ -1,3 +1,3 @@
 # coding: utf-8
 
-require 'archive/tar/minitar'
+require "archive/tar/minitar"

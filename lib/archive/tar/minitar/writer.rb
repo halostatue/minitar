@@ -30,8 +30,8 @@ module Archive::Tar::Minitar
       def self.const_missing(c)
         case c
         when :FileOverflow
-          warn 'Writer::BoundedWriteStream::FileOverflow has been renamed ' \
-            'to Writer::WriteBoundaryOverflow'
+          warn "Writer::BoundedWriteStream::FileOverflow has been renamed " \
+            "to Writer::WriteBoundaryOverflow"
           const_set :FileOverflow,
             Archive::Tar::Minitar::Writer::WriteBoundaryOverflow
         else
@@ -46,9 +46,9 @@ module Archive::Tar::Minitar
       attr_reader :written
 
       def initialize(io, limit)
-        @io       = io
-        @limit    = limit
-        @written  = 0
+        @io = io
+        @limit = limit
+        @written = 0
       end
 
       def write(data)
@@ -65,7 +65,7 @@ module Archive::Tar::Minitar
     def self.const_missing(c)
       case c
       when :BoundedStream
-        warn 'BoundedStream has been renamed to BoundedWriteStream'
+        warn "BoundedStream has been renamed to BoundedWriteStream"
         const_set(:BoundedStream, BoundedWriteStream)
       else
         super
@@ -101,7 +101,7 @@ module Archive::Tar::Minitar
 
     # Creates and returns a new Writer object.
     def initialize(io)
-      @io     = io
+      @io = io
       @closed = false
     end
 
@@ -139,10 +139,10 @@ module Archive::Tar::Minitar
       raise ClosedStream if @closed
 
       header = {
-        :mode   => opts.fetch(:mode, 0o644),
-        :mtime  => opts.fetch(:mtime, nil),
-        :gid    => opts.fetch(:gid, nil),
-        :uid    => opts.fetch(:uid, nil)
+        :mode => opts.fetch(:mode, 0o644),
+        :mtime => opts.fetch(:mtime, nil),
+        :gid => opts.fetch(:gid, nil),
+        :uid => opts.fetch(:uid, nil)
       }
 
       data = opts.fetch(:data, nil)
@@ -151,12 +151,12 @@ module Archive::Tar::Minitar
       if block_given?
         if data
           raise ArgumentError,
-            'Too much data (opts[:data] and block_given?).'
+            "Too much data (opts[:data] and block_given?)."
         end
 
-        raise ArgumentError, 'No size provided' unless size
+        raise ArgumentError, "No size provided" unless size
       else
-        raise ArgumentError, 'No data provided' unless data
+        raise ArgumentError, "No data provided" unless data
 
         bytes = bytesize(data)
         size = bytes if size.nil? || size < bytes
@@ -220,7 +220,7 @@ module Archive::Tar::Minitar
 
       yield WriteOnlyStream.new(@io), opts
 
-      size      = @io.pos - (init_pos + data_offset)
+      size = @io.pos - (init_pos + data_offset)
       remainder = (512 - (size % 512)) % 512
       @io.write("\0" * remainder)
 
@@ -231,7 +231,7 @@ module Archive::Tar::Minitar
         :mtime => opts[:mtime],
         :size => size,
         :gid => opts[:gid],
-        :uid => opts[:uid],
+        :uid => opts[:uid]
       }
 
       write_header(header, name, short_name, prefix, needs_long_name)
@@ -245,11 +245,11 @@ module Archive::Tar::Minitar
 
       header = {
         :mode => opts[:mode],
-        :typeflag => '5',
+        :typeflag => "5",
         :size => 0,
         :gid => opts[:gid],
         :uid => opts[:uid],
-        :mtime => opts[:mtime],
+        :mtime => opts[:mtime]
       }
 
       short_name, prefix, needs_long_name = split_name(name)
@@ -283,42 +283,42 @@ module Archive::Tar::Minitar
     def write_header(header, long_name, short_name, prefix, needs_long_name)
       if needs_long_name
         long_name_header = {
-          :prefix => '',
+          :prefix => "",
           :name => PosixHeader::GNU_EXT_LONG_LINK,
-          :typeflag => 'L',
+          :typeflag => "L",
           :size => long_name.length,
-          :mode => 0,
+          :mode => 0
         }
         @io.write(PosixHeader.new(long_name_header))
         @io.write(long_name)
         @io.write("\0" * (512 - (long_name.length % 512)))
       end
 
-      new_header = header.merge({ :name => short_name, :prefix => prefix })
+      new_header = header.merge({:name => short_name, :prefix => prefix})
       @io.write(PosixHeader.new(new_header))
     end
 
     def split_name(name)
       if bytesize(name) <= 100
-        prefix = ''
+        prefix = ""
       else
-        parts = name.split(/\//)
+        parts = name.split("/")
         newname = parts.pop
 
-        nxt = ''
+        nxt = ""
 
         loop do
-          nxt = parts.pop || ''
+          nxt = parts.pop || ""
           break if bytesize(newname) + 1 + bytesize(nxt) >= 100
           newname = "#{nxt}/#{newname}"
         end
 
-        prefix = (parts + [nxt]).join('/')
+        prefix = (parts + [nxt]).join("/")
 
         name = newname
       end
 
-      [ name, prefix, (bytesize(name) > 100 || bytesize(prefix) > 155) ]
+      [name, prefix, (bytesize(name) > 100 || bytesize(prefix) > 155)]
     end
   end
 end
