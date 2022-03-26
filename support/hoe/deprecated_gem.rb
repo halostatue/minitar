@@ -20,7 +20,7 @@ module Hoe::Deprecated_Gem
             YAML.safe_load(
               YAML.dump(spec), permitted_classes, permitted_symbols, true
             )
-          end
+    end
     atm.name = "archive-tar-minitar"
     d = %('#{atm.name}' has been deprecated; just install '#{spec.name}'.)
     atm.description = "#{d} #{spec.description}"

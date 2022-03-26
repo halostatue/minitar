@@ -206,7 +206,7 @@ module Archive::Tar::Minitar
                     io.pos
       rescue
                     nil
-                  end
+      end
     end
 
     # Resets the read pointer to the beginning of data stream. Do not call
