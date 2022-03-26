@@ -119,18 +119,18 @@ class TestTarWriter < Minitest::Test
     @dummyos.reset
 
     @os.add_file_simple(File.join("a" * 152, "b" * 10, "c" * 92),
-                        :mode => 0o644, :size => 10) {}
+      :mode => 0o644, :size => 10) {}
     @os.add_file_simple(File.join("d" * 162, "e" * 10),
-                        :mode => 0o644, :size => 10) {}
+      :mode => 0o644, :size => 10) {}
     @os.add_file_simple(File.join("f" * 10, "g" * 110),
-                        :mode => 0o644, :size => 10) {}
+      :mode => 0o644, :size => 10) {}
     # Issue #6.
     @os.add_file_simple("a" * 114, :mode => 0o644, :size => 10) {}
 
     # "././@LongLink", a file name, its actual header, its data, ...
     4.times do |i|
       assert_equal(Minitar::PosixHeader::GNU_EXT_LONG_LINK,
-                   @dummyos.data[4 * i * 512, 32].rstrip)
+        @dummyos.data[4 * i * 512, 32].rstrip)
     end
   end
 
@@ -142,7 +142,7 @@ class TestTarWriter < Minitest::Test
     @os.add_file_simple("a" * 114, :mode => 0o0644, :data => long_name_file_content)
 
     assert_equal(long_name_file_content,
-                 @dummyos.data[3 * 512, long_name_file_content.bytesize])
+      @dummyos.data[3 * 512, long_name_file_content.bytesize])
   end
 
   def test_add_file_content_with_long_name
@@ -164,7 +164,7 @@ class TestTarWriter < Minitest::Test
     end
 
     assert_equal(long_name_file_content,
-                 dummyos[3 * 512, long_name_file_content.bytesize])
+      dummyos[3 * 512, long_name_file_content.bytesize])
   end
 
   def test_add_file
