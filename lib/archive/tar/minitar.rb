@@ -2,6 +2,7 @@
 
 ##
 module Archive; end
+
 ##
 module Archive::Tar; end
 

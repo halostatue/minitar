@@ -2,8 +2,10 @@
 
 ##
 module Archive; end
+
 ##
 module Archive::Tar; end
+
 ##
 module Archive::Tar::Minitar; end
 

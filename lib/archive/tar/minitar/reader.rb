@@ -12,8 +12,11 @@ module Archive::Tar::Minitar
     # actual data stream.
     module InvalidEntryStream
       def read(*); raise ClosedStream; end
+
       def getc; raise ClosedStream; end
+
       def rewind; raise ClosedStream; end
+
       def closed?; true; end
     end
 

@@ -46,7 +46,6 @@ class TestTarWriter < Minitest::Test
     assert writer.closed?
   end
 
-
   def test_add_file_simple
     @dummyos.reset
 
@@ -172,6 +171,7 @@ class TestTarWriter < Minitest::Test
     def dummyos.method_missing(meth, *a)
       string.send(meth, *a)
     end
+
     def dummyos.respond_to_missing?(meth)
       string.respond_to?(meth)
     end
