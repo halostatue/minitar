@@ -1,3 +1,7 @@
+## 0.10 / 2022-03-26
+
+- nevesenin fixed an issue with long filename handling. Marged as PR [#40][].
+
 ## 0.9 / 2019-09-04
 
 - jtappa added the ability to skip fsync with a new option to Minitar.unpack
@@ -159,12 +163,15 @@
 [#16]: https://github.com/halostatue/minitar/issues/16
 [#23]: https://github.com/halostatue/minitar/issues/23
 [#24]: https://github.com/halostatue/minitar/issues/24
-[#26]: https://github.com/halostatue/minitar/issues/26
+[#26]: https://github.com/halostatue/minitar/issues/27
 [#28]: https://github.com/halostatue/minitar/issues/28
-[#29]: https://github.com/halostatue/minitar/issues/29
+[#29]: https://github.com/halostatue/minitar/pull/29
 [#30]: https://github.com/halostatue/minitar/issues/30
-[#32]: https://github.com/halostatue/minitar/issues/32
-[#33]: https://github.com/halostatue/minitar/issues/33
-[#35]: https://github.com/halostatue/minitar/issues/35
-[#36]: https://github.com/halostatue/minitar/issues/36
-[#37]: https://github.com/halostatue/minitar/issues/37
+[#31]: https://github.com/halostatue/minitar/issues/31
+[#32]: https://github.com/halostatue/minitar/pull/32
+[#33]: https://github.com/halostatue/minitar/pull/33
+[#34]: https://github.com/halostatue/minitar/pull/34
+[#35]: https://github.com/halostatue/minitar/pull/35
+[#36]: https://github.com/halostatue/minitar/pull/36
+[#37]: https://github.com/halostatue/minitar/pull/37
+[#40]: https://github.com/halostatue/minitar/pull/40
