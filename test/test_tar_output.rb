@@ -34,7 +34,7 @@ class TestTarOutput < Minitest::Test
       Dir.chdir("data__") do
         NAMES.each do |name|
           stat = File.stat(name)
-          opts = { :size => stat.size, :mode => 0o644 }
+          opts = {:size => stat.size, :mode => 0o644}
           os.tar.add_file_simple(name, opts) do |ss|
             File.open(name, "rb") { |ff| ss.write(ff.read(4096)) until ff.eof? }
           end

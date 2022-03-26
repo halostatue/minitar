@@ -19,15 +19,15 @@ UTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIwCUgAAGnyo6wAoAAA=
   FILETIMES = Time.utc(2004).to_i
 
   TEST_CONTENTS = {
-    "data.tar.gz" => { :size => 210, :mode => 0o644 },
-    "file3" => { :size => 18, :mode => 0o755 }
+    "data.tar.gz" => {:size => 210, :mode => 0o644},
+    "file3" => {:size => 18, :mode => 0o755}
   }.freeze
 
   TEST_DATA_CONTENTS = {
-    "data/" => { :size => 0, :mode => 0o755 },
-    "data/__dir__/" => { :size => 0, :mode => 0o755 },
-    "data/file1" => { :size => 16, :mode => 0o644 },
-    "data/file2" => { :size => 16, :mode => 0o644 }
+    "data/" => {:size => 0, :mode => 0o755},
+    "data/__dir__/" => {:size => 0, :mode => 0o755},
+    "data/file1" => {:size => 16, :mode => 0o644},
+    "data/file2" => {:size => 16, :mode => 0o644}
   }.freeze
 
   def setup

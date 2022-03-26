@@ -294,7 +294,7 @@ module Archive::Tar::Minitar
         @io.write("\0" * (512 - (long_name.length % 512)))
       end
 
-      new_header = header.merge({ :name => short_name, :prefix => prefix })
+      new_header = header.merge({:name => short_name, :prefix => prefix})
       @io.write(PosixHeader.new(new_header))
     end
 
