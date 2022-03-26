@@ -71,7 +71,7 @@ module Archive::Tar::Minitar
     #    Archive::Tar::Minitar::Input.new(path) -> input
     def initialize(input)
       @io = if input.respond_to?(:read)
-              input
+        input
             else
               ::Kernel.open(input, "rb")
             end

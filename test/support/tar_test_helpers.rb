@@ -43,7 +43,7 @@ module TarTestHelpers
   def assert_headers_equal(expected, actual)
     FIELD_ORDER.each do |field|
       message = if field == "checksum"
-                  "Header checksums are expected to match."
+        "Header checksums are expected to match."
                 else
                   "Header field #{field} is expected to match."
                 end

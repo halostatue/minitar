@@ -55,7 +55,7 @@ module Archive::Tar::Minitar
     #    Archive::Tar::Minitar::Output.new(path) -> output
     def initialize(output)
       @io = if output.respond_to?(:write)
-              output
+        output
             else
               ::Kernel.open(output, "wb")
             end
