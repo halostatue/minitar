@@ -167,13 +167,13 @@ module Archive::Tar::Minitar
     # <tt>:gid</tt>::     The group owner of the file. (+nil+ on Windows.)
     # <tt>:mtime</tt>::   The modification Time of the file.
     def pack_file(entry, outputter) # :yields action, name, stats:
-      if outputter.kind_of?(Archive::Tar::Minitar::Output)
+      if outputter.is_a?(Archive::Tar::Minitar::Output)
         outputter = outputter.tar
       end
 
       stats = {}
 
-      if entry.kind_of?(Hash)
+      if entry.is_a?(Hash)
         name = entry[:name]
         entry.each { |kk, vv| stats[kk] = vv unless vv.nil? }
       else
@@ -225,7 +225,7 @@ module Archive::Tar::Minitar
     def pack(src, dest, recurse_dirs = true, &block)
       require "find"
       Output.open(dest) do |outp|
-        if src.kind_of?(Array)
+        if src.is_a?(Array)
           src.each do |entry|
             if dir?(entry) and recurse_dirs
               Find.find(entry) do |ee|
@@ -271,7 +271,7 @@ module Archive::Tar::Minitar
       else
         # Duck-type the rest of this.
         methods ||= [ :pos, :pos=, :seek, :rewind ]
-        methods = [ methods ] unless methods.kind_of?(Array)
+        methods = [ methods ] unless methods.is_a?(Array)
         methods.all? { |m| io.respond_to?(m) }
       end
     end
