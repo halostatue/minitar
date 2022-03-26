@@ -195,8 +195,8 @@ class Archive::Tar::Minitar::PosixHeader
 
   def header(chksum)
     arr = [name, oct(mode, 7), oct(uid, 7), oct(gid, 7), oct(size, 11),
-           oct(mtime, 11), chksum, " ", typeflag, linkname, magic, version,
-           uname, gname, oct(devmajor, 7), oct(devminor, 7), prefix]
+      oct(mtime, 11), chksum, " ", typeflag, linkname, magic, version,
+      uname, gname, oct(devmajor, 7), oct(devminor, 7), prefix]
     str = arr.pack(HEADER_PACK_FORMAT)
     str + "\0" * ((BLOCK_SIZE - bytesize(str)) % BLOCK_SIZE)
   end
