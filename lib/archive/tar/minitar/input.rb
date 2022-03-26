@@ -74,7 +74,7 @@ module Archive::Tar::Minitar
         input
       else
               ::Kernel.open(input, "rb")
-            end
+      end
 
       unless Archive::Tar::Minitar.seekable?(@io, :rewind)
         raise Archive::Tar::Minitar::NonSeekableStream

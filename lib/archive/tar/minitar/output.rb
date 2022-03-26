@@ -58,7 +58,7 @@ module Archive::Tar::Minitar
         output
       else
               ::Kernel.open(output, "wb")
-            end
+      end
       @tar = Archive::Tar::Minitar::Writer.new(@io)
     end
 

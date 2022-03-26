@@ -46,7 +46,7 @@ module TarTestHelpers
         "Header checksums are expected to match."
       else
                   "Header field #{field} is expected to match."
-                end
+      end
 
       offset = FIELDS[field].offset
       length = FIELDS[field].length
