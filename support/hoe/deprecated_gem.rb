@@ -10,16 +10,16 @@ module Hoe::Deprecated_Gem
     ]
     permitted_symbols = %w[development runtime]
     atm = begin
-            YAML.safe_load(
-              YAML.dump(spec),
-              :permitted_classes => permitted_classes,
-              :permitted_symbols => permitted_symbols,
-              :aliases => true
-            )
+      YAML.safe_load(
+        YAML.dump(spec),
+        :permitted_classes => permitted_classes,
+        :permitted_symbols => permitted_symbols,
+        :aliases => true
+      )
     rescue
-            YAML.safe_load(
-              YAML.dump(spec), permitted_classes, permitted_symbols, true
-            )
+      YAML.safe_load(
+        YAML.dump(spec), permitted_classes, permitted_symbols, true
+      )
     end
     atm.name = "archive-tar-minitar"
     d = %('#{atm.name}' has been deprecated; just install '#{spec.name}'.)

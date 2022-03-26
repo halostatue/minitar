@@ -203,9 +203,9 @@ module Archive::Tar::Minitar
     def initialize(io)
       @io = io
       @init_pos = begin
-                    io.pos
+        io.pos
       rescue
-                    nil
+        nil
       end
     end
 
