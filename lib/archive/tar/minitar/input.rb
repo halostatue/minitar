@@ -96,7 +96,7 @@ module Archive::Tar::Minitar
     ensure
       @tar.rewind
     end
-    alias each each_entry
+    alias_method :each, :each_entry
 
     # Extracts the current +entry+ to +destdir+. If a block is provided, it
     # yields an +action+ Symbol, the full name of the file being extracted

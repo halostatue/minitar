@@ -169,7 +169,7 @@ class Archive::Tar::Minitar::PosixHeader
     update_checksum
     header(@checksum)
   end
-  alias to_str to_s
+  alias_method :to_str, :to_s
 
   # Update the checksum field.
   def update_checksum

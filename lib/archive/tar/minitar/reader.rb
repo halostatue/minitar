@@ -87,13 +87,13 @@ module Archive::Tar::Minitar
           false
         end
       end
-      alias directory directory?
+      alias_method :directory, :directory?
 
       # Returns +true+ if the entry represents a plain file.
       def file?
         (@typeflag == "0" || @typeflag == "\0") && !@name.end_with?("/")
       end
-      alias file file?
+      alias_method :file, :file?
 
       # Returns +true+ if the current read pointer is at the end of the
       # EntryStream data.
@@ -255,7 +255,7 @@ module Archive::Tar::Minitar
         entry.close
       end
     end
-    alias each each_entry
+    alias_method :each, :each_entry
 
     # Returns false if the reader is open (it never closes).
     def closed?
