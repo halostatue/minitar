@@ -78,8 +78,7 @@ module TarTestHelpers
       asciiz(fname, 100),
       asciiz(dname, 155),
       z(to_oct(length, 11)),
-      z(to_oct(mode, 7))
-    )
+      z(to_oct(mode, 7)))
   end
 
   def raw_header(type, fname, dname, length, mode)

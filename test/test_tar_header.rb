@@ -94,8 +94,7 @@ class TestTarHeader < Minitest::Test
       asciiz("a" * 100, 100),
       asciiz("", 155),
       "       1213\0",
-      z(to_oct(0o12345, 7))
-    )
+      z(to_oct(0o12345, 7)))
 
     header = update_checksum(header)
     io = StringIO.new(header)
