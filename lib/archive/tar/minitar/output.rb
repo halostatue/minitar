@@ -1,6 +1,6 @@
 # coding: utf-8
 
-require 'archive/tar/minitar/writer'
+require "archive/tar/minitar/writer"
 
 module Archive::Tar::Minitar
   # Wraps a Archive::Tar::Minitar::Writer with convenience methods and wrapped
@@ -57,7 +57,7 @@ module Archive::Tar::Minitar
       @io = if output.respond_to?(:write)
               output
             else
-              ::Kernel.open(output, 'wb')
+              ::Kernel.open(output, "wb")
             end
       @tar = Archive::Tar::Minitar::Writer.new(@io)
     end

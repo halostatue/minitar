@@ -5,15 +5,15 @@ module Archive; end
 ##
 module Archive::Tar; end
 
-require 'fileutils'
-require 'rbconfig'
+require "fileutils"
+require "rbconfig"
 
 class << Archive::Tar #:nodoc:
   def const_missing(const) #:nodoc:
     case const
     when :PosixHeader
-      warn 'Archive::Tar::PosixHeader has been renamed to ' \
-        'Archive::Tar::Minitar::PosixHeader'
+      warn "Archive::Tar::PosixHeader has been renamed to " \
+        "Archive::Tar::Minitar::PosixHeader"
       const_set :PosixHeader, Archive::Tar::Minitar::PosixHeader
     else
       super
@@ -29,7 +29,7 @@ class << Archive::Tar #:nodoc:
   end
 
   def modules
-    require 'set'
+    require "set"
     @modules ||= Set.new
   end
 end
@@ -73,7 +73,7 @@ end
 #       tar.close
 #     end
 module Archive::Tar::Minitar
-  VERSION = '0.9'.freeze # :nodoc:
+  VERSION = "0.9".freeze # :nodoc:
 
   # The base class for any minitar error.
   Error = Class.new(::StandardError)
@@ -106,21 +106,21 @@ module Archive::Tar::Minitar
     # A convenience method for wrapping Archive::Tar::Minitar::Input.open
     # (mode +r+) and Archive::Tar::Minitar::Output.open (mode +w+). No other
     # modes are currently supported.
-    def open(dest, mode = 'r', &block)
+    def open(dest, mode = "r", &block)
       case mode
-      when 'r'
+      when "r"
         Input.open(dest, &block)
-      when 'w'
+      when "w"
         Output.open(dest, &block)
       else
-        raise 'Unknown open mode for Archive::Tar::Minitar.open.'
+        raise "Unknown open mode for Archive::Tar::Minitar.open."
       end
     end
 
     def const_missing(c) #:nodoc:
       case c
       when :BlockRequired
-        warn 'This constant has been removed.'
+        warn "This constant has been removed."
         const_set(:BlockRequired, Class.new(StandardError))
       else
         super
@@ -128,7 +128,7 @@ module Archive::Tar::Minitar
     end
 
     def windows? #:nodoc:
-      RbConfig::CONFIG['host_os'] =~ /^(mswin|mingw|cygwin)/
+      RbConfig::CONFIG["host_os"] =~ /^(mswin|mingw|cygwin)/
     end
 
     # A convenience method to pack the file provided. +entry+ may either be a
@@ -179,7 +179,7 @@ module Archive::Tar::Minitar
         name = entry
       end
 
-      name = name.sub(%r{\./}, '')
+      name = name.sub(%r{\./}, "")
       stat = File.stat(name)
       stats[:mode]   ||= stat.mode
       stats[:mtime]  ||= stat.mtime
@@ -197,7 +197,7 @@ module Archive::Tar::Minitar
         outputter.add_file_simple(name, stats) do |os|
           stats[:current] = 0
           yield :file_start, name, stats if block_given?
-          File.open(name, 'rb') do |ff|
+          File.open(name, "rb") do |ff|
             until ff.eof?
               stats[:currinc] = os.write(ff.read(4096))
               stats[:current] += stats[:currinc]
@@ -222,7 +222,7 @@ module Archive::Tar::Minitar
     # If +src+ is an Array, it will be treated as the result of Find.find; all
     # files matching will be packed.
     def pack(src, dest, recurse_dirs = true, &block)
-      require 'find'
+      require "find"
       Output.open(dest) do |outp|
         if src.kind_of?(Array)
           src.each do |entry|
@@ -284,7 +284,7 @@ module Archive::Tar::Minitar
     end
 
     def modules
-      require 'set'
+      require "set"
       @modules ||= Set.new
     end
   end
@@ -293,7 +293,7 @@ module Archive::Tar::Minitar
   module ByteSize # :nodoc:
     private
 
-    if ''.respond_to?(:bytesize)
+    if "".respond_to?(:bytesize)
       def bytesize(item)
         item.bytesize
       end
@@ -305,6 +305,6 @@ module Archive::Tar::Minitar
   end
 end
 
-require 'archive/tar/minitar/posix_header'
-require 'archive/tar/minitar/input'
-require 'archive/tar/minitar/output'
+require "archive/tar/minitar/posix_header"
+require "archive/tar/minitar/input"
+require "archive/tar/minitar/output"

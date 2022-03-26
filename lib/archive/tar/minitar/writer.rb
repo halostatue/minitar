@@ -30,8 +30,8 @@ module Archive::Tar::Minitar
       def self.const_missing(c)
         case c
         when :FileOverflow
-          warn 'Writer::BoundedWriteStream::FileOverflow has been renamed ' \
-            'to Writer::WriteBoundaryOverflow'
+          warn "Writer::BoundedWriteStream::FileOverflow has been renamed " \
+            "to Writer::WriteBoundaryOverflow"
           const_set :FileOverflow,
             Archive::Tar::Minitar::Writer::WriteBoundaryOverflow
         else
@@ -65,7 +65,7 @@ module Archive::Tar::Minitar
     def self.const_missing(c)
       case c
       when :BoundedStream
-        warn 'BoundedStream has been renamed to BoundedWriteStream'
+        warn "BoundedStream has been renamed to BoundedWriteStream"
         const_set(:BoundedStream, BoundedWriteStream)
       else
         super
@@ -151,12 +151,12 @@ module Archive::Tar::Minitar
       if block_given?
         if data
           raise ArgumentError,
-            'Too much data (opts[:data] and block_given?).'
+            "Too much data (opts[:data] and block_given?)."
         end
 
-        raise ArgumentError, 'No size provided' unless size
+        raise ArgumentError, "No size provided" unless size
       else
-        raise ArgumentError, 'No data provided' unless data
+        raise ArgumentError, "No data provided" unless data
 
         bytes = bytesize(data)
         size = bytes if size.nil? || size < bytes
@@ -245,7 +245,7 @@ module Archive::Tar::Minitar
 
       header = {
         :mode => opts[:mode],
-        :typeflag => '5',
+        :typeflag => "5",
         :size => 0,
         :gid => opts[:gid],
         :uid => opts[:uid],
@@ -283,9 +283,9 @@ module Archive::Tar::Minitar
     def write_header(header, long_name, short_name, prefix, needs_long_name)
       if needs_long_name
         long_name_header = {
-          :prefix => '',
+          :prefix => "",
           :name => PosixHeader::GNU_EXT_LONG_LINK,
-          :typeflag => 'L',
+          :typeflag => "L",
           :size => long_name.length,
           :mode => 0,
         }
@@ -300,20 +300,20 @@ module Archive::Tar::Minitar
 
     def split_name(name)
       if bytesize(name) <= 100
-        prefix = ''
+        prefix = ""
       else
         parts = name.split(/\//)
         newname = parts.pop
 
-        nxt = ''
+        nxt = ""
 
         loop do
-          nxt = parts.pop || ''
+          nxt = parts.pop || ""
           break if bytesize(newname) + 1 + bytesize(nxt) >= 100
           newname = "#{nxt}/#{newname}"
         end
 
-        prefix = (parts + [nxt]).join('/')
+        prefix = (parts + [nxt]).join("/")
 
         name = newname
       end

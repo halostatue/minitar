@@ -21,7 +21,7 @@ module Hoe::Deprecated_Gem # rubocop:disable Style/ClassAndModuleCamelCase
               YAML.dump(spec), permitted_classes, permitted_symbols, true
             )
           end
-    atm.name = 'archive-tar-minitar'
+    atm.name = "archive-tar-minitar"
     d = %Q('#{atm.name}' has been deprecated; just install '#{spec.name}'.)
     atm.description = "#{d} #{spec.description}"
     atm.summary = atm.post_install_message = d
@@ -32,7 +32,7 @@ module Hoe::Deprecated_Gem # rubocop:disable Style/ClassAndModuleCamelCase
     atm.rdoc_options.clear
     atm.dependencies.clear
 
-    version = Gem::Version.new(spec.version.segments.first(2).join('.'))
+    version = Gem::Version.new(spec.version.segments.first(2).join("."))
 
     atm.add_dependency(spec.name, "~> #{version}")
     atm.add_dependency(%Q(#{spec.name}-cli), "~> #{version}")
@@ -47,11 +47,11 @@ module Hoe::Deprecated_Gem # rubocop:disable Style/ClassAndModuleCamelCase
   end
 
   def define_deprecated_gem_tasks
-    gemspec = spec.name + '.gemspec'
-    atmspec = 'archive-tar-minitar.gemspec'
+    gemspec = spec.name + ".gemspec"
+    atmspec = "archive-tar-minitar.gemspec"
 
     file atmspec => gemspec do
-      open(atmspec, 'w') { |f| f.write(linked_spec(spec).to_ruby) }
+      open(atmspec, "w") { |f| f.write(linked_spec(spec).to_ruby) }
     end
 
     task :gemspec => atmspec

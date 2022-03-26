@@ -1,6 +1,6 @@
 # coding: utf-8
 
-require 'archive/tar/minitar/reader'
+require "archive/tar/minitar/reader"
 
 module Archive::Tar::Minitar
   # Wraps a Archive::Tar::Minitar::Reader with convenience methods and wrapped
@@ -73,7 +73,7 @@ module Archive::Tar::Minitar
       @io = if input.respond_to?(:read)
               input
             else
-              ::Kernel.open(input, 'rb')
+              ::Kernel.open(input, "rb")
             end
 
       unless Archive::Tar::Minitar.seekable?(@io, :rewind)
@@ -133,7 +133,7 @@ module Archive::Tar::Minitar
       # leave +destdir+.
       #
       # However, squeeze consecutive '/' characters together.
-      full_name = entry.full_name.squeeze('/')
+      full_name = entry.full_name.squeeze("/")
 
       if full_name =~ /\.{2}(?:\/|\z)/
         raise SecureRelativePathError, %q(Path contains '..')
@@ -164,7 +164,7 @@ module Archive::Tar::Minitar
 
     def fsync_dir(dirname)
       # make sure this hits the disc
-      dir = open(dirname, 'rb')
+      dir = open(dirname, "rb")
       dir.fsync
     rescue # ignore IOError if it's an unpatched (old) Ruby
       nil
@@ -184,7 +184,7 @@ module Archive::Tar::Minitar
           nil
         end
       else
-        File.unlink(dest.chomp('/')) if File.symlink?(dest.chomp('/'))
+        File.unlink(dest.chomp("/")) if File.symlink?(dest.chomp("/"))
 
         FileUtils.mkdir_p(dest, :mode => entry.mode)
         FileUtils.chmod(entry.mode, dest)
@@ -192,7 +192,7 @@ module Archive::Tar::Minitar
 
       if options.fetch(:fsync, true)
         fsync_dir(dest)
-        fsync_dir(File.join(dest, '..'))
+        fsync_dir(File.join(dest, ".."))
       end
     end
 
@@ -211,7 +211,7 @@ module Archive::Tar::Minitar
 
       yield :file_start, full_name, stats if block_given?
 
-      File.open(destfile, 'wb', entry.mode) do |os|
+      File.open(destfile, "wb", entry.mode) do |os|
         loop do
           data = entry.read(4096)
           break unless data
@@ -234,7 +234,7 @@ module Archive::Tar::Minitar
         yield :dir_fsync, full_name, stats if block_given?
 
         fsync_dir(File.dirname(destfile))
-        fsync_dir(File.join(File.dirname(destfile), '..'))
+        fsync_dir(File.join(File.dirname(destfile), ".."))
       end
 
       yield :file_done, full_name, stats if block_given?

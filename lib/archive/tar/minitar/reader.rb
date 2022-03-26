@@ -79,14 +79,14 @@ module Archive::Tar::Minitar
       # Returns +true+ if the entry represents a directory.
       def directory?
         case @typeflag
-        when '5'
+        when "5"
           true
-        when '0', "\0"
+        when "0", "\0"
           # If the name ends with a slash, treat it as a directory.
           # This is what other major tar implementations do for
           # interoperability and compatibility with older tar variants
           # and some new ones.
-          @name.end_with?('/')
+          @name.end_with?("/")
         else
           false
         end
@@ -95,7 +95,7 @@ module Archive::Tar::Minitar
 
       # Returns +true+ if the entry represents a plain file.
       def file?
-        (@typeflag == '0' || @typeflag == "\0") && !@name.end_with?('/')
+        (@typeflag == "0" || @typeflag == "\0") && !@name.end_with?("/")
       end
       alias file file?
 
@@ -125,7 +125,7 @@ module Archive::Tar::Minitar
 
       # Returns the full and proper name of the entry.
       def full_name
-        if @prefix != ''
+        if @prefix != ""
           File.join(@prefix, @name)
         else
           @name

@@ -1,0 +1,9 @@
+parallel: true
+ruby_version: 1.9
+ignore:
+  - '*.gemspec'
+  - Rakefile:
+      - Layout/HeredocIndentation
+
+Style/HashSyntax:
+  Enabled: false
