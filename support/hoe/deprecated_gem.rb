@@ -22,7 +22,7 @@ module Hoe::Deprecated_Gem
             )
           end
     atm.name = "archive-tar-minitar"
-    d = %Q('#{atm.name}' has been deprecated; just install '#{spec.name}'.)
+    d = %('#{atm.name}' has been deprecated; just install '#{spec.name}'.)
     atm.description = "#{d} #{spec.description}"
     atm.summary = atm.post_install_message = d
     atm.files.delete_if do |f|
@@ -35,7 +35,7 @@ module Hoe::Deprecated_Gem
     version = Gem::Version.new(spec.version.segments.first(2).join("."))
 
     atm.add_dependency(spec.name, "~> #{version}")
-    atm.add_dependency(%Q(#{spec.name}-cli), "~> #{version}")
+    atm.add_dependency(%(#{spec.name}-cli), "~> #{version}")
 
     unless @include_all
       [ :signing_key, :cert_chain ].each { |name|

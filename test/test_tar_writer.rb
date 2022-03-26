@@ -178,7 +178,7 @@ class TestTarWriter < Minitest::Test
     end
     assert_headers_equal(tar_file_header("lib/foo/bar", "", 0o644, 10),
       dummyos[0, 512])
-    assert_equal(%Q(#{"a" * 10}#{"\0" * 502}), dummyos[512, 512])
+    assert_equal(%(#{"a" * 10}#{"\0" * 502}), dummyos[512, 512])
     offset = 512 * 2
     [content1, content2, ""].each do |data|
       assert_headers_equal(tar_file_header("lib/bar/baz", "", 0o644,
