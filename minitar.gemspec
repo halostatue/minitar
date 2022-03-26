@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: minitar 0.9 ruby lib
+# stub: minitar 0.10 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "minitar".freeze
-  s.version = "0.9"
+  s.version = "0.10"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.metadata = { "bug_tracker_uri" => "https://github.com/halostatue/minitar/issues", "homepage_uri" => "https://github.com/halostatue/minitar/", "source_code_uri" => "https://github.com/halostatue/minitar/" } if s.respond_to? :metadata=
