@@ -265,7 +265,7 @@ class TestTarWriter < Minitest::Test
     @dummyos.reset
     @os.symlink("lib/foo/bar", "lib/foo/baz", :mode => 0o644)
     @os.flush
-    assert_headers_equal(tar_dir_header("lib/foo", "", 0o644),
+    assert_headers_equal(tar_symlink_header("lib/foo/bar", "", 0o644, "lib/foo/baz"),
       @dummyos.data[0, 512])
   end
 
