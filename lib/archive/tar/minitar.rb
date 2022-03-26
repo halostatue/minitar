@@ -227,7 +227,7 @@ module Archive::Tar::Minitar
       Output.open(dest) do |outp|
         if src.is_a?(Array)
           src.each do |entry|
-            if dir?(entry) and recurse_dirs
+            if dir?(entry) && recurse_dirs
               Find.find(entry) do |ee|
                 pack_file(ee, outp, &block)
               end
@@ -248,14 +248,14 @@ module Archive::Tar::Minitar
     # will be extracted.
     def unpack(src, dest, files = [], options = {}, &block)
       Input.open(src) do |inp|
-        if File.exist?(dest) and !dir?(dest)
+        if File.exist?(dest) && !dir?(dest)
           raise "Can't unpack to a non-directory."
         end
 
         FileUtils.mkdir_p(dest) unless File.exist?(dest)
 
         inp.each do |entry|
-          if files.empty? or files.include?(entry.full_name)
+          if files.empty? || files.include?(entry.full_name)
             inp.extract_entry(dest, entry, options, &block)
           end
         end
