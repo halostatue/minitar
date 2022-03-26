@@ -302,7 +302,7 @@ module Archive::Tar::Minitar
       if bytesize(name) <= 100
         prefix = ""
       else
-        parts = name.split(/\//)
+        parts = name.split("/")
         newname = parts.pop
 
         nxt = ""
