@@ -270,8 +270,8 @@ module Archive::Tar::Minitar
         io.stat.file?
       else
         # Duck-type the rest of this.
-        methods ||= [ :pos, :pos=, :seek, :rewind ]
-        methods = [ methods ] unless methods.is_a?(Array)
+        methods ||= [:pos, :pos=, :seek, :rewind]
+        methods = [methods] unless methods.is_a?(Array)
         methods.all? { |m| io.respond_to?(m) }
       end
     end

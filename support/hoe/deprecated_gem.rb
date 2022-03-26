@@ -38,7 +38,7 @@ module Hoe::Deprecated_Gem
     atm.add_dependency(%(#{spec.name}-cli), "~> #{version}")
 
     unless @include_all
-      [ :signing_key, :cert_chain ].each { |name|
+      [:signing_key, :cert_chain].each { |name|
         atm.send("#{name}=".to_sym, atm.default_value(name))
       }
     end

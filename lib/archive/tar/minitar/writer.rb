@@ -318,7 +318,7 @@ module Archive::Tar::Minitar
         name = newname
       end
 
-      [ name, prefix, (bytesize(name) > 100 || bytesize(prefix) > 155) ]
+      [name, prefix, (bytesize(name) > 100 || bytesize(prefix) > 155)]
     end
   end
 end

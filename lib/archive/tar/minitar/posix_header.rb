@@ -43,7 +43,7 @@ class Archive::Tar::Minitar::PosixHeader
   GNU_EXT_LONG_LINK = "././@LongLink"
 
   # Fields that must be set in a POSIX tar(1) header.
-  REQUIRED_FIELDS = [ :name, :size, :prefix, :mode ].freeze
+  REQUIRED_FIELDS = [:name, :size, :prefix, :mode].freeze
   # Fields that may be set in a POSIX tar(1) header.
   OPTIONAL_FIELDS = [
     :uid, :gid, :mtime, :checksum, :typeflag, :linkname, :magic, :version,
