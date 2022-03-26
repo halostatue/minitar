@@ -231,7 +231,7 @@ module Archive::Tar::Minitar
         :mtime => opts[:mtime],
         :size => size,
         :gid => opts[:gid],
-        :uid => opts[:uid],
+        :uid => opts[:uid]
       }
 
       write_header(header, name, short_name, prefix, needs_long_name)
@@ -249,7 +249,7 @@ module Archive::Tar::Minitar
         :size => 0,
         :gid => opts[:gid],
         :uid => opts[:uid],
-        :mtime => opts[:mtime],
+        :mtime => opts[:mtime]
       }
 
       short_name, prefix, needs_long_name = split_name(name)
@@ -287,7 +287,7 @@ module Archive::Tar::Minitar
           :name => PosixHeader::GNU_EXT_LONG_LINK,
           :typeflag => "L",
           :size => long_name.length,
-          :mode => 0,
+          :mode => 0
         }
         @io.write(PosixHeader.new(long_name_header))
         @io.write(long_name)
