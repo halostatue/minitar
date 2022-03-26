@@ -136,7 +136,7 @@ module Archive::Tar::Minitar
       full_name = entry.full_name.squeeze("/")
 
       if full_name =~ /\.{2}(?:\/|\z)/
-        raise SecureRelativePathError, %q(Path contains '..')
+        raise SecureRelativePathError, "Path contains '..'"
       end
 
       if entry.directory?

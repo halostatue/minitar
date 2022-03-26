@@ -211,7 +211,7 @@ module Archive::Tar::Minitar
         yield :dir, name, stats if block_given?
         outputter.mkdir(name, stats)
       else
-        raise %q(Don't yet know how to pack this type of file.)
+        raise "Don't yet know how to pack this type of file."
       end
     end
 
@@ -249,7 +249,7 @@ module Archive::Tar::Minitar
     def unpack(src, dest, files = [], options = {}, &block)
       Input.open(src) do |inp|
         if File.exist?(dest) and !dir?(dest)
-          raise %q(Can't unpack to a non-directory.)
+          raise "Can't unpack to a non-directory."
         end
 
         FileUtils.mkdir_p(dest) unless File.exist?(dest)
