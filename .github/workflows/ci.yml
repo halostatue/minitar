@@ -9,23 +9,25 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 jobs:
   test:
     strategy:
       matrix:
         os:
-          - ubuntu-latest
-          - macos-latest
-          - windows-latest
+          - ubuntu
+          - macos
+          - windows
         ruby:
-          - 2.4
-          - 2.5
-          - 2.6
-          - 2.7
+          - '2.4'
+          - '2.5'
+          - '2.6'
+          - '2.7'
+          - '3.0'
+          - '3.1'
           - head
           - debug
           - mingw
@@ -35,25 +37,29 @@ jobs:
           - truffleruby
           - truffleruby-head
         exclude:
-          - os: macos-latest
+          - os: macos
             ruby: mingw
-          - os: macos-latest
+          - os: macos
             ruby: mswin
-          - os: ubuntu-latest
+          - os: ubuntu
             ruby: mingw
-          - os: ubuntu-latest
+          - os: ubuntu
             ruby: mswin
-          - os: windows-latest
+          - os: windows
             ruby: debug
-          - os: windows-latest
+          - os: windows
+            ruby: jruby
+          - os: windows
+            ruby: jruby-head
+          - os: windows
             ruby: truffleruby
-          - os: windows-latest
+          - os: windows
             ruby: truffleruby-head
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
     continue-on-error: ${{
       endsWith(matrix.ruby, 'head') ||
       matrix.ruby == 'debug' ||
-      (matrix.ruby == 'jruby' && matrix.os == 'windows')
+      (startsWith(matrix.ruby, 'jruby') && matrix.os == 'windows')
       }}
     steps:
       - uses: actions/checkout@v2
@@ -61,8 +67,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
-      - name: Install dependencies
-        run: bundle install
+          bundler-cache: true # 'bundle install' and cache
       - name: Run tests
-        run: bundle exec ruby -S rake
+        run: bundle exec ruby -S rake test --trace
