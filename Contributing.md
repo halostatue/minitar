@@ -72,19 +72,19 @@ Thanks to everyone who has contributed to minitar:
 - Antoine Toulme
 - Curtis Sampson
 - Daniel J. Berger
+- dearblue
+- inkstak
 - Jorie Tappa
-- Kazuyoshi Kato
 - Kazuyoshi Kato
 - Kevin McDermott
 - Matthew Kent
 - Merten Falk
 - Michal Suchanek
 - Mike Furr
+- ooooooo_q
 - Pete Fritchman
 - Zach Dennis
-- dearblue
-- inkstak
-- ooooooo_q
+- Yamamoto Kōhei
 
 [minitest]: https://github.com/seattlerb/minitest
 [quality commit messages]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html

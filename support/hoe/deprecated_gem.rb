@@ -51,7 +51,7 @@ module Hoe::Deprecated_Gem # standard:disable Naming/ClassAndModuleCamelCase
     atmspec = "archive-tar-minitar.gemspec"
 
     file atmspec => gemspec do
-      IO.open(atmspec, "w") { |f| f.write(linked_spec(spec).to_ruby) }
+      File.open(atmspec, "w") { |f| f.write(linked_spec(spec).to_ruby) }
     end
 
     task :gemspec => atmspec

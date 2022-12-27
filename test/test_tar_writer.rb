@@ -73,10 +73,9 @@ class TestTarWriter < Minitest::Test
     @os.add_file_simple("sadd", :mode => 0o644, :size => 20) { |f| }
     @os.close
     assert_raises(Minitar::ClosedStream) { @os.flush }
-    assert_raises(Minitar::ClosedStream) {
-      @os.add_file("dfdsf", :mode => 0o644) {}
-    }
+    assert_raises(Minitar::ClosedStream) { @os.add_file("dfdsf", :mode => 0o644) {} }
     assert_raises(Minitar::ClosedStream) { @os.mkdir "sdfdsf", :mode => 0o644 }
+    assert_raises(Minitar::ClosedStream) { @os.symlink "a", "b", :mode => 0o644 }
   end
 
   def test_file_name_is_split_correctly
@@ -260,5 +259,20 @@ class TestTarWriter < Minitest::Test
       end
     end
     @os.add_file_simple("lib/foo/bar", :mode => 0o644, :size => 10) { |f| }
+  end
+
+  def test_symlink
+    @dummyos.reset
+    @os.symlink("lib/foo/bar", "lib/foo/baz", :mode => 0o644)
+    @os.flush
+    assert_headers_equal(tar_symlink_header("lib/foo/bar", "", 0o644, "lib/foo/baz"),
+      @dummyos.data[0, 512])
+  end
+
+  def test_symlink_target_size_is_checked
+    @dummyos.reset
+    assert_raises(Minitar::FileNameTooLong) do
+      @os.symlink("lib/foo/bar", "x" * 101)
+    end
   end
 end

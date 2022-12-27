@@ -1,7 +1,7 @@
-# -*- ruby -*-
+# frozen_string_literal: true
 
-# NOTE: This file is present to keep Travis CI happy. Edits to it will not
-# be accepted.
+# NOTE: This file is not the canonical source of dependencies. Edit the
+# Rakefile, instead.
 
 source "https://rubygems.org/"
 
@@ -14,15 +14,9 @@ mime_version =
     gem "rdoc", "< 6.0"
     "2.0"
   elsif RUBY_VERSION >= "2.0"
-    if RUBY_ENGINE == "ruby"
-      gem "simplecov", "~> 0.7"
-      gem "coveralls", "~> 0.7"
-    end
     "3.0"
   end
 
 gem "mime-types", "~> #{mime_version}"
 
 gemspec :name => "minitar"
-
-# vim: syntax=ruby

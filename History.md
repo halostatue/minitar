@@ -1,6 +1,18 @@
+# History
+
+## 0.11 / 2022-12-31
+
+- symlink support is complete. Merged as PR [#42][], rebased and built on top of
+  PR [#12][] by fetep.
+
+- kymmt90 fixed a documentation error on Minitar.pack in PR [#43][].
+
+- This version is a soft-deprecation of all versions before Ruby 2.7, as they
+  will no longer be tested in CI.
+
 ## 0.10 / 2022-03-26
 
-- nevesenin fixed an issue with long filename handling. Marged as PR [#40][].
+- nevesenin fixed an issue with long filename handling. Merged as PR [#40][].
 
 ## 0.9 / 2019-09-04
 
@@ -158,6 +170,7 @@
 [#3]: https://github.com/halostatue/minitar/issues/3
 [#4]: https://github.com/halostatue/minitar/issues/4
 [#6]: https://github.com/halostatue/minitar/issues/6
+[#12]: https://github.com/halostatue/minitar/pull/12
 [#13]: https://github.com/halostatue/minitar/issues/13
 [#14]: https://github.com/halostatue/minitar/issues/14
 [#16]: https://github.com/halostatue/minitar/issues/16
@@ -175,3 +188,5 @@
 [#36]: https://github.com/halostatue/minitar/pull/36
 [#37]: https://github.com/halostatue/minitar/pull/37
 [#40]: https://github.com/halostatue/minitar/pull/40
+[#42]: https://github.com/halostatue/minitar/pull/42
+[#43]: https://github.com/halostatue/minitar/pull/43
