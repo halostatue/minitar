@@ -220,8 +220,8 @@ module Archive::Tar::Minitar
     # the resulting Archive::Tar::Minitar::Output stream; if +recurse_dirs+ is
     # true, then directories will be recursed.
     #
-    # If +src+ is an Array, it will be treated as the result of Find.find; all
-    # files matching will be packed.
+    # If +src+ is not an Array, it will be treated as the result of Find.find;
+    # all files matching will be packed.
     def pack(src, dest, recurse_dirs = true, &block)
       require "find"
       Output.open(dest) do |outp|
