@@ -74,7 +74,7 @@ end
 #       tar.close
 #     end
 module Archive::Tar::Minitar
-  VERSION = "0.10".freeze # :nodoc:
+  VERSION = "0.11".freeze # :nodoc:
 
   # The base class for any minitar error.
   Error = Class.new(::StandardError)
@@ -100,7 +100,7 @@ module Archive::Tar::Minitar
     # corrupted <tt>stat()</tt> call on Windows.
     def dir?(path)
       # rubocop:disable Style/CharacterLiteral
-      File.directory?(path[-1] == ?/ ? path : "#{path}/")
+      File.directory?((path[-1] == ?/) ? path : "#{path}/")
       # rubocop:enable Style/CharacterLiteral
     end
 
