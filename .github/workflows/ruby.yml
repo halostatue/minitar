@@ -2,11 +2,8 @@ name: Ruby CI
 
 on:
   pull_request:
-    branches:
-      - main
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -14,7 +11,7 @@ jobs:
     name: Ruby ${{ matrix.ruby }} - ${{ matrix.os }}
 
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         os:
           - ubuntu-20.04
@@ -39,6 +36,9 @@ jobs:
             ruby: mingw
           - os: windows-latest
             ruby: mswin
+          - os: windows-latest
+            ruby: jruby
+            continue-on-error: true
           - os: macos-latest
             ruby: '2.7'
           - os: macos-latest
@@ -46,7 +46,7 @@ jobs:
           - os: macos-latest
             ruby: '3.1'
           - os: macos-latest
-            ruby: '3.1'
+            ruby: '3.2'
           - os: ubuntu-22.04
             ruby: head
             continue-on-error: true
@@ -54,6 +54,13 @@ jobs:
             ruby: '3.1'
           - os: ubuntu-22.04
             ruby: '3.2'
+          - os: ubuntu-22.04
+            ruby: truffleruby+graalvm-head
+            continue-on-error: true
+          - os: ubuntu-22.04
+            ruby: truffleruby-head
+            continue-on-error: true
+
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.continue-on-error || false }}
 
@@ -62,8 +69,11 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+          rubygems: latest
+          bundler: 2
           bundler-cache: true
 
       - run: bundle exec ruby -S rake test --trace
 
-      - run: bundle exec standardrb
+      - if: matrix.os == 'ubuntu-22.04' && matrix.ruby == '3.2'
+        run: bundle exec standardrb
