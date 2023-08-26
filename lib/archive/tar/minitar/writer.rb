@@ -308,7 +308,7 @@ module Archive::Tar::Minitar
           :prefix => "",
           :name => PosixHeader::GNU_EXT_LONG_LINK,
           :typeflag => "L",
-          :size => long_name.length,
+          :size => long_name.length + 1,
           :mode => 0
         }
         @io.write(PosixHeader.new(long_name_header))
