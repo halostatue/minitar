@@ -240,8 +240,11 @@ module Archive::Tar::Minitar
         raise Archive::Tar::Minitar::InvalidTarStream if header.size < 0
 
         if header.long_name?
-          name = @io.read(512).rstrip
+          name_block = (header.size / 512.0).ceil * 512
+
+          name = @io.read(name_block).rstrip
           header = PosixHeader.from_stream(@io)
+
           return if header.empty?
           header.name = name
         end
