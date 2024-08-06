@@ -83,8 +83,9 @@ Thanks to everyone who has contributed to minitar:
 - Mike Furr
 - ooooooo_q
 - Pete Fritchman
-- Zach Dennis
+- Vijay (bv-vijay)
 - Yamamoto Kōhei
+- Zach Dennis
 
 [minitest]: https://github.com/seattlerb/minitest
 [quality commit messages]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
