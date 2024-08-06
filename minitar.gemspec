@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze]
   s.date = "2024-08-06"
-  s.description = "The minitar library is a pure-Ruby library that provides the ability to deal\nwith POSIX tar(1) archive files.\n\nThis is release 0.9, adding a minor feature to Minitar.unpack and\nMinitar::Input#extract_entry that when <tt>:fsync => false</tt> is provided,\nfsync will be skipped.\n\nminitar (previously called Archive::Tar::Minitar) is based heavily on code\noriginally written by Mauricio Julio Fern\u00E1ndez Pradier for the rpa-base\nproject.".freeze
+  s.description = "The minitar library is a pure-Ruby library that provides the ability to deal\nwith POSIX tar(1) archive files.\n\nThis is release 0.12. This is likely the last revision before 1.0.\n\nminitar (previously called Archive::Tar::Minitar) is based heavily on code\noriginally written by Mauricio Julio Fern\u00E1ndez Pradier for the rpa-base\nproject.".freeze
   s.email = ["halostatue@gmail.com".freeze]
   s.extra_rdoc_files = ["Code-of-Conduct.md".freeze, "Contributing.md".freeze, "History.md".freeze, "Licence.md".freeze, "Manifest.txt".freeze, "README.rdoc".freeze, "docs/bsdl.txt".freeze, "docs/ruby.txt".freeze]
   s.files = ["Code-of-Conduct.md".freeze, "Contributing.md".freeze, "History.md".freeze, "Licence.md".freeze, "Manifest.txt".freeze, "README.rdoc".freeze, "Rakefile".freeze, "docs/bsdl.txt".freeze, "docs/ruby.txt".freeze, "lib/archive-tar-minitar.rb".freeze, "lib/archive/tar/minitar.rb".freeze, "lib/archive/tar/minitar/input.rb".freeze, "lib/archive/tar/minitar/output.rb".freeze, "lib/archive/tar/minitar/posix_header.rb".freeze, "lib/archive/tar/minitar/reader.rb".freeze, "lib/archive/tar/minitar/writer.rb".freeze, "lib/minitar.rb".freeze, "support/hoe/deprecated_gem.rb".freeze, "test/minitest_helper.rb".freeze, "test/support/tar_test_helpers.rb".freeze, "test/test_tar_header.rb".freeze, "test/test_tar_input.rb".freeze, "test/test_tar_output.rb".freeze, "test/test_tar_reader.rb".freeze, "test/test_tar_writer.rb".freeze]
@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   s.specification_version = 4
 
   s.add_development_dependency(%q<minitest>.freeze, ["~> 5.24".freeze])
+  s.add_development_dependency(%q<base64>.freeze, ["~> 0.2".freeze])
   s.add_development_dependency(%q<hoe>.freeze, ["~> 4.0".freeze])
   s.add_development_dependency(%q<hoe-doofus>.freeze, ["~> 1.0".freeze])
   s.add_development_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1".freeze])

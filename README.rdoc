@@ -11,9 +11,7 @@ cli  :: https://github.com/halostatue/minitar-cli
 The minitar library is a pure-Ruby library that provides the ability to deal
 with POSIX tar(1) archive files.
 
-This is release 0.9, adding a minor feature to Minitar.unpack and
-Minitar::Input#extract_entry that when <tt>:fsync => false</tt> is provided,
-fsync will be skipped.
+This is release 0.12. This is likely the last revision before 1.0.
 
 minitar (previously called Archive::Tar::Minitar) is based heavily on code
 originally written by Mauricio Julio Fernández Pradier for the rpa-base

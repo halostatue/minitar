@@ -57,6 +57,7 @@ expecting this executable, make sure you also install `minitar-cli`.
 
   spec_extras[:metadata] = ->(val) { val["rubygems_mfa_required"] = "true" }
 
+  extra_dev_deps << ["base64", "~> 0.2"]
   extra_dev_deps << ["hoe", "~> 4.0"]
   extra_dev_deps << ["hoe-doofus", "~> 1.0"]
   extra_dev_deps << ["hoe-gemspec2", "~> 1.1"]
