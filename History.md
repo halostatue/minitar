@@ -3,6 +3,8 @@
 ## 0.12 / 2024-08-DD
 
 - Properly handle very long GNU filenames, resolving [#46][].
+- Handle very long GNU filenames that are 512 or more bytes, resolving [#45][].
+  Originally implemented in [#47][] by Vijay, but accidentally closed.
 
 ## 0.11 / 2022-12-31
 
@@ -194,4 +196,6 @@
 [#40]: https://github.com/halostatue/minitar/pull/40
 [#42]: https://github.com/halostatue/minitar/pull/42
 [#43]: https://github.com/halostatue/minitar/pull/43
+[#45]: https://github.com/halostatue/minitar/issues/45
 [#46]: https://github.com/halostatue/minitar/issues/46
+[#47]: https://github.com/halostatue/minitar/pull/47
