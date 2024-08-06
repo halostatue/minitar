@@ -39,7 +39,7 @@ module Hoe::Deprecated_Gem # standard:disable Naming/ClassAndModuleCamelCase
 
     unless @include_all
       [:signing_key, :cert_chain].each { |name|
-        atm.send("#{name}=".to_sym, atm.default_value(name))
+        atm.send(:"#{name}=", atm.default_value(name))
       }
     end
 
