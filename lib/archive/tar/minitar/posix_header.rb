@@ -144,7 +144,7 @@ class Archive::Tar::Minitar::PosixHeader
     v[:version] ||= "00"
 
     FIELDS.each do |f|
-      instance_variable_set("@#{f}", v[f])
+      instance_variable_set(:"@#{f}", v[f])
     end
 
     @empty = v[:empty]

@@ -1,5 +1,9 @@
 # History
 
+## 0.12 / 2024-08-DD
+
+- Properly handle very long GNU filenames, resolving [#46][].
+
 ## 0.11 / 2022-12-31
 
 - symlink support is complete. Merged as PR [#42][], rebased and built on top of
@@ -190,3 +194,4 @@
 [#40]: https://github.com/halostatue/minitar/pull/40
 [#42]: https://github.com/halostatue/minitar/pull/42
 [#43]: https://github.com/halostatue/minitar/pull/43
+[#46]: https://github.com/halostatue/minitar/issues/46
