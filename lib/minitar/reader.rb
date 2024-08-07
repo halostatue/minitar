@@ -1,5 +1,3 @@
-# coding: utf-8
-
 module Minitar
   # The class that reads a tar format archive from a data stream. The data
   # stream may be sequential or random access, but certain features only work
