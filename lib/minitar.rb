@@ -73,10 +73,10 @@ module Minitar
     # A convenience method for wrapping Minitar::Input.open
     # (mode +r+) and Minitar::Output.open (mode +w+). No other
     # modes are currently supported.
-    def open(dest, mode = "r", &block)
+    def open(dest, mode = "r", &)
       case mode
       when "r"
-        Input.open(dest, &block)
+        Input.open(dest, &)
       when "w"
         Output.open(dest, &block)
       else
