@@ -167,7 +167,7 @@ module Minitar
     rescue # ignore IOError if it's an unpatched (old) Ruby
       nil
     ensure
-      dir.close if dir rescue nil # rubocop:disable Style/RescueModifier
+      dir&.close rescue nil # rubocop:disable Style/RescueModifier
     end
 
     def extract_directory(destdir, full_name, entry, stats, options)
