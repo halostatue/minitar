@@ -65,7 +65,7 @@ module Minitar
     # Tests if +path+ refers to a directory. Fixes an apparently
     # corrupted <tt>stat()</tt> call on Windows.
     def dir?(path)
-      File.directory?((path[-1] == '/') ? path : "#{path}/")
+      File.directory?((path[-1] == "/") ? path : "#{path}/")
     end
 
     # A convenience method for wrapping Minitar::Input.open
