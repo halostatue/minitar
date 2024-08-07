@@ -50,10 +50,10 @@ class TestTarWriter < Minitest::Test
     @dummyos.reset
 
     Minitar::Writer.open(@dummyos) do |os|
-      os.add_file_simple("lib/foo/bar", :mode => 0o644, :size => 10) do |f|
+      os.add_file_simple("lib/foo/bar", mode: 0o644, size: 10) do |f|
         f.write "a" * 10
       end
-      os.add_file_simple("lib/bar/baz", :mode => 0o644, :size => 100) do |f|
+      os.add_file_simple("lib/bar/baz", mode: 0o644, size: 100) do |f|
         f.write "fillme"
       end
     end
@@ -70,12 +70,12 @@ class TestTarWriter < Minitest::Test
 
   def test_write_operations_fail_after_closed
     @dummyos.reset
-    @os.add_file_simple("sadd", :mode => 0o644, :size => 20) { |f| }
+    @os.add_file_simple("sadd", mode: 0o644, size: 20) { |f| }
     @os.close
     assert_raises(Minitar::ClosedStream) { @os.flush }
-    assert_raises(Minitar::ClosedStream) { @os.add_file("dfdsf", :mode => 0o644) {} }
-    assert_raises(Minitar::ClosedStream) { @os.mkdir "sdfdsf", :mode => 0o644 }
-    assert_raises(Minitar::ClosedStream) { @os.symlink "a", "b", :mode => 0o644 }
+    assert_raises(Minitar::ClosedStream) { @os.add_file("dfdsf", mode: 0o644) {} }
+    assert_raises(Minitar::ClosedStream) { @os.mkdir "sdfdsf", mode: 0o644 }
+    assert_raises(Minitar::ClosedStream) { @os.symlink "a", "b", mode: 0o644 }
   end
 
   def test_file_name_is_split_correctly
@@ -103,7 +103,7 @@ class TestTarWriter < Minitest::Test
       "#{"a" * 49}x"
     ]
     names.each do |name|
-      @os.add_file_simple(name, :mode => 0o644, :size => 10) {}
+      @os.add_file_simple(name, mode: 0o644, size: 10) {}
     end
     names.each_index do |i|
       assert_headers_equal(
@@ -117,13 +117,13 @@ class TestTarWriter < Minitest::Test
     @dummyos.reset
 
     @os.add_file_simple(File.join("a" * 152, "b" * 10, "c" * 92),
-      :mode => 0o644, :size => 10) {}
+      mode: 0o644, size: 10) {}
     @os.add_file_simple(File.join("d" * 162, "e" * 10),
-      :mode => 0o644, :size => 10) {}
+      mode: 0o644, size: 10) {}
     @os.add_file_simple(File.join("f" * 10, "g" * 110),
-      :mode => 0o644, :size => 10) {}
+      mode: 0o644, size: 10) {}
     # Issue #6.
-    @os.add_file_simple("a" * 114, :mode => 0o644, :size => 10) {}
+    @os.add_file_simple("a" * 114, mode: 0o644, size: 10) {}
 
     # "././@LongLink", a file name, its actual header, its data, ...
     4.times do |i|
@@ -137,7 +137,7 @@ class TestTarWriter < Minitest::Test
 
     long_name_file_content = "where_is_all_the_content_gone"
 
-    @os.add_file_simple("a" * 114, :mode => 0o0644, :data => long_name_file_content)
+    @os.add_file_simple("a" * 114, mode: 0o0644, data: long_name_file_content)
 
     assert_equal(long_name_file_content,
       @dummyos.data[3 * 512, long_name_file_content.bytesize])
@@ -156,7 +156,7 @@ class TestTarWriter < Minitest::Test
     long_name_file_content = "where_is_all_the_content_gone"
 
     Minitar::Writer.open(dummyos) do |os|
-      os.add_file("a" * 114, :mode => 0o0644) do |f|
+      os.add_file("a" * 114, mode: 0o0644) do |f|
         f.write(long_name_file_content)
       end
     end
@@ -177,10 +177,10 @@ class TestTarWriter < Minitest::Test
     content1 = ("a".."z").to_a.join("") # 26
     content2 = ("aa".."zz").to_a.join("") # 1352
     Minitar::Writer.open(dummyos) do |os|
-      os.add_file("lib/foo/bar", :mode => 0o644) { |f, _opts| f.write "a" * 10 }
-      os.add_file("lib/bar/baz", :mode => 0o644) { |f, _opts| f.write content1 }
-      os.add_file("lib/bar/baz", :mode => 0o644) { |f, _opts| f.write content2 }
-      os.add_file("lib/bar/baz", :mode => 0o644) { |_f, _opts| }
+      os.add_file("lib/foo/bar", mode: 0o644) { |f, _opts| f.write "a" * 10 }
+      os.add_file("lib/bar/baz", mode: 0o644) { |f, _opts| f.write content1 }
+      os.add_file("lib/bar/baz", mode: 0o644) { |f, _opts| f.write content2 }
+      os.add_file("lib/bar/baz", mode: 0o644) { |_f, _opts| }
     end
     assert_headers_equal(tar_file_header("lib/foo/bar", "", 0o644, 10),
       dummyos[0, 512])
@@ -203,28 +203,28 @@ class TestTarWriter < Minitest::Test
 
   def test_add_file_tests_seekability
     assert_raises(Minitar::NonSeekableStream) do
-      @os.add_file("libdfdsfd", :mode => 0o644) { |f| }
+      @os.add_file("libdfdsfd", mode: 0o644) { |f| }
     end
   end
 
   def test_write_header
     @dummyos.reset
-    @os.add_file_simple("lib/foo/bar", :mode => 0o644, :size => 0) {}
+    @os.add_file_simple("lib/foo/bar", mode: 0o644, size: 0) {}
     @os.flush
     assert_headers_equal(tar_file_header("lib/foo/bar", "", 0o644, 0),
       @dummyos.data[0, 512])
     @dummyos.reset
-    @os.mkdir("lib/foo", :mode => 0o644)
+    @os.mkdir("lib/foo", mode: 0o644)
     assert_headers_equal(tar_dir_header("lib/foo", "", 0o644),
       @dummyos.data[0, 512])
-    @os.mkdir("lib/bar", :mode => 0o644)
+    @os.mkdir("lib/bar", mode: 0o644)
     assert_headers_equal(tar_dir_header("lib/bar", "", 0o644),
       @dummyos.data[512 * 1, 512])
   end
 
   def test_write_data
     @dummyos.reset
-    @os.add_file_simple("lib/foo/bar", :mode => 0o644, :size => 10) do |f|
+    @os.add_file_simple("lib/foo/bar", mode: 0o644, size: 10) do |f|
       f.write @data
     end
     @os.flush
@@ -243,7 +243,7 @@ class TestTarWriter < Minitest::Test
 
     file = ["lib/foo/b", 0xc3.chr, 0xa5.chr, "r"].join
 
-    @os.add_file_simple(file, :mode => 0o644, :size => 20) do |f|
+    @os.add_file_simple(file, mode: 0o644, size: 20) do |f|
       f.write @unicode
     end
     @os.flush
@@ -254,16 +254,16 @@ class TestTarWriter < Minitest::Test
   def test_file_size_is_checked
     @dummyos.reset
     assert_raises(Minitar::Writer::WriteBoundaryOverflow) do
-      @os.add_file_simple("lib/foo/bar", :mode => 0o644, :size => 10) do |f|
+      @os.add_file_simple("lib/foo/bar", mode: 0o644, size: 10) do |f|
         f.write "1" * 100
       end
     end
-    @os.add_file_simple("lib/foo/bar", :mode => 0o644, :size => 10) { |f| }
+    @os.add_file_simple("lib/foo/bar", mode: 0o644, size: 10) { |f| }
   end
 
   def test_symlink
     @dummyos.reset
-    @os.symlink("lib/foo/bar", "lib/foo/baz", :mode => 0o644)
+    @os.symlink("lib/foo/bar", "lib/foo/baz", mode: 0o644)
     @os.flush
     assert_headers_equal(tar_symlink_header("lib/foo/bar", "", 0o644, "lib/foo/baz"),
       @dummyos.data[0, 512])

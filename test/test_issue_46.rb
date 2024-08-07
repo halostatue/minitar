@@ -19,8 +19,8 @@ Z2ZlDKlb/ktNrEQQ+3gA9/xP3aS0z/e5bUXh40B+/Vj+oJ63Xkzff26zoqzmzf13
   superlong_name = (["0123456789abcde"] * 33).join("/")
 
   SUPERLONG_CONTENTS = {
-    superlong_name => {:size => 496, :mode => 0o644},
-    "endfile" => {:size => 0, :mode => 0o644}
+    superlong_name => {size: 496, mode: 0o644},
+    "endfile" => {size: 0, mode: 0o644}
   }
 
   def test_each_works

@@ -137,10 +137,10 @@ module Minitar
       raise ClosedStream if @closed
 
       header = {
-        :mode => opts.fetch(:mode, 0o644),
-        :mtime => opts.fetch(:mtime, nil),
-        :gid => opts.fetch(:gid, nil),
-        :uid => opts.fetch(:uid, nil)
+        mode: opts.fetch(:mode, 0o644),
+        mtime: opts.fetch(:mtime, nil),
+        gid: opts.fetch(:gid, nil),
+        uid: opts.fetch(:uid, nil)
       }
 
       data = opts.fetch(:data, nil)
@@ -225,11 +225,11 @@ module Minitar
       final_pos, @io.pos = @io.pos, init_pos
 
       header = {
-        :mode => opts[:mode],
-        :mtime => opts[:mtime],
-        :size => size,
-        :gid => opts[:gid],
-        :uid => opts[:uid]
+        mode: opts[:mode],
+        mtime: opts[:mtime],
+        size: size,
+        gid: opts[:gid],
+        uid: opts[:uid]
       }
 
       write_header(header, name, short_name, prefix, needs_long_name)
@@ -242,12 +242,12 @@ module Minitar
       raise ClosedStream if @closed
 
       header = {
-        :mode => opts[:mode],
-        :typeflag => "5",
-        :size => 0,
-        :gid => opts[:gid],
-        :uid => opts[:uid],
-        :mtime => opts[:mtime]
+        mode: opts[:mode],
+        typeflag: "5",
+        size: 0,
+        gid: opts[:gid],
+        uid: opts[:uid],
+        mtime: opts[:mtime]
       }
 
       short_name, prefix, needs_long_name = split_name(name)
@@ -264,15 +264,15 @@ module Minitar
 
       name, prefix = split_name(name)
       header = {
-        :name => name,
-        :mode => opts[:mode],
-        :typeflag => "2",
-        :size => 0,
-        :linkname => link_target,
-        :gid => opts[:gid],
-        :uid => opts[:uid],
-        :mtime => opts[:mtime],
-        :prefix => prefix
+        name: name,
+        mode: opts[:mode],
+        typeflag: "2",
+        size: 0,
+        linkname: link_target,
+        gid: opts[:gid],
+        uid: opts[:uid],
+        mtime: opts[:mtime],
+        prefix: prefix
       }
       @io.write(PosixHeader.new(header))
       nil
@@ -303,18 +303,18 @@ module Minitar
     def write_header(header, long_name, short_name, prefix, needs_long_name)
       if needs_long_name
         long_name_header = {
-          :prefix => "",
-          :name => PosixHeader::GNU_EXT_LONG_LINK,
-          :typeflag => "L",
-          :size => long_name.length + 1,
-          :mode => 0
+          prefix: "",
+          name: PosixHeader::GNU_EXT_LONG_LINK,
+          typeflag: "L",
+          size: long_name.length + 1,
+          mode: 0
         }
         @io.write(PosixHeader.new(long_name_header))
         @io.write(long_name)
         @io.write("\0" * (512 - (long_name.length % 512)))
       end
 
-      new_header = header.merge({:name => short_name, :prefix => prefix})
+      new_header = header.merge({name: short_name, prefix: prefix})
       @io.write(PosixHeader.new(new_header))
     end
 

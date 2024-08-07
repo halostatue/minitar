@@ -96,23 +96,23 @@ class Minitar::PosixHeader
       empty = !data.each_byte.any?(&:nonzero?)
 
       new(
-        :name => name,
-        :mode => mode,
-        :uid => uid,
-        :gid => gid,
-        :size => size,
-        :mtime => mtime,
-        :checksum => checksum,
-        :typeflag => typeflag,
-        :magic => magic,
-        :version => version,
-        :uname => uname,
-        :gname => gname,
-        :devmajor => devmajor,
-        :devminor => devminor,
-        :prefix => prefix,
-        :empty => empty,
-        :linkname => linkname
+        name: name,
+        mode: mode,
+        uid: uid,
+        gid: gid,
+        size: size,
+        mtime: mtime,
+        checksum: checksum,
+        typeflag: typeflag,
+        magic: magic,
+        version: version,
+        uname: uname,
+        gname: gname,
+        devmajor: devmajor,
+        devminor: devminor,
+        prefix: prefix,
+        empty: empty,
+        linkname: linkname
       )
     end
 
