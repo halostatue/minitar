@@ -115,7 +115,7 @@ module Minitar
     #                     cycle.
     # <tt>:entry</tt>::   The entry being extracted; this is a
     #                     Reader::EntryStream, with all methods thereof.
-    def extract_entry(destdir, entry, options = {}, &block) # :yields action, name, stats:
+    def extract_entry(destdir, entry, options = {}, &) # :yields action, name, stats:
       stats = {
         current: 0,
         currinc: 0,
@@ -138,9 +138,9 @@ module Minitar
       end
 
       if entry.directory?
-        extract_directory(destdir, full_name, entry, stats, options, &block)
+        extract_directory(destdir, full_name, entry, stats, options, &)
       else # it's a file
-        extract_file(destdir, full_name, entry, stats, options, &block)
+        extract_file(destdir, full_name, entry, stats, options, &)
       end
     end
 

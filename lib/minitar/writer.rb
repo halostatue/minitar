@@ -201,10 +201,10 @@ module Minitar
     # #add_file_simple must be used.
     #
     # +opts+ may be modified during the writing of the file to the stream.
-    def add_file(name, opts = {}, &block) # :yields WriteOnlyStream, +opts+:
+    def add_file(name, opts = {}, &) # :yields WriteOnlyStream, +opts+:
       raise ClosedStream if @closed
 
-      return add_file_simple(name, opts, &block) if opts[:data]
+      return add_file_simple(name, opts, &) if opts[:data]
 
       unless Minitar.seekable?(@io)
         raise Minitar::NonSeekableStream
