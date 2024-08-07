@@ -117,9 +117,9 @@ module Minitar
     #                     Reader::EntryStream, with all methods thereof.
     def extract_entry(destdir, entry, options = {}, &block) # :yields action, name, stats:
       stats = {
-        :current => 0,
-        :currinc => 0,
-        :entry => entry
+        current: 0,
+        currinc: 0,
+        entry: entry
       }
 
       # extract_entry is not vulnerable to prefix '/' vulnerabilities, but it
@@ -184,7 +184,7 @@ module Minitar
       else
         File.unlink(dest.chomp("/")) if File.symlink?(dest.chomp("/"))
 
-        FileUtils.mkdir_p(dest, :mode => entry.mode)
+        FileUtils.mkdir_p(dest, mode: entry.mode)
         FileUtils.chmod(entry.mode, dest)
       end
 
@@ -196,7 +196,7 @@ module Minitar
 
     def extract_file(destdir, full_name, entry, stats, options)
       destdir = File.join(destdir, File.dirname(full_name))
-      FileUtils.mkdir_p(destdir, :mode => 0o755)
+      FileUtils.mkdir_p(destdir, mode: 0o755)
 
       destfile = File.join(destdir, File.basename(full_name))
 

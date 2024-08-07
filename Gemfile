@@ -3,4 +3,4 @@
 source "https://rubygems.org/"
 
 # TODO: Remove this for minitar 1 since archive-tar-minitar is going away
-gemspec :name => "minitar"
+gemspec name: "minitar"

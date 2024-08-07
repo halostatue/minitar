@@ -6,36 +6,36 @@ class TestTarHeader < Minitest::Test
   def test_arguments_are_checked
     ph = Minitar::PosixHeader
     assert_raises(ArgumentError) {
-      ph.new(:name => "", :size => "", :mode => "")
+      ph.new(name: "", size: "", mode: "")
     }
     assert_raises(ArgumentError) {
-      ph.new(:name => "", :size => "", :prefix => "")
+      ph.new(name: "", size: "", prefix: "")
     }
     assert_raises(ArgumentError) {
-      ph.new(:name => "", :prefix => "", :mode => "")
+      ph.new(name: "", prefix: "", mode: "")
     }
     assert_raises(ArgumentError) {
-      ph.new(:prefix => "", :size => "", :mode => "")
+      ph.new(prefix: "", size: "", mode: "")
     }
   end
 
   def test_basic_headers
     header = {
-      :name => "bla",
-      :mode => 0o12345,
-      :size => 10,
-      :prefix => "",
-      :typeflag => "0"
+      name: "bla",
+      mode: 0o12345,
+      size: 10,
+      prefix: "",
+      typeflag: "0"
     }
     assert_headers_equal(tar_file_header("bla", "", 0o12345, 10),
       Minitar::PosixHeader.new(header).to_s)
 
     header = {
-      :name => "bla",
-      :mode => 0o12345,
-      :size => 0,
-      :prefix => "",
-      :typeflag => "5"
+      name: "bla",
+      mode: 0o12345,
+      size: 0,
+      prefix: "",
+      typeflag: "5"
     }
     assert_headers_equal(tar_dir_header("bla", "", 0o12345),
       Minitar::PosixHeader.new(header).to_s)
@@ -43,12 +43,12 @@ class TestTarHeader < Minitest::Test
 
   def test_long_name_works
     header = {
-      :name => "a" * 100, :mode => 0o12345, :size => 10, :prefix => ""
+      name: "a" * 100, mode: 0o12345, size: 10, prefix: ""
     }
     assert_headers_equal(tar_file_header("a" * 100, "", 0o12345, 10),
       Minitar::PosixHeader.new(header).to_s)
     header = {
-      :name => "a" * 100, :mode => 0o12345, :size => 10, :prefix => "bb" * 60
+      name: "a" * 100, mode: 0o12345, size: 10, prefix: "bb" * 60
     }
     assert_headers_equal(tar_file_header("a" * 100, "bb" * 60, 0o12345, 10),
       Minitar::PosixHeader.new(header).to_s)
