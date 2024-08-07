@@ -1,6 +1,6 @@
 require "minitar/writer"
 
-module Minitar
+class Minitar
   # Wraps a Minitar::Writer with convenience methods and wrapped
   # stream management. If the stream provided to Output does not support random
   # access, only Writer#add_file_simple and Writer#mkdir are guaranteed to

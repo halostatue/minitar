@@ -1,13 +1,12 @@
-# frozen_string_literal: true
-
 module TarTestHelpers
-  include Minitar::ByteSize
-
   Field = Struct.new(:name, :offset, :length)
   def self.Field(name, length)
+    # standard:disable ThreadSafety/InstanceVariableInClassMethod
     @offset ||= 0
     field = Field.new(name, @offset, length)
     @offset += length
+    # standard:enable ThreadSafety/InstanceVariableInClassMethod
+
     FIELDS[name] = field
     FIELD_ORDER << name
     field
@@ -51,7 +50,7 @@ module TarTestHelpers
       offset = FIELDS[field].offset
       length = FIELDS[field].length
 
-      assert_equal(expected[offset, length], actual[offset, length], message)
+      assert_equal expected[offset, length], actual[offset, length], message
     end
   end
 
@@ -95,8 +94,8 @@ module TarTestHelpers
     ]
 
     h = arr.join.bytes.to_a.pack("C100C8C8C8C12C12C8CC100C6C2C32C32C8C8C155")
-    ret = h + "\0" * (512 - bytesize(h))
-    assert_equal(512, bytesize(ret))
+    ret = h + "\0" * (512 - h.bytesize)
+    assert_equal 512, ret.bytesize
     ret
   end
 
@@ -116,7 +115,7 @@ module TarTestHelpers
   end
 
   def asciiz(str, length)
-    str + "\0" * (length - bytesize(str))
+    str + "\0" * (length - str.bytesize)
   end
 
   def sp(s)

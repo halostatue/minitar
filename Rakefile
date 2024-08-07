@@ -37,4 +37,6 @@ Hoe.spec "minitar" do
   extra_dev_deps << ["rake", ">= 10.0", "< 14"]
   extra_dev_deps << ["rdoc", ">= 0.0"]
   extra_dev_deps << ["standard", "~> 1.0"]
+  extra_dev_deps << ["standard-minitest", "~> 1.0"]
+  extra_dev_deps << ["standard-thread_safety", "~> 1.0"]
 end

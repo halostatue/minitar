@@ -1,8 +1,6 @@
-module Minitar
+class Minitar
   # The class that writes a tar format archive to a data stream.
   class Writer
-    include Minitar::ByteSize
-
     # The exception raised when the user attempts to write more data to a
     # BoundedWriteStream than has been allocated.
     WriteBoundaryOverflow = Class.new(StandardError)
@@ -23,8 +21,6 @@ module Minitar
 
     # A WriteOnlyStream that also has a size limit.
     class BoundedWriteStream < WriteOnlyStream
-      include Minitar::ByteSize
-
       def self.const_missing(c)
         case c
         when :FileOverflow
@@ -50,7 +46,7 @@ module Minitar
       end
 
       def write(data)
-        size = bytesize(data)
+        size = data.bytesize
         raise WriteBoundaryOverflow if (size + @written) > @limit
         @io.write(data)
         @written += size
@@ -156,7 +152,7 @@ module Minitar
       else
         raise ArgumentError, "No data provided" unless data
 
-        bytes = bytesize(data)
+        bytes = data.bytesize
         size = bytes if size.nil? || size < bytes
       end
 
@@ -319,7 +315,7 @@ module Minitar
     end
 
     def split_name(name)
-      if bytesize(name) <= 100
+      if name.bytesize <= 100
         prefix = ""
       else
         parts = name.split("/")
@@ -329,7 +325,7 @@ module Minitar
 
         loop do
           nxt = parts.pop || ""
-          break if bytesize(newname) + 1 + bytesize(nxt) >= 100
+          break if newname.bytesize + 1 + nxt.bytesize >= 100
           newname = "#{nxt}/#{newname}"
         end
 
@@ -338,7 +334,7 @@ module Minitar
         name = newname
       end
 
-      [name, prefix, bytesize(name) > 100 || bytesize(prefix) > 155]
+      [name, prefix, name.bytesize > 100 || prefix.bytesize > 155]
     end
   end
 end

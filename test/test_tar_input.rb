@@ -52,36 +52,36 @@ class TestTarInput < Minitest::Test
     Minitar::Input.open(reader) do |stream|
       outer = 0
       stream.each.with_index do |entry, i|
-        assert_kind_of(Minitar::Reader::EntryStream, entry)
+        assert_kind_of Minitar::Reader::EntryStream, entry
         assert TEST_CONTENTS.key?(entry.name)
 
-        assert_equal(TEST_CONTENTS[entry.name][:size], entry.size, entry.name)
+        assert_equal TEST_CONTENTS[entry.name][:size], entry.size, entry.name
         assert_modes_equal(TEST_CONTENTS[entry.name][:mode],
           entry.mode, entry.name)
-        assert_equal(FILETIMES, entry.mtime, "entry.mtime")
+        assert_equal FILETIMES, entry.mtime, "entry.mtime"
 
         if i.zero?
           data_reader = Zlib::GzipReader.new(StringIO.new(entry.read))
           Minitar::Input.open(data_reader) do |is2|
             inner = 0
             is2.each_with_index do |entry2, _j|
-              assert_kind_of(Minitar::Reader::EntryStream, entry2)
+              assert_kind_of Minitar::Reader::EntryStream, entry2
               assert TEST_DATA_CONTENTS.key?(entry2.name)
               assert_equal(TEST_DATA_CONTENTS[entry2.name][:size], entry2.size,
                 entry2.name)
               assert_modes_equal(TEST_DATA_CONTENTS[entry2.name][:mode],
                 entry2.mode, entry2.name)
-              assert_equal(FILETIMES, entry2.mtime, entry2.name)
+              assert_equal FILETIMES, entry2.mtime, entry2.name
               inner += 1
             end
-            assert_equal(4, inner)
+            assert_equal 4, inner
           end
         end
 
         outer += 1
       end
 
-      assert_equal(2, outer)
+      assert_equal 2, outer
     end
   end
 
@@ -100,7 +100,7 @@ class TestTarInput < Minitest::Test
         else
           assert(File.file?(name))
 
-          assert_equal(TEST_CONTENTS[entry.name][:size], File.stat(name).size)
+          assert_equal TEST_CONTENTS[entry.name][:size], File.stat(name).size
         end
 
         assert_modes_equal(TEST_CONTENTS[entry.name][:mode],
@@ -136,7 +136,7 @@ class TestTarInput < Minitest::Test
         outer_count += 1
       end
 
-      assert_equal(2, outer_count)
+      assert_equal 2, outer_count
     end
   end
 
@@ -211,7 +211,7 @@ class TestTarInput < Minitest::Test
   def test_extract_octal_wrapped_by_space
     reader = Zlib::GzipReader.new(StringIO.new(OCTAL_WRAPPED_BY_SPACE_TGZ))
     header = Minitar::PosixHeader.from_stream(reader)
-    assert_equal(210, header.size)
+    assert_equal 210, header.size
 
     reader = Zlib::GzipReader.new(StringIO.new(OCTAL_WRAPPED_BY_SPACE_TGZ))
     Minitar.unpack(reader, "data__", [])
@@ -222,6 +222,6 @@ class TestTarInput < Minitest::Test
     Minitar.unpack(Zlib::GzipReader.new(StringIO.new(TEST_TGZ)), "data__", [], fsync: false) do |_label, _path, _stats|
       outer += 1
     end
-    assert_equal(6, outer)
+    assert_equal 6, outer
   end
 end

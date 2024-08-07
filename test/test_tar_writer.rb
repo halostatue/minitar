@@ -4,11 +4,7 @@ require "minitar"
 require "minitest_helper"
 
 class TestTarWriter < Minitest::Test
-  include Minitar::ByteSize
-
   class DummyIO
-    include Minitar::ByteSize
-
     attr_reader :data
 
     def initialize
@@ -60,12 +56,12 @@ class TestTarWriter < Minitest::Test
 
     assert_headers_equal(tar_file_header("lib/foo/bar", "", 0o644, 10),
       @dummyos.data[0, 512])
-    assert_equal("a" * 10 + "\0" * 502, @dummyos.data[512, 512])
+    assert_equal "a" * 10 + "\0" * 502, @dummyos.data[512, 512]
     assert_headers_equal(tar_file_header("lib/bar/baz", "", 0o644, 100),
       @dummyos.data[512 * 2, 512])
-    assert_equal("fillme" + "\0" * 506, @dummyos.data[512 * 3, 512])
-    assert_equal("\0" * 512, @dummyos.data[512 * 4, 512])
-    assert_equal("\0" * 512, @dummyos.data[512 * 5, 512])
+    assert_equal "fillme" + "\0" * 506, @dummyos.data[512 * 3, 512]
+    assert_equal "\0" * 512, @dummyos.data[512 * 4, 512]
+    assert_equal "\0" * 512, @dummyos.data[512 * 5, 512]
   end
 
   def test_write_operations_fail_after_closed
@@ -184,21 +180,21 @@ class TestTarWriter < Minitest::Test
     end
     assert_headers_equal(tar_file_header("lib/foo/bar", "", 0o644, 10),
       dummyos[0, 512])
-    assert_equal(%(#{"a" * 10}#{"\0" * 502}), dummyos[512, 512])
+    assert_equal %(#{"a" * 10}#{"\0" * 502}), dummyos[512, 512]
     offset = 512 * 2
     [content1, content2, ""].each do |data|
       assert_headers_equal(tar_file_header("lib/bar/baz", "", 0o644,
-        bytesize(data)), dummyos[offset, 512])
+        data.bytesize), dummyos[offset, 512])
       offset += 512
       until !data || data == ""
         chunk = data[0, 512]
         data[0, 512] = ""
-        assert_equal(chunk + "\0" * (512 - bytesize(chunk)),
+        assert_equal(chunk + "\0" * (512 - chunk.bytesize),
           dummyos[offset, 512])
         offset += 512
       end
     end
-    assert_equal("\0" * 1024, dummyos[offset, 1024])
+    assert_equal "\0" * 1024, dummyos[offset, 1024]
   end
 
   def test_add_file_tests_seekability
@@ -228,7 +224,7 @@ class TestTarWriter < Minitest::Test
       f.write @data
     end
     @os.flush
-    assert_equal(@data + ("\0" * (512 - bytesize(@data))),
+    assert_equal(@data + ("\0" * (512 - @data.bytesize)),
       @dummyos.data[512, 512])
   end
 
@@ -247,7 +243,7 @@ class TestTarWriter < Minitest::Test
       f.write @unicode
     end
     @os.flush
-    assert_equal(@unicode + ("\0" * (512 - bytesize(@unicode))),
+    assert_equal(@unicode + ("\0" * (512 - @unicode.bytesize)),
       @dummyos.data[512, 512])
   end
 

@@ -1,6 +1,6 @@
 require "minitar/reader"
 
-module Minitar
+class Minitar
   # Wraps a Minitar::Reader with convenience methods and wrapped
   # stream management; Input only works with data streams that can be rewound.
   class Input

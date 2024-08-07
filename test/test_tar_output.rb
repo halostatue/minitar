@@ -46,7 +46,7 @@ class TestTarOutput < Minitest::Test
       names_from_tar = is.map do |entry|
         entry.name
       end
-      assert_equal(NAMES, names_from_tar)
+      assert_equal NAMES, names_from_tar
     end
   ensure
     ff&.close
