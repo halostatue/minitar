@@ -16,8 +16,6 @@ jobs:
         os:
           - ubuntu-20.04
         ruby:
-          - '2.7'
-          - '3.0'
           - '3.1'
           - '3.2'
           - '3.3'
@@ -38,10 +36,6 @@ jobs:
           - os: windows-latest
             ruby: jruby
             continue-on-error: true
-          - os: macos-latest
-            ruby: '2.7'
-          - os: macos-latest
-            ruby: '3.0'
           - os: macos-latest
             ruby: '3.1'
           - os: macos-latest
@@ -73,5 +67,5 @@ jobs:
 
       - run: bundle exec ruby -S rake test --trace
 
-      - if: matrix.os == 'ubuntu-22.04' && matrix.ruby == '3.2'
+      - if: matrix.os == 'ubuntu-22.04' && matrix.ruby == '3.3'
         run: bundle exec standardrb
