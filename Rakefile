@@ -11,7 +11,6 @@ Hoe.plugin :gemspec2
 Hoe.plugin :git2
 Hoe.plugin :minitest
 Hoe.plugin :rubygems
-Hoe.plugin :deprecated_gem
 Hoe.plugin :cov
 
 Hoe.spec "minitar" do
