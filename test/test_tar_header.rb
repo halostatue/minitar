@@ -4,7 +4,7 @@ require "minitest_helper"
 
 class TestTarHeader < Minitest::Test
   def test_arguments_are_checked
-    ph = Archive::Tar::Minitar::PosixHeader
+    ph = Minitar::PosixHeader
     assert_raises(ArgumentError) {
       ph.new(:name => "", :size => "", :mode => "")
     }
@@ -28,7 +28,7 @@ class TestTarHeader < Minitest::Test
       :typeflag => "0"
     }
     assert_headers_equal(tar_file_header("bla", "", 0o12345, 10),
-      Archive::Tar::Minitar::PosixHeader.new(header).to_s)
+      Minitar::PosixHeader.new(header).to_s)
 
     header = {
       :name => "bla",
@@ -38,7 +38,7 @@ class TestTarHeader < Minitest::Test
       :typeflag => "5"
     }
     assert_headers_equal(tar_dir_header("bla", "", 0o12345),
-      Archive::Tar::Minitar::PosixHeader.new(header).to_s)
+      Minitar::PosixHeader.new(header).to_s)
   end
 
   def test_long_name_works
@@ -46,18 +46,18 @@ class TestTarHeader < Minitest::Test
       :name => "a" * 100, :mode => 0o12345, :size => 10, :prefix => ""
     }
     assert_headers_equal(tar_file_header("a" * 100, "", 0o12345, 10),
-      Archive::Tar::Minitar::PosixHeader.new(header).to_s)
+      Minitar::PosixHeader.new(header).to_s)
     header = {
       :name => "a" * 100, :mode => 0o12345, :size => 10, :prefix => "bb" * 60
     }
     assert_headers_equal(tar_file_header("a" * 100, "bb" * 60, 0o12345, 10),
-      Archive::Tar::Minitar::PosixHeader.new(header).to_s)
+      Minitar::PosixHeader.new(header).to_s)
   end
 
   def test_from_stream
     header = tar_file_header("a" * 100, "", 0o12345, 10)
     header = StringIO.new(header)
-    h = Archive::Tar::Minitar::PosixHeader.from_stream(header)
+    h = Minitar::PosixHeader.from_stream(header)
     assert_equal("a" * 100, h.name)
     assert_equal(0o12345, h.mode)
     assert_equal(10, h.size)
@@ -68,14 +68,14 @@ class TestTarHeader < Minitest::Test
   def test_from_stream_with_evil_name
     header = tar_file_header("a \0" + "\0" * 97, "", 0o12345, 10)
     header = StringIO.new(header)
-    h = Archive::Tar::Minitar::PosixHeader.from_stream header
+    h = Minitar::PosixHeader.from_stream header
     assert_equal("a ", h.name)
   end
 
   def test_valid_with_valid_header
     header = tar_file_header("a" * 100, "", 0o12345, 10)
     header = StringIO.new(header)
-    h = Archive::Tar::Minitar::PosixHeader.from_stream header
+    h = Minitar::PosixHeader.from_stream header
 
     assert(h.valid?)
   end
@@ -85,7 +85,7 @@ class TestTarHeader < Minitest::Test
     io = StringIO.new(header)
 
     assert_raises(ArgumentError) do
-      Archive::Tar::Minitar::PosixHeader.from_stream(io)
+      Minitar::PosixHeader.from_stream(io)
     end
   end
 
@@ -98,14 +98,14 @@ class TestTarHeader < Minitest::Test
 
     header = update_checksum(header)
     io = StringIO.new(header)
-    header = Archive::Tar::Minitar::PosixHeader.from_stream(io)
+    header = Minitar::PosixHeader.from_stream(io)
 
     assert_equal(651, header.size)
   end
 
   def test_valid_with_invalid_header
     header = StringIO.new("testing")
-    h = Archive::Tar::Minitar::PosixHeader.from_stream header
+    h = Minitar::PosixHeader.from_stream header
 
     refute(h.valid?)
   end

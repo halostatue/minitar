@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module TarTestHelpers
-  include Archive::Tar::Minitar::ByteSize
+  include Minitar::ByteSize
 
   Field = Struct.new(:name, :offset, :length)
   def self.Field(name, length)

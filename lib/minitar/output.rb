@@ -1,9 +1,7 @@
-# coding: utf-8
+require "minitar/writer"
 
-require "archive/tar/minitar/writer"
-
-module Archive::Tar::Minitar
-  # Wraps a Archive::Tar::Minitar::Writer with convenience methods and wrapped
+module Minitar
+  # Wraps a Minitar::Writer with convenience methods and wrapped
   # stream management. If the stream provided to Output does not support random
   # access, only Writer#add_file_simple and Writer#mkdir are guaranteed to
   # work.
@@ -15,8 +13,8 @@ module Archive::Tar::Minitar
     # instance, +Output.open+ returns the value of the block.
     #
     # call-seq:
-    #    Archive::Tar::Minitar::Output.open(io) -> output
-    #    Archive::Tar::Minitar::Output.open(io) { |output| block } -> obj
+    #    Minitar::Output.open(io) -> output
+    #    Minitar::Output.open(io) { |output| block } -> obj
     def self.open(output)
       stream = new(output)
       return stream unless block_given?
@@ -35,8 +33,8 @@ module Archive::Tar::Minitar
     # will be created with the same behaviour.
     #
     # call-seq:
-    #    Archive::Tar::Minitar::Output.tar(io) -> enumerator
-    #    Archive::Tar::Minitar::Output.tar(io) { |tar| block } -> obj
+    #    Minitar::Output.tar(io) -> enumerator
+    #    Minitar::Output.tar(io) { |tar| block } -> obj
     def self.tar(output)
       return to_enum(__method__, output) unless block_given?
 
@@ -51,15 +49,15 @@ module Archive::Tar::Minitar
     # object wrapped will be closed.
     #
     # call-seq:
-    #    Archive::Tar::Minitar::Output.new(io) -> output
-    #    Archive::Tar::Minitar::Output.new(path) -> output
+    #    Minitar::Output.new(io) -> output
+    #    Minitar::Output.new(path) -> output
     def initialize(output)
       @io = if output.respond_to?(:write)
         output
       else
         ::Kernel.open(output, "wb")
       end
-      @tar = Archive::Tar::Minitar::Writer.new(@io)
+      @tar = Minitar::Writer.new(@io)
     end
 
     # Returns the Writer object for direct access.

@@ -167,7 +167,7 @@ MDUzVDAwNDY0N2VQMGCgAygtLkksAjolEcjIzMOtDqgsLQ2/J0H+gNOjYBSMglEwyAEA2LchrwAGAAA=
     reader = Zlib::GzipReader.new(StringIO.new(RELATIVE_DIRECTORY_TGZ))
     Minitar::Input.open(reader) do |stream|
       stream.each do |entry|
-        assert_raises Archive::Tar::Minitar::SecureRelativePathError do
+        assert_raises Minitar::SecureRelativePathError do
           stream.extract_entry("data__", entry)
         end
       end
@@ -210,7 +210,7 @@ UTAKRsEoGAWjYBSMglFACgAAuUHUvwAoAAA=
 
   def test_extract_octal_wrapped_by_space
     reader = Zlib::GzipReader.new(StringIO.new(OCTAL_WRAPPED_BY_SPACE_TGZ))
-    header = Archive::Tar::Minitar::PosixHeader.from_stream(reader)
+    header = Minitar::PosixHeader.from_stream(reader)
     assert_equal(210, header.size)
 
     reader = Zlib::GzipReader.new(StringIO.new(OCTAL_WRAPPED_BY_SPACE_TGZ))

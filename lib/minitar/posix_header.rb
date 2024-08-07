@@ -1,13 +1,7 @@
 # coding: utf-8
 
 ##
-module Archive; end
-
-##
-module Archive::Tar; end
-
-##
-module Archive::Tar::Minitar; end
+module Minitar; end
 
 # Implements the POSIX tar header as a Ruby class. The structure of
 # the POSIX tar header is:
@@ -36,7 +30,7 @@ module Archive::Tar::Minitar; end
 #
 # POSIX indicates that "A POSIX-compliant implementation must treat any
 # unrecognized typeflag value as a regular file."
-class Archive::Tar::Minitar::PosixHeader
+class Minitar::PosixHeader
   BLOCK_SIZE = 512
   MAGIC_BYTES = "ustar".freeze
 
@@ -181,7 +175,7 @@ class Archive::Tar::Minitar::PosixHeader
 
   private
 
-  include Archive::Tar::Minitar::ByteSize
+  include Minitar::ByteSize
 
   def oct(num, len)
     if num.nil?
