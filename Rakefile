@@ -19,14 +19,9 @@ Hoe.spec "minitar" do
   self.history_file = "History.md"
   self.readme_file = "README.rdoc"
 
-  require_ruby_version ">= 1.8"
+  require_ruby_version ">= 3.1"
 
   self.licenses = ["Ruby", "BSD-2-Clause"]
-
-  self.post_install_message = <<-EOS
-The `minitar` executable is no longer bundled with `minitar`. If you are
-expecting this executable, make sure you also install `minitar-cli`.
-  EOS
 
   spec_extras[:metadata] = ->(val) { val["rubygems_mfa_required"] = "true" }
 

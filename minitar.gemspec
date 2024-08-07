@@ -16,9 +16,8 @@ Gem::Specification.new do |s|
   s.files = ["Code-of-Conduct.md".freeze, "Contributing.md".freeze, "History.md".freeze, "Licence.md".freeze, "Manifest.txt".freeze, "README.rdoc".freeze, "Rakefile".freeze, "docs/bsdl.txt".freeze, "docs/ruby.txt".freeze, "lib/minitar.rb".freeze, "lib/minitar/input.rb".freeze, "lib/minitar/output.rb".freeze, "lib/minitar/posix_header.rb".freeze, "lib/minitar/reader.rb".freeze, "lib/minitar/writer.rb".freeze, "test/minitest_helper.rb".freeze, "test/support/tar_test_helpers.rb".freeze, "test/test_issue_46.rb".freeze, "test/test_tar_header.rb".freeze, "test/test_tar_input.rb".freeze, "test/test_tar_output.rb".freeze, "test/test_tar_reader.rb".freeze, "test/test_tar_writer.rb".freeze]
   s.homepage = "https://github.com/halostatue/minitar/".freeze
   s.licenses = ["Ruby".freeze, "BSD-2-Clause".freeze]
-  s.post_install_message = "The `minitar` executable is no longer bundled with `minitar`. If you are\nexpecting this executable, make sure you also install `minitar-cli`.\n".freeze
   s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
-  s.required_ruby_version = Gem::Requirement.new(">= 1.8".freeze)
+  s.required_ruby_version = Gem::Requirement.new(">= 3.1".freeze)
   s.rubygems_version = "3.5.17".freeze
   s.summary = "The minitar library is a pure-Ruby library that provides the ability to deal with POSIX tar(1) archive files".freeze
 

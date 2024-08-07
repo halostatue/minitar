@@ -1,5 +1,15 @@
 # History
 
+## 1.0.0 / 2024-08-07
+
+This is (almost) the same code as minitar 0.12 with the following incompatible
+changes:
+
+- Minimum Ruby version is 3.1.
+
+- The Archive::Tar::Minitar namespace has been completely removed and the code
+  is only available from Minitar.
+
 ## 0.12 / 2024-08-06
 
 - Properly handle very long GNU filenames, resolving [#46][].
