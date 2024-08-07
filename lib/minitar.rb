@@ -97,9 +97,63 @@ class << Minitar
     RbConfig::CONFIG["host_os"] =~ /^(mswin|mingw|cygwin)/
   end
 
-  # A convenience method to pack the file provided. +entry+ may either be a
-  # filename (in which case various values for the file (see below) will be
-  # obtained from <tt>File#stat(entry)</tt> or a Hash with the fields:
+  # A convenience method to pack the provided +data+ as a file named +entry+. +entry+ may
+  # either be a name or a Hash with the fields described below. When only a name is
+  # provided, or only some Hash fields are provided, the default values will apply.
+  #
+  # <tt>:name</tt>::  The filename to be packed into the archive. Required.
+  # <tt>:mode</tt>::  The mode to be applied. Defaults to 0o644 for files and 0o755 for
+  #                   directories.
+  # <tt>:uid</tt>::   The user owner of the file. Default is +nil+.
+  # <tt>:gid</tt>::   The group owner of the file. Default is +nil+.
+  # <tt>:mtime</tt>:: The modification Time of the file. Default is +Time.now+.
+  #
+  # If +data+ is +nil+, a directory will be created. Use an empty String for a normal
+  # empty file.
+  def pack_as_file(entry, data, outputter) # :yields action, name, stats:
+    if outputter.is_a?(Minitar::Output)
+      outputter = outputter.tar
+    end
+
+    stats = {
+      gid: nil,
+      uid: nil,
+      mtime: Time.now,
+      size: data&.size || 0,
+      mode: data ? 0o644 : 0o755
+    }
+
+    if entry.is_a?(Hash)
+      name = entry.delete(:name)
+      entry.each_pair { stats[_1] = _2 unless _2.nil? }
+    else
+      name = entry
+    end
+
+    if data.nil? # Create a directory
+      yield :dir, name, stats if block_given?
+      outputter.mkdir(name, stats)
+    else
+      outputter.add_file_simple(name, stats) do |os|
+        stats[:current] = 0
+        yield :file_start, name, stats if block_given?
+
+        StringIO.open(data, "rb") do |ff|
+          until ff.eof?
+            stats[:currinc] = os.write(ff.read(4096))
+            stats[:current] += stats[:currinc]
+            yield :file_progress, name, stats if block_given?
+          end
+        end
+
+        yield :file_done, name, stats if block_given?
+      end
+    end
+  end
+
+  # A convenience method to pack the file provided. +entry+ may either be a filename (in
+  # which case various values for the file (see below) will be obtained from
+  # <tt>File#stat(entry)</tt> or a Hash with the fields:
   #
   # <tt>:name</tt>::  The filename to be packed into the archive. Required.
   # <tt>:mode</tt>::  The mode to be applied.
