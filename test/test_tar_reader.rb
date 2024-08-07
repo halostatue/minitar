@@ -4,7 +4,7 @@ require "minitar"
 require "minitest_helper"
 
 class TestTarReader < Minitest::Test
-  include Archive::Tar::Minitar::ByteSize
+  include Minitar::ByteSize
 
   def test_open_no_block
     str = tar_file_header("lib/foo", "", 0o10644, 10) + "\0" * 512
@@ -163,7 +163,7 @@ class TestTarReader < Minitest::Test
   end
 
   def test_read_invalid_tar_file
-    assert_raises Archive::Tar::Minitar::InvalidTarStream do
+    assert_raises Minitar::InvalidTarStream do
       Minitar::Reader.open(StringIO.new("testing")) do |r|
         r.each_entry do |entry|
           fail "invalid tar file should not read files"

@@ -1,12 +1,12 @@
 # coding: utf-8
 
-module Archive::Tar::Minitar
+module Minitar
   # The class that reads a tar format archive from a data stream. The data
   # stream may be sequential or random access, but certain features only work
   # with random access data streams.
   class Reader
     include Enumerable
-    include Archive::Tar::Minitar::ByteSize
+    include Minitar::ByteSize
 
     # This marks the EntryStream closed for reading without closing the
     # actual data stream.
@@ -30,9 +30,9 @@ module Archive::Tar::Minitar
 
     # EntryStreams are pseudo-streams on top of the main data stream.
     class EntryStream
-      include Archive::Tar::Minitar::ByteSize
+      include Minitar::ByteSize
 
-      Archive::Tar::Minitar::PosixHeader::FIELDS.each do |field|
+      Minitar::PosixHeader::FIELDS.each do |field|
         attr_reader field.to_sym
       end
 
@@ -56,7 +56,7 @@ module Archive::Tar::Minitar
         @prefix = header.prefix
         @read = 0
         @orig_pos =
-          if Archive::Tar::Minitar.seekable?(@io)
+          if Minitar.seekable?(@io)
             @io.pos
           else
             0
@@ -119,8 +119,8 @@ module Archive::Tar::Minitar
 
       # Sets the current read pointer to the beginning of the EntryStream.
       def rewind
-        unless Archive::Tar::Minitar.seekable?(@io, :pos=)
-          raise Archive::Tar::Minitar::NonSeekableStream
+        unless Minitar.seekable?(@io, :pos=)
+          raise Minitar::NonSeekableStream
         end
         @io.pos = @orig_pos
         @read = 0
@@ -177,7 +177,7 @@ module Archive::Tar::Minitar
     # Iterates over each entry in the provided input. This wraps the common
     # pattern of:
     #
-    #     Archive::Tar::Minitar::Input.open(io) do |i|
+    #     Minitar::Input.open(io) do |i|
     #       inp.each do |entry|
     #         # ...
     #       end
@@ -187,8 +187,8 @@ module Archive::Tar::Minitar
     # behaviour.
     #
     # call-seq:
-    #    Archive::Tar::Minitar::Reader.each_entry(io) -> enumerator
-    #    Archive::Tar::Minitar::Reader.each_entry(io) { |entry| block } -> obj
+    #    Minitar::Reader.each_entry(io) -> enumerator
+    #    Minitar::Reader.each_entry(io) { |entry| block } -> obj
     def self.each_entry(io)
       return to_enum(__method__, io) unless block_given?
 
@@ -214,13 +214,13 @@ module Archive::Tar::Minitar
     # random access data streams that respond to #rewind and #pos.
     def rewind
       if @init_pos.zero?
-        unless Archive::Tar::Minitar.seekable?(@io, :rewind)
-          raise Archive::Tar::Minitar::NonSeekableStream
+        unless Minitar.seekable?(@io, :rewind)
+          raise Minitar::NonSeekableStream
         end
         @io.rewind
       else
-        unless Archive::Tar::Minitar.seekable?(@io, :pos=)
-          raise Archive::Tar::Minitar::NonSeekableStream
+        unless Minitar.seekable?(@io, :pos=)
+          raise Minitar::NonSeekableStream
         end
         @io.pos = @init_pos
       end
@@ -233,11 +233,11 @@ module Archive::Tar::Minitar
       loop do
         return if @io.eof?
 
-        header = Archive::Tar::Minitar::PosixHeader.from_stream(@io)
-        raise Archive::Tar::Minitar::InvalidTarStream unless header.valid?
+        header = Minitar::PosixHeader.from_stream(@io)
+        raise Minitar::InvalidTarStream unless header.valid?
         return if header.empty?
 
-        raise Archive::Tar::Minitar::InvalidTarStream if header.size < 0
+        raise Minitar::InvalidTarStream if header.size < 0
 
         if header.long_name?
           name_block = (header.size / 512.0).ceil * 512
@@ -256,7 +256,7 @@ module Archive::Tar::Minitar
 
         skip = (512 - (size % 512)) % 512
 
-        if Archive::Tar::Minitar.seekable?(@io, :seek)
+        if Minitar.seekable?(@io, :seek)
           # avoid reading...
           @io.seek(size - entry.bytes_read, IO::SEEK_CUR)
         else

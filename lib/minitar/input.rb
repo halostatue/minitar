@@ -1,9 +1,7 @@
-# coding: utf-8
+require "minitar/reader"
 
-require "archive/tar/minitar/reader"
-
-module Archive::Tar::Minitar
-  # Wraps a Archive::Tar::Minitar::Reader with convenience methods and wrapped
+module Minitar
+  # Wraps a Minitar::Reader with convenience methods and wrapped
   # stream management; Input only works with data streams that can be rewound.
   class Input
     include Enumerable
@@ -15,8 +13,8 @@ module Archive::Tar::Minitar
     # instance, +Input.open+ returns the value of the block.
     #
     # call-seq:
-    #    Archive::Tar::Minitar::Input.open(io) -> input
-    #    Archive::Tar::Minitar::Input.open(io) { |input| block } -> obj
+    #    Minitar::Input.open(io) -> input
+    #    Minitar::Input.open(io) { |input| block } -> obj
     def self.open(input)
       stream = new(input)
 
@@ -36,7 +34,7 @@ module Archive::Tar::Minitar
     # Iterates over each entry in the provided input. This wraps the common
     # pattern of:
     #
-    #     Archive::Tar::Minitar::Input.open(io) do |i|
+    #     Minitar::Input.open(io) do |i|
     #       inp.each do |entry|
     #         # ...
     #       end
@@ -46,8 +44,8 @@ module Archive::Tar::Minitar
     # behaviour.
     #
     # call-seq:
-    #    Archive::Tar::Minitar::Input.each_entry(io) -> enumerator
-    #    Archive::Tar::Minitar::Input.each_entry(io) { |entry| block } -> obj
+    #    Minitar::Input.each_entry(io) -> enumerator
+    #    Minitar::Input.each_entry(io) { |entry| block } -> obj
     def self.each_entry(input)
       return to_enum(__method__, input) unless block_given?
 
@@ -67,8 +65,8 @@ module Archive::Tar::Minitar
     # support rewinding.
     #
     # call-seq:
-    #    Archive::Tar::Minitar::Input.new(io) -> input
-    #    Archive::Tar::Minitar::Input.new(path) -> input
+    #    Minitar::Input.new(io) -> input
+    #    Minitar::Input.new(path) -> input
     def initialize(input)
       @io = if input.respond_to?(:read)
         input
@@ -76,8 +74,8 @@ module Archive::Tar::Minitar
         ::Kernel.open(input, "rb")
       end
 
-      unless Archive::Tar::Minitar.seekable?(@io, :rewind)
-        raise Archive::Tar::Minitar::NonSeekableStream
+      unless Minitar.seekable?(@io, :rewind)
+        raise Minitar::NonSeekableStream
       end
 
       @tar = Reader.new(@io)
@@ -177,7 +175,7 @@ module Archive::Tar::Minitar
 
       yield :dir, full_name, stats if block_given?
 
-      if Archive::Tar::Minitar.dir?(dest)
+      if Minitar.dir?(dest)
         begin
           FileUtils.chmod(entry.mode, dest)
         rescue

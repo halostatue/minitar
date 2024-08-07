@@ -4,10 +4,10 @@ require "minitar"
 require "minitest_helper"
 
 class TestTarWriter < Minitest::Test
-  include Archive::Tar::Minitar::ByteSize
+  include Minitar::ByteSize
 
   class DummyIO
-    include Archive::Tar::Minitar::ByteSize
+    include Minitar::ByteSize
 
     attr_reader :data
 
@@ -202,7 +202,7 @@ class TestTarWriter < Minitest::Test
   end
 
   def test_add_file_tests_seekability
-    assert_raises(Archive::Tar::Minitar::NonSeekableStream) do
+    assert_raises(Minitar::NonSeekableStream) do
       @os.add_file("libdfdsfd", :mode => 0o644) { |f| }
     end
   end

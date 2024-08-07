@@ -1,9 +1,7 @@
-# coding: utf-8
-
-module Archive::Tar::Minitar
+module Minitar
   # The class that writes a tar format archive to a data stream.
   class Writer
-    include Archive::Tar::Minitar::ByteSize
+    include Minitar::ByteSize
 
     # The exception raised when the user attempts to write more data to a
     # BoundedWriteStream than has been allocated.
@@ -25,7 +23,7 @@ module Archive::Tar::Minitar
 
     # A WriteOnlyStream that also has a size limit.
     class BoundedWriteStream < WriteOnlyStream
-      include Archive::Tar::Minitar::ByteSize
+      include Minitar::ByteSize
 
       def self.const_missing(c)
         case c
@@ -33,7 +31,7 @@ module Archive::Tar::Minitar
           warn "Writer::BoundedWriteStream::FileOverflow has been renamed " \
             "to Writer::WriteBoundaryOverflow"
           const_set :FileOverflow,
-            Archive::Tar::Minitar::Writer::WriteBoundaryOverflow
+            Minitar::Writer::WriteBoundaryOverflow
         else
           super
         end
@@ -79,11 +77,11 @@ module Archive::Tar::Minitar
     # of the block.
     #
     # call-seq:
-    #    w = Archive::Tar::Minitar::Writer.open(STDOUT)
+    #    w = Minitar::Writer.open(STDOUT)
     #    w.add_file_simple('foo.txt', :size => 3)
     #    w.close
     #
-    #    Archive::Tar::Minitar::Writer.open(STDOUT) do |w|
+    #    Minitar::Writer.open(STDOUT) do |w|
     #      w.add_file_simple('foo.txt', :size => 3)
     #    end
     def self.open(io) # :yields Writer:
@@ -208,8 +206,8 @@ module Archive::Tar::Minitar
 
       return add_file_simple(name, opts, &block) if opts[:data]
 
-      unless Archive::Tar::Minitar.seekable?(@io)
-        raise Archive::Tar::Minitar::NonSeekableStream
+      unless Minitar.seekable?(@io)
+        raise Minitar::NonSeekableStream
       end
 
       short_name, prefix, needs_long_name = split_name(name)
