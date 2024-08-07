@@ -13,10 +13,10 @@ lib/minitar/output.rb
 lib/minitar/posix_header.rb
 lib/minitar/reader.rb
 lib/minitar/writer.rb
-renovate.json
 test/minitest_helper.rb
 test/support/tar_test_helpers.rb
 test/test_issue_46.rb
+test/test_minitar.rb
 test/test_tar_header.rb
 test/test_tar_input.rb
 test/test_tar_output.rb
