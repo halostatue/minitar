@@ -1,10 +1,9 @@
-module Minitar
+class Minitar
   # The class that reads a tar format archive from a data stream. The data
   # stream may be sequential or random access, but certain features only work
   # with random access data streams.
   class Reader
     include Enumerable
-    include Minitar::ByteSize
 
     # This marks the EntryStream closed for reading without closing the
     # actual data stream.
@@ -28,8 +27,6 @@ module Minitar
 
     # EntryStreams are pseudo-streams on top of the main data stream.
     class EntryStream
-      include Minitar::ByteSize
-
       Minitar::PosixHeader::FIELDS.each do |field|
         attr_reader field.to_sym
       end
@@ -68,7 +65,7 @@ module Minitar
         len ||= @size - @read
         max_read = [len, @size - @read].min
         ret = @io.read(max_read)
-        @read += bytesize(ret)
+        @read += ret.bytesize
         ret
       end
 
@@ -260,7 +257,7 @@ module Minitar
         else
           pending = size - entry.bytes_read
           while pending > 0
-            bread = bytesize(@io.read([pending, 4096].min))
+            bread = @io.read([pending, 4096].min).bytesize
             raise UnexpectedEOF if @io.eof?
             pending -= bread
           end

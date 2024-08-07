@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "minitest_helper"
 
 class TestTarHeader < Minitest::Test
@@ -58,18 +56,18 @@ class TestTarHeader < Minitest::Test
     header = tar_file_header("a" * 100, "", 0o12345, 10)
     header = StringIO.new(header)
     h = Minitar::PosixHeader.from_stream(header)
-    assert_equal("a" * 100, h.name)
-    assert_equal(0o12345, h.mode)
-    assert_equal(10, h.size)
-    assert_equal("", h.prefix)
-    assert_equal("ustar", h.magic)
+    assert_equal "a" * 100, h.name
+    assert_equal 0o12345, h.mode
+    assert_equal 10, h.size
+    assert_equal "", h.prefix
+    assert_equal "ustar", h.magic
   end
 
   def test_from_stream_with_evil_name
     header = tar_file_header("a \0" + "\0" * 97, "", 0o12345, 10)
     header = StringIO.new(header)
     h = Minitar::PosixHeader.from_stream header
-    assert_equal("a ", h.name)
+    assert_equal "a ", h.name
   end
 
   def test_valid_with_valid_header
@@ -100,7 +98,7 @@ class TestTarHeader < Minitest::Test
     io = StringIO.new(header)
     header = Minitar::PosixHeader.from_stream(io)
 
-    assert_equal(651, header.size)
+    assert_equal 651, header.size
   end
 
   def test_valid_with_invalid_header

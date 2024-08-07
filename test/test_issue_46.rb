@@ -38,12 +38,12 @@ class TestIssue46 < Minitest::Test
 
         assert_modes_equal(SUPERLONG_CONTENTS[entry.name][:mode],
           entry.mode, entry.name)
-        assert_equal(FILETIMES, entry.mtime, "entry.mtime")
+        assert_equal FILETIMES, entry.mtime, "entry.mtime"
 
         outer += 1
       end
 
-      assert_equal(2, outer)
+      assert_equal 2, outer
     end
   end
 end
