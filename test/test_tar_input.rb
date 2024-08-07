@@ -145,7 +145,7 @@ UTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIwCUgAAGnyo6wAoAAA=
 
     IO.respond_to?(:write) &&
       IO.write("data__/file4", "") ||
-      File.open("data__/file4", "w") { |f| f.write "" }
+      File.write("data__/file4", "")
 
     File.symlink("data__/file4", "data__/file3")
     File.symlink("data__/file4", "data__/data")
