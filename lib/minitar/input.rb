@@ -167,7 +167,7 @@ module Minitar
     rescue # ignore IOError if it's an unpatched (old) Ruby
       nil
     ensure
-      dir&.close rescue nil # rubocop:disable Style/RescueModifier
+      dir&.close rescue nil # standard:disable Style/RescueModifier
     end
 
     def extract_directory(destdir, full_name, entry, stats, options)
@@ -203,9 +203,7 @@ module Minitar
       File.unlink(destfile) if File.symlink?(destfile)
 
       # Errno::ENOENT
-      # rubocop:disable Style/RescueModifier
-      FileUtils.chmod(0o600, destfile) rescue nil
-      # rubocop:enable Style/RescueModifier
+      FileUtils.chmod(0o600, destfile) rescue nil # standard:disable Style/RescueModifier
 
       yield :file_start, full_name, stats if block_given?
 
