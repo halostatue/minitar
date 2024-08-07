@@ -1,0 +1,46 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "timezone": "America/Toronto",
+  "branchNameStrict": true,
+  "commitBodyTable": true,
+  "configMigration": true,
+  "extends": [
+    "config:recommended",
+    "group:allNonMajor",
+    "helpers:pinGitHubActionDigests",
+    "security:openssf-scorecard",
+    ":approveMajorUpdates",
+    ":automergeStableNonMajor",
+    ":automergePr",
+    ":combinePatchMinorReleases",
+    ":ignoreUnstable",
+    ":rebaseStalePrs",
+    ":prHourlyLimit2",
+    ":semanticCommits",
+    ":semanticPrefixChore",
+    ":separateMultipleMajorReleases",
+    ":timezone(America/Toronto)"
+  ],
+  "automergeSchedule": [
+    "before 7am on Wednesday"
+  ],
+  "minimumReleaseAge": "3 days",
+  "platformAutomerge": true,
+  "schedule": [
+    "before 7am on Tuesday"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "datasourceTemplate": "rubygems",
+      "fileMatch": [
+        "Rakefile"
+      ],
+      "matchStrings": [
+        "extra_(?<isDev>dev_)?deps << \\[\"(?<depName>[^\"]+)\"\\, \"(?<currentValue>[^\"]+)\"]"
+      ],
+      "depTypeTemplate": "{{#if isDev}}devDependencies{{else}}dependencies{{/if}}",
+      "versioningTemplate": "ruby"
+    }
+  ]
+}
