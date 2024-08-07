@@ -49,6 +49,6 @@ class TestTarOutput < Minitest::Test
       assert_equal(NAMES, names_from_tar)
     end
   ensure
-    ff.close if ff
+    ff&.close
   end
 end
