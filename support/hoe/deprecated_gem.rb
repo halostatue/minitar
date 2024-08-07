@@ -1,6 +1,8 @@
 # A Hoe plug-in to provide a second, linked gemspec, for a gem that has been
 # deprecated in favour of a modern name. (The name is an artifact of Hoe's
 # plugin loading.)
+#
+# TODO: Remove for 1.0 since archive-tar-minitar is going away
 module Hoe::Deprecated_Gem # standard:disable Naming/ClassAndModuleCamelCase
   def linked_spec(spec)
     permitted_classes = %w[

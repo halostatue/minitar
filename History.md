@@ -1,6 +1,6 @@
 # History
 
-## 0.12 / 2024-08-DD
+## 0.12 / 2024-08-06
 
 - Properly handle very long GNU filenames, resolving [#46][].
 - Handle very long GNU filenames that are 512 or more bytes, resolving [#45][].
