@@ -22,32 +22,6 @@ Hoe.spec "minitar" do
 
   require_ruby_version ">= 1.8"
 
-  # This is a hack because of an issue with Hoe 3.26, but I'm not sure which
-  # hoe version introduced this issue or if it's a JRuby issue. This issue is
-  # demonstrable in lib/hoe.rb at line 676, which is (reformatted for space):
-  #
-  # ```ruby
-  # readme =
-  #   input
-  #     .lines
-  #     .chunk { |l| l[/^(?:=+|#+)/] || "" } # # chunk is different somehow
-  #     .map(&:last) # <-- HERE: "#" does not respond to #last
-  #     .each_slice(2)
-  #     .map { |k, v|
-  #       kp = k.join
-  #       kp = kp.strip.chomp(":").split.last.downcase if k.size == 1
-  #       [kp, v.join.strip]
-  #     }
-  #     .to_h
-  # ```
-  #
-  # We don't *ship* with JRuby, but use it in CI only, so this is here at least
-  # temporarily.
-  if RUBY_PLATFORM.match?(/java/)
-    self.summary = self.description = "Description for testing"
-    self.homepage = "https://github.com/KineticCafe/app-identity/tree/main/ruby/"
-  end
-
   self.licenses = ["Ruby", "BSD-2-Clause"]
 
   self.post_install_message = <<-EOS

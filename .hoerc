@@ -6,14 +6,14 @@ exclude: !ruby/regexp '/
   )$
   |
   \.(?:
-      bundle|
-      git|
-      github|
-      hg|
-      idea|
-      svn|
-      vagrant
-    )\/
+    bundle |
+    git |
+    github |
+    hg |
+    idea |
+    svn |
+    vagrant
+  )\/
   |
   [Aa]ppraisals
   |
@@ -28,23 +28,21 @@ exclude: !ruby/regexp '/
     standard.* |
     travis |
     unused
-    )\.yml$
+  )\.yml$
   |
   (?i:TAGS)$
   |
   \.(?:
-      DS_Store |
-      autotest |
-      byebug_history |
-      gemtest |
-      gitattributes |
-      gitignore |
-      hoerc |
-      minitest.rb |
-      simplecov-prelude.rb
+    DS_Store |
+    autotest |
+    byebug_history |
+    gemtest |
+    gitattributes |
+    gitignore |
+    hoerc |
+    minitest.rb |
+    simplecov-prelude.rb
   )$
   |
   \.gemspec$
-  |
-  Vagrantfile$
   /x'
