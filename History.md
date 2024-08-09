@@ -1,5 +1,12 @@
 # History
 
+## 1.0.1 / 2024-08-08
+
+- Bugfix:
+
+  - Resolve a constant lookup issue. The accepted fix has been provided by Aram
+    Price in [#58][#58].
+
 ## 1.0.0 / 2024-08-07
 
 - Breaking Changes:
@@ -213,3 +220,4 @@
 [#45]: https://github.com/halostatue/minitar/issues/45
 [#46]: https://github.com/halostatue/minitar/issues/46
 [#47]: https://github.com/halostatue/minitar/pull/47
+[#58]: https://github.com/halostatue/minitar/issues/58
