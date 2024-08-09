@@ -31,7 +31,7 @@ require "rbconfig"
 #
 #     begin
 #       sgz = Zlib::GzipWriter.new(StringIO.new(""))
-#       tar = Output.new(sgz)
+#       tar = Minitar::Output.new(sgz)
 #       Find.find('tests') do |entry|
 #         Minitar.pack_file(entry, tar)
 #       end
@@ -40,7 +40,7 @@ require "rbconfig"
 #       tar.close
 #     end
 class Minitar
-  VERSION = "1.0.0".freeze # :nodoc:
+  VERSION = "1.0.1".freeze # :nodoc:
 
   # The base class for any minitar error.
   Error = Class.new(::StandardError)
@@ -75,21 +75,11 @@ class << Minitar
   def open(dest, mode = "r", &)
     case mode
     when "r"
-      Input.open(dest, &)
+      Minitar::Input.open(dest, &)
     when "w"
-      Output.open(dest, &block)
+      Minitar::Output.open(dest, &block)
     else
       raise "Unknown open mode for Minitar.open."
-    end
-  end
-
-  def const_missing(c) # :nodoc:
-    case c
-    when :BlockRequired
-      warn "This constant has been removed."
-      const_set(:BlockRequired, Class.new(StandardError))
-    else
-      super
     end
   end
 

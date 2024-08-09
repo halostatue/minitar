@@ -31,7 +31,7 @@ class TestMinitar < Minitest::Test
 
     count = 0
     reader = StringIO.new(writer.string)
-    Minitar::Input.open(reader) do |stream|
+    Minitar.open(reader) do |stream|
       stream.each.with_index do |entry, i|
         assert_kind_of Minitar::Reader::EntryStream, entry
 
