@@ -125,7 +125,7 @@ class Archive::Tar::Minitar::PosixHeader
     private
 
     def strict_oct(string)
-      return string.oct if /\A[0-7 ]*\z/.match?(string)
+      return string.oct if string =~ /\A[0-7 ]*\z/
       raise ArgumentError, "#{string.inspect} is not a valid octal string"
     end
   end

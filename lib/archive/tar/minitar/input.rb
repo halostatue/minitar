@@ -135,7 +135,7 @@ module Archive::Tar::Minitar
       # However, squeeze consecutive '/' characters together.
       full_name = entry.full_name.squeeze("/")
 
-      if /\.{2}(?:\/|\z)/.match?(full_name)
+      if full_name =~ /\.{2}(?:\/|\z)/
         raise SecureRelativePathError, "Path contains '..'"
       end
 
