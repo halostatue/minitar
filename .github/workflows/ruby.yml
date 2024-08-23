@@ -40,6 +40,7 @@ jobs:
           - '3.2'
           - '3.3'
           - truffleruby
+          - jruby
         include:
           - ruby: jruby
             continue-on-error: true
