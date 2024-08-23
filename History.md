@@ -28,6 +28,11 @@
   - Added `Minitar.pack_as_file`, originally proposed by John Prince back in
     2011 [#7][#7].
 
+## 0.12.1 / 2024-08-21
+
+- Reverted @adbbb9b596 to restore compatibility with Ruby < 2.0. Resolves
+  [#63][#63] reported by Robert Schulze.
+
 ## 0.12 / 2024-08-06
 
 - Properly handle very long GNU filenames, resolving [#46][#46].
