@@ -40,7 +40,7 @@ require "rbconfig"
 #       tar.close
 #     end
 class Minitar
-  VERSION = "1.0.1".freeze # :nodoc:
+  VERSION = "1.0.2".freeze # :nodoc:
 
   # The base class for any minitar error.
   Error = Class.new(::StandardError)
