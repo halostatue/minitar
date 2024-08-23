@@ -29,6 +29,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        continue-on-error:
+          - false
         os:
           - ubuntu-20.04
           - ubuntu-22.04
@@ -44,7 +46,7 @@ jobs:
 
 
     runs-on: ${{ matrix.os }}
-    continue-on-error: ${{ matrix.continue-on-error || false }}
+    continue-on-error: ${{ matrix.continue-on-error }}
 
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
