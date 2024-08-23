@@ -1,5 +1,12 @@
 # History
 
+## 1.0.2 / 2024-08-23
+
+- Bugfix:
+
+  - Minitar 1.0.1 was released with an unchanged gemspec. Reported by Debashish
+    Biswas in [#65][#65].
+
 ## 1.0.1 / 2024-08-08
 
 - Bugfix:
@@ -221,3 +228,4 @@
 [#46]: https://github.com/halostatue/minitar/issues/46
 [#47]: https://github.com/halostatue/minitar/pull/47
 [#58]: https://github.com/halostatue/minitar/issues/58
+[#65]: https://github.com/halostatue/minitar/issues/65
