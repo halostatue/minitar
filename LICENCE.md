@@ -10,6 +10,6 @@ terms of Ruby’s licence or the Simplified BSD licence.
 
 See the file docs/bsdl.txt in the main distribution.
 
-### Ruby’s Licence
+### Ruby's Licence
 
 See the file docs/ruby.txt in the main distribution.
