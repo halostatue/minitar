@@ -1,48 +1,41 @@
 ---
 exclude: !ruby/regexp '/
-  \.(?:
-    tmp |
-    swp
-  )$
-  |
-  \.(?:
-    bundle |
-    git |
-    github |
-    hg |
-    idea |
-    svn |
-    vagrant
+    \.gemspec$
+  | \.tmp$
+  | \.swp$
+  | ^\.(?:
+      DS_Store
+    | autotest
+    | byebug_history
+    | gemtest
+    | gitattributes
+    | gitignore
+    | hoerc
+    | minitest\.rb
+    | simplecov-prelude\.rb
+    | workenv
+    | (?:
+        appveyor
+      | coveralls
+      | fasterer
+      | pullreview
+      | rubocop.*
+      | standard.*
+      | travis
+      | unused
+      )\.yml
+    )$
+  | ^\.(?:
+      bundle
+    | github
+    | git
+    | hg
+    | idea
+    | svn
+    | vagrant
   )\/
-  |
-  [Aa]ppraisals
-  |
-  [gG]emfile(?:\.lock)?
-  |
-  \.(?:
-    appveyor |
-    coveralls |
-    fasterer |
-    pullreview |
-    rubocop.* |
-    standard.* |
-    travis |
-    unused
-  )\.yml$
-  |
-  (?i:TAGS)$
-  |
-  \.(?:
-    DS_Store |
-    autotest |
-    byebug_history |
-    gemtest |
-    gitattributes |
-    gitignore |
-    hoerc |
-    minitest.rb |
-    simplecov-prelude.rb
-  )$
-  |
-  \.gemspec$
-  /x'
+  | [gG]emfile(?:\.lock)?$
+  | [Aa]ppraisals$
+  | (?i:TAGS)$
+  | Vagrantfile$
+/x'

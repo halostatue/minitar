@@ -1,4 +1,4 @@
-## Contributing
+# Contributing
 
 I value any contribution to minitar you can provide: a bug report, a feature
 request, or code contributions. There are a few guidelines for contributing to
@@ -15,7 +15,7 @@ minitar:
 - Submit a GitHub pull request with your changes.
 - New or changed behaviours require appropriate documentation.
 
-### Test Dependencies
+## Test Dependencies
 
 minitar uses Ryan Davis’s [Hoe][Hoe] to manage the release process, and it adds
 a number of rake tasks. You will mostly be interested in:
@@ -47,7 +47,7 @@ You can run tests with code coverage analysis by running:
 
     $ rake test:coverage
 
-### Workflow
+## Workflow
 
 Here's the most direct way to get your work merged into the project:
 
@@ -61,33 +61,6 @@ Here's the most direct way to get your work merged into the project:
 - Push the branch up (`git push origin my_awesome_feature`).
 - Create a pull request against halostatue/minitar and describe what your change
   does and the why you think it should be merged.
-
-### Contributors
-
-- Austin Ziegler created minitar, based on work originally written by Mauricio
-  Fernández for rpa-base.
-
-Thanks to everyone who has contributed to minitar:
-
-- Akinori MUSHA (knu)
-- Antoine Toulme
-- Curtis Sampson
-- Daniel J. Berger
-- dearblue
-- inkstak
-- John Prince
-- Jorie Tappa
-- Kazuyoshi Kato
-- Kevin McDermott
-- Matthew Kent
-- Merten Falk
-- Michal Suchanek
-- Mike Furr
-- ooooooo_q
-- Pete Fritchman
-- Vijay (bv-vijay)
-- Yamamoto Kōhei
-- Zach Dennis
 
 [minitest]: https://github.com/seattlerb/minitest
 [quality commit messages]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
