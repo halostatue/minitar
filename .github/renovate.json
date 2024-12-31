@@ -7,7 +7,7 @@
   "extends": [
     "config:recommended",
     "group:allNonMajor",
-    "helpers:pinGitHubActionDigests",
+    "helpers:pinGitHubActionDigestsToSemver",
     "security:openssf-scorecard",
     ":approveMajorUpdates",
     ":automergeStableNonMajor",
