@@ -23,9 +23,14 @@ age1fc6ngxmn02m62fej5cl30lrvwmxn4k3q2atqu53aatekmnqfwumqj4g93w
 
 ## Exclusions
 
-There are several classes of "security" issues which will not be accepted for
-Minitar, because any issues arising from these are a matter of the library being
-used incorrectly.
+There are several classes of potential security issues that will not be accepted
+for Minitar There are several classes of "security" issues which will not be
+accepted for Minitar, because any issues arising from these are a matter of the
+library being used incorrectly.
+
+- [CWE-073](https://cwe.mitre.org/data/definitions/73.html)
+- [CWE-078](https://cwe.mitre.org/data/definitions/78.html)
+- [CWE-088](https://cwe.mitre.org/data/definitions/88.html)
 
 Minitar does _not_ perform validation or sanitization of path names provided to
 the convenience classes `Minitar::Output` and `Minitar::Input`, which use
