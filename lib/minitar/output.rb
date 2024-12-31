@@ -1,16 +1,29 @@
 require "minitar/writer"
 
 class Minitar
-  # Wraps a Minitar::Writer with convenience methods and wrapped
-  # stream management. If the stream provided to Output does not support random
-  # access, only Writer#add_file_simple and Writer#mkdir are guaranteed to
-  # work.
+  # Wraps a Minitar::Writer with convenience methods and wrapped stream management. If the
+  # stream provided to Output does not support random access, only Writer#add_file_simple
+  # and Writer#mkdir are guaranteed to work.
+  #
+  # === Security Notice
+  #
+  # Constructing a Minitar::Output will use Kernel.open if the provided output is not
+  # a readable stream object. Using an untrusted value for output may allow a malicious
+  # user to execute arbitrary system commands. It is the caller's responsibility to ensure
+  # that the output value is safe.
+  #
+  # * {CWE-073}[https://cwe.mitre.org/data/definitions/73.html]
+  # * {CWE-078}[https://cwe.mitre.org/data/definitions/78.html]
+  # * {CWE-088}[https://cwe.mitre.org/data/definitions/88.html]
+  #
+  # This notice applies to Minitar::Output.open, Minitar::Output.tar, and
+  # Minitar::Output.new.
   class Output
-    # With no associated block, +Output.open+ is a synonym for +Output.new+. If
-    # the optional code block is given, it will be given the new Output as an
-    # argument and the Output object will automatically be closed when the
-    # block terminates (this also closes the wrapped stream object). In this
-    # instance, +Output.open+ returns the value of the block.
+    # With no associated block, +Output.open+ is a synonym for +Output.new+.
+    #
+    # If a block is given, the new Output will be yielded to the block as an argument and
+    # the Output object will automatically be closed when the block terminates (this also
+    # closes the wrapped stream object). The return value will be the value of the block.
     #
     # call-seq:
     #    Minitar::Output.open(io) -> output
@@ -28,9 +41,9 @@ class Minitar
       end
     end
 
-    # Output.tar is a wrapper for Output.open that yields the owned tar object
-    # instead of the Output object. If a block is not provided, an enumerator
-    # will be created with the same behaviour.
+    # Output.tar is a wrapper for Output.open that yields the owned tar object instead of
+    # the Output object. If a block is not provided, an enumerator will be created with
+    # the same behaviour.
     #
     # call-seq:
     #    Minitar::Output.tar(io) -> enumerator
@@ -43,10 +56,9 @@ class Minitar
       end
     end
 
-    # Creates a new Output object. If +output+ is a stream object that responds
-    # to #write, then it will simply be wrapped. Otherwise, one will be created
-    # and opened using Kernel#open. When Output#close is called, the stream
-    # object wrapped will be closed.
+    # Creates a new Output object. If +output+ is a stream object that responds to #write,
+    # then it will simply be wrapped. Otherwise, one will be created and opened using
+    # Kernel#open. When Output#close is called, the stream object wrapped will be closed.
     #
     # call-seq:
     #    Minitar::Output.new(io) -> output
