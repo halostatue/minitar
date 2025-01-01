@@ -77,14 +77,15 @@
 
 ## 0.8 / 2019-01-05
 
-- inkstak resolved an issue introduced in the fix for [#31][issue-31] by
-  allowing spaces to be considered valid characters in strict octal handling.
-  Octal conversion ignores leading spaces. Merged from a slightly modified
-  version of PR [#35][pull-35].
+- [@inkstak](https://github.com/inkstak) resolved an issue introduced in the fix
+  for [#31][issue-31] by allowing spaces to be considered valid characters in
+  strict octal handling. Octal conversion ignores leading spaces. Merged from a
+  slightly modified version of PR [#35][pull-35].
 
-- dearblue contributed PR [#32][pull-32] providing an explicit call to #bytesize
-  for strings that include multibyte characters. The PR has been modified to be
-  compatible with older versions of Ruby and extend tests.
+- [@dearblue](https://github.com/dearblue) contributed PR [#32][pull-32]
+  providing an explicit call to #bytesize for strings that include multibyte
+  characters. The PR has been modified to be compatible with older versions of
+  Ruby and extend tests.
 
 - Akinori MUSHA (knu) contributed PR [#36][pull-36] that treats certain badly
   encoded regular files (with names ending in `/`) as if they were directories
@@ -94,11 +95,12 @@
 
 - Fixed issue [#28][issue-28] with a modified version of PR [#29][pull-29]
   covering the security policy and position for `Minitar`. Thanks so much to
-  [@ooooooo\_q](https://github.com/ooooooo_q) for the report and an initial
+  [@ooooooo-q](https://github.com/ooooooo-q) for the report and an initial
   patch. Additional information was added as [#30][issue-30].
 
-- dearblue contributed PR [#33][pull-33] providing a fix for `Minitar::Reader`
-  when the IO-like object does not have a `#pos` method.
+- [@dearblue](https://github.com/dearblue) contributed PR [#33][pull-33]
+  providing a fix for `Minitar::Reader` when the IO-like object does not have a
+  `#pos` method.
 
 - Kevin McDermott contributed PR [#34][pull-34] so that an InvalidTarStream is
   raised if the tar header is not valid, preventing incorrect streaming of files
