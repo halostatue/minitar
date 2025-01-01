@@ -9,8 +9,8 @@ Thanks to everyone who has contributed to minitar:
 - Antoine Toulme
 - Curtis Sampson
 - Daniel J. Berger
-- dearblue
-- inkstak
+- [@dearblue](https://github.com/dearblue)
+- [@inkstak](https://github.com/inkstak)
 - John Prince
 - Jorie Tappa
 - Kazuyoshi Kato
@@ -19,8 +19,8 @@ Thanks to everyone who has contributed to minitar:
 - Merten Falk
 - Michal Suchanek
 - Mike Furr
-- ooooooo\_q
+- [@ooooooo-q](https://github.com/ooooooo-q)
 - Pete Fritchman
-- Vijay (bv-vijay)
+- Vijay ([@bv-vijay](https://github.com/bv-vijay))
 - Yamamoto Kōhei
 - Zach Dennis
