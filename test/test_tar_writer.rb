@@ -17,7 +17,7 @@ class TestTarWriter < Minitest::Test
     end
 
     def reset
-      @data = ""
+      @data = +""
       @data.force_encoding("ascii-8bit") if @data.respond_to?(:force_encoding)
     end
   end

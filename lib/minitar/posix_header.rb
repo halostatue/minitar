@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Minitar
   # Implements the POSIX tar header as a Ruby class. The structure of
   # the POSIX tar header is:
@@ -28,7 +30,7 @@ class Minitar
   # unrecognized typeflag value as a regular file."
   class PosixHeader
     BLOCK_SIZE = 512
-    MAGIC_BYTES = "ustar".freeze
+    MAGIC_BYTES = "ustar"
 
     GNU_EXT_LONG_LINK = "././@LongLink"
 
@@ -52,9 +54,9 @@ class Minitar
     attr_accessor :name
 
     # The pack format passed to Array#pack for encoding a header.
-    HEADER_PACK_FORMAT = "a100a8a8a8a12a12a7aaa100a6a2a32a32a8a8a155".freeze
+    HEADER_PACK_FORMAT = "a100a8a8a8a12a12a7aaa100a6a2a32a32a8a8a155"
     # The unpack format passed to String#unpack for decoding a header.
-    HEADER_UNPACK_FORMAT = "Z100A8A8A8A12A12A8aZ100A6A2Z32Z32A8A8Z155".freeze
+    HEADER_UNPACK_FORMAT = "Z100A8A8A8A12A12A8aZ100A6A2Z32Z32A8A8Z155"
 
     class << self
       # Creates a new PosixHeader from a data stream.

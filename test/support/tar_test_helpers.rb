@@ -1,11 +1,11 @@
 module TarTestHelpers
   Field = Struct.new(:name, :offset, :length)
   def self.Field(name, length)
-    # standard:disable ThreadSafety/InstanceVariableInClassMethod
+    # standard:disable ThreadSafety/ClassInstanceVariable
     @offset ||= 0
     field = Field.new(name, @offset, length)
     @offset += length
-    # standard:enable ThreadSafety/InstanceVariableInClassMethod
+    # standard:enable ThreadSafety/ClassInstanceVariable
 
     FIELDS[name] = field
     FIELD_ORDER << name

@@ -40,7 +40,7 @@
 - Enhancements:
 
   - Added `Minitar.pack_as_file`, originally proposed by John Prince back in
-    2011 [#7][issue-7].
+    2011 [#7][issue-07].
 
 ## 0.12.1 / 2024-08-21
 
@@ -186,14 +186,14 @@
 
 - Bugs:
 
-  - Fix [#2][issue-2] to handle IO streams that are not seekable, such as pipes,
-    `STDIN`, or `STDOUT`.
-  - Fix [#3][issue-3] to make the test timezone resilient.
-  - Fix [#4][issue-4] for supporting the reading of tar files with filenames in
+  - Fix [#2][issue-02] to handle IO streams that are not seekable, such as
+    pipes, `STDIN`, or `STDOUT`.
+  - Fix [#3][issue-03] to make the test timezone resilient.
+  - Fix [#4][issue-04] for supporting the reading of tar files with filenames in
     the GNU long filename extension format. Ported from
     [@atoulme](https://github.com/atoulme)’s fork, originally provided by Curtis
     Sampson.
-  - Fix [#6][issue-6] by making it raise the correct error for a long filename
+  - Fix [#6][issue-06] by making it raise the correct error for a long filename
     with no path components.
   - Fix [#13][issue-13] provided by [@fetep](https://github.com/fetep) fixes an
     off-by-one error on filename splitting.
@@ -226,35 +226,35 @@
 [age]: https://github.com/FiloSottile/age
 [hoe-halostatue]: https://github.com/halostatue/hoe-halostatue
 [hoe-markdown]: https://github.com/flavorjones/hoe-markdown
-[issue-13]: [#13](https://github.com/halostatue/minitar/issues/13)
-[issue-14]: [#14](https://github.com/halostatue/minitar/issues/14)
-[issue-16]: [#16](https://github.com/halostatue/minitar/issues/16)
-[issue-23]: [#23](https://github.com/halostatue/minitar/issues/23)
-[issue-24]: [#24](https://github.com/halostatue/minitar/issues/24)
-[issue-28]: [#28](https://github.com/halostatue/minitar/issues/28)
-[issue-2]: [#2](https://github.com/halostatue/minitar/issues/2)
-[issue-30]: [#30](https://github.com/halostatue/minitar/issues/30)
-[issue-31]: [#31](https://github.com/halostatue/minitar/issues/31)
-[issue-3]: [#3](https://github.com/halostatue/minitar/issues/3)
-[issue-45]: [#45](https://github.com/halostatue/minitar/issues/45)
-[issue-46]: [#46](https://github.com/halostatue/minitar/issues/46)
-[issue-4]: [#4](https://github.com/halostatue/minitar/issues/4)
-[issue-58]: [#58](https://github.com/halostatue/minitar/issues/58)
-[issue-63]: [#63](https://github.com/halostatue/minitar/issues/63)
-[issue-65]: [#65](https://github.com/halostatue/minitar/issues/65)
-[issue-6]: [#6](https://github.com/halostatue/minitar/issues/6)
-[issue-7]: [#7](https://github.com/halostatue/minitar/issues/7)
-[pull-12]: [#12](https://github.com/halostatue/minitar/pull/12)
-[pull-26]: [#26](https://github.com/halostatue/minitar/pull/26)
-[pull-29]: [#29](https://github.com/halostatue/minitar/pull/29)
-[pull-32]: [#32](https://github.com/halostatue/minitar/pull/32)
-[pull-33]: [#33](https://github.com/halostatue/minitar/pull/33)
-[pull-34]: [#34](https://github.com/halostatue/minitar/pull/34)
-[pull-35]: [#35](https://github.com/halostatue/minitar/pull/35)
-[pull-36]: [#36](https://github.com/halostatue/minitar/pull/36)
-[pull-37]: [#37](https://github.com/halostatue/minitar/pull/37)
-[pull-40]: [#40](https://github.com/halostatue/minitar/pull/40)
-[pull-42]: [#42](https://github.com/halostatue/minitar/pull/42)
-[pull-43]: [#43](https://github.com/halostatue/minitar/pull/43)
-[pull-47]: [#47](https://github.com/halostatue/minitar/pull/47)
+[issue-02]: https://github.com/halostatue/minitar/issues/2
+[issue-03]: https://github.com/halostatue/minitar/issues/3
+[issue-04]: https://github.com/halostatue/minitar/issues/4
+[issue-06]: https://github.com/halostatue/minitar/issues/6
+[issue-07]: https://github.com/halostatue/minitar/issues/7
+[issue-13]: https://github.com/halostatue/minitar/issues/13
+[issue-14]: https://github.com/halostatue/minitar/issues/14
+[issue-16]: https://github.com/halostatue/minitar/issues/16
+[issue-23]: https://github.com/halostatue/minitar/issues/23
+[issue-24]: https://github.com/halostatue/minitar/issues/24
+[issue-28]: https://github.com/halostatue/minitar/issues/28
+[issue-30]: https://github.com/halostatue/minitar/issues/30
+[issue-31]: https://github.com/halostatue/minitar/issues/31
+[issue-45]: https://github.com/halostatue/minitar/issues/45
+[issue-46]: https://github.com/halostatue/minitar/issues/46
+[issue-58]: https://github.com/halostatue/minitar/issues/58
+[issue-63]: https://github.com/halostatue/minitar/issues/63
+[issue-65]: https://github.com/halostatue/minitar/issues/65
+[pull-12]: https://github.com/halostatue/minitar/pull/12
+[pull-26]: https://github.com/halostatue/minitar/pull/26
+[pull-29]: https://github.com/halostatue/minitar/pull/29
+[pull-32]: https://github.com/halostatue/minitar/pull/32
+[pull-33]: https://github.com/halostatue/minitar/pull/33
+[pull-34]: https://github.com/halostatue/minitar/pull/34
+[pull-35]: https://github.com/halostatue/minitar/pull/35
+[pull-36]: https://github.com/halostatue/minitar/pull/36
+[pull-37]: https://github.com/halostatue/minitar/pull/37
+[pull-40]: https://github.com/halostatue/minitar/pull/40
+[pull-42]: https://github.com/halostatue/minitar/pull/42
+[pull-43]: https://github.com/halostatue/minitar/pull/43
+[pull-47]: https://github.com/halostatue/minitar/pull/47
 [tidelift]: https://tidelift.com/security

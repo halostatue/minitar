@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Minitar
   # The class that writes a tar format archive to a data stream.
   class Writer
