@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "fileutils"
 require "rbconfig"
 
@@ -40,8 +42,6 @@ require "rbconfig"
 #       tar.close
 #     end
 class Minitar
-  VERSION = "1.0.2".freeze # :nodoc:
-
   # The base class for any minitar error.
   Error = Class.new(::StandardError)
   # Raised when a wrapped data stream class is not seekable.
@@ -288,3 +288,4 @@ end
 require "minitar/posix_header"
 require "minitar/input"
 require "minitar/output"
+require "minitar/version"

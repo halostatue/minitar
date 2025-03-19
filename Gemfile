@@ -1,6 +1,13 @@
+# -*- ruby -*-
+# frozen_string_literal: true
+
 # NOTE: This file is not the canonical source of dependencies. Edit the Rakefile, instead.
 
 source "https://rubygems.org/"
 
-# TODO: Remove this for minitar 1 since archive-tar-minitar is going away
-gemspec name: "minitar"
+if ENV["COVERAGE"]
+  gem "simplecov", require: false, platforms: [:mri]
+  gem "simplecov-lcov", require: false, platforms: [:mri]
+end
+
+gemspec

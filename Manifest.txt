@@ -14,6 +14,7 @@ lib/minitar/input.rb
 lib/minitar/output.rb
 lib/minitar/posix_header.rb
 lib/minitar/reader.rb
+lib/minitar/version.rb
 lib/minitar/writer.rb
 test/minitest_helper.rb
 test/support/tar_test_helpers.rb

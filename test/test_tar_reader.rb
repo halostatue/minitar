@@ -85,7 +85,7 @@ class TestTarReader < Minitest::Test
   end
 
   def test_read_works
-    contents = ("a".."z").inject("") { |a, e| a << e * 100 }
+    contents = ("a".."z").inject(+"") { |a, e| a << e * 100 }
     str = tar_file_header("lib/foo", "", 0o10644, contents.bytesize) + contents
     str += "\0" * (512 - (str.bytesize % 512))
     Minitar::Reader.new(StringIO.new(str)) do |is|

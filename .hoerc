@@ -23,12 +23,15 @@ exclude: !ruby/regexp '/
       | standard.*
       | travis
       | unused
-      )\.yml
-    )$
+    )\.yml$
+    | (?:
+        typos
+    )\.toml$
+  )
   | ^\.(?:
       bundle
-    | github
     | git
+    | github
     | hg
     | idea
     | svn
@@ -38,4 +41,10 @@ exclude: !ruby/regexp '/
   | [Aa]ppraisals$
   | (?i:TAGS)$
   | Vagrantfile$
+  | ^(?:
+      support
+    | research
+    | benchmarks/
+    | vendor
+  )\/
 /x'
