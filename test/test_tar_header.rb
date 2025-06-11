@@ -107,4 +107,60 @@ class TestTarHeader < Minitest::Test
 
     refute(h.valid?)
   end
+
+  def test_parse_numeric_field_octal
+    ph = Minitar::PosixHeader
+    assert_equal 123, ph.send(:parse_numeric_field, "173")
+    assert_equal 0, ph.send(:parse_numeric_field, "0")
+    assert_equal 511, ph.send(:parse_numeric_field, "777")
+  end
+
+  def test_parse_numeric_field_octal_with_spaces
+    ph = Minitar::PosixHeader
+    assert_equal 123, ph.send(:parse_numeric_field, "  173  ")
+    assert_equal 0, ph.send(:parse_numeric_field, "       ")
+  end
+
+  def test_parse_numeric_field_binary_positive_number
+    binary_data = [0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x12, 0x34, 0x56, 0x78, 0x9A].pack("C*")
+
+    header = raw_header(0,
+      asciiz("large_file.bin", 100),
+      asciiz("", 155),
+      binary_data,
+      z(to_oct(0o12345, 7)))
+    header = update_checksum(header)
+    io = StringIO.new(header)
+    h = Minitar::PosixHeader.from_stream(io)
+
+    expected_size = 0x123456789A
+    assert_equal expected_size, h.size
+  end
+
+  def test_parse_numeric_field_binary_negative_number
+    binary_data = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF].pack("C*")
+
+    header = raw_header(0,
+      asciiz("negative_size.bin", 100),
+      asciiz("", 155),
+      binary_data,
+      z(to_oct(0o12345, 7)))
+
+    header = update_checksum(header)
+    io = StringIO.new(header)
+    h = Minitar::PosixHeader.from_stream(io)
+
+    expected_size = -1
+    assert_equal expected_size, h.size
+  end
+
+  def test_parse_numeric_field_invalid
+    ph = Minitar::PosixHeader
+    assert_raises(ArgumentError) do
+      ph.send(:parse_numeric_field, "invalid")
+    end
+    assert_raises(ArgumentError) do
+      ph.send(:parse_numeric_field, "\x01\x02\x03")  # Invalid binary format
+    end
+  end
 end
