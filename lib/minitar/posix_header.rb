@@ -53,6 +53,9 @@ class Minitar
     # longer (up to BLOCK_SIZE bytes) if using the GNU long name tar extension.
     attr_accessor :name
 
+    # The size of the file. Required.
+    attr_accessor :size
+
     # The pack format passed to Array#pack for encoding a header.
     HEADER_PACK_FORMAT = "a100a8a8a8a12a12a7aaa100a6a2a32a32a8a8a155"
     # The unpack format passed to String#unpack for decoding a header.
@@ -174,6 +177,12 @@ class Minitar
       typeflag == "L" && name == GNU_EXT_LONG_LINK
     end
 
+    # Returns +true+ if the header is a PAX extended header which contains
+    # metadata for the next file entry.
+    def pax_header?
+      typeflag == "x"
+    end
+
     # A string representation of the header.
     def to_s
       update_checksum
@@ -208,10 +217,6 @@ class Minitar
       str = arr.pack(HEADER_PACK_FORMAT)
       str + "\0" * ((BLOCK_SIZE - str.bytesize) % BLOCK_SIZE)
     end
-
-    ##
-    # :attr_reader: size
-    # The size of the file. Required.
 
     ##
     # :attr_reader: prefix

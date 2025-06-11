@@ -244,6 +244,15 @@ class Minitar
 
           return if header.empty?
           header.name = name
+        elsif header.pax_header?
+          pax_header = PaxHeader.from_stream(@io, header)
+
+          header = PosixHeader.from_stream(@io)
+          return if header.empty?
+
+          if pax_header.size
+            header.size = pax_header.size
+          end
         end
 
         entry = EntryStream.new(header, @io)
