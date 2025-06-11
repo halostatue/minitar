@@ -1,10 +1,17 @@
 # Changelog
 
-## NEXT / 2025-MM-DD
+## 1.1.0 / 2025-09-DD
+
+- Enhancements:
+
+  - Support large file size encoded in base-256 encoding which is a GNU tar
+    extension [#121][pull-121].
+
+  - Support large file size encoded in PAX extension header. [#121][pull-121].
 
 - Governance:
 
-  Changes described here are effective 2024-12-31.
+  Changes described below are effective 2024-12-31.
 
   - Update gem management details to use markdown files for everything, enabled
     in part by [flavorjones/hoe-markdown][hoe-markdown]. Several files were
@@ -16,7 +23,7 @@
 
   Changes described below are effective 2025-08-04.
 
-  - Contributions to minitar-cli now require a DCO certification.
+  - Contributions to minitar now require a DCO certification.
 
 ## 1.0.2 / 2024-08-23
 
@@ -261,4 +268,5 @@
 [pull-42]: https://github.com/halostatue/minitar/pull/42
 [pull-43]: https://github.com/halostatue/minitar/pull/43
 [pull-47]: https://github.com/halostatue/minitar/pull/47
+[pull-121]: https://github.com/halostatue/minitar/pull/121
 [tidelift]: https://tidelift.com/security
