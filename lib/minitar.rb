@@ -286,6 +286,7 @@ class << Minitar
 end
 
 require "minitar/posix_header"
+require "minitar/pax_header"
 require "minitar/input"
 require "minitar/output"
 require "minitar/version"
