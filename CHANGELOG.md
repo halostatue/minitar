@@ -14,6 +14,13 @@
     Keybase.io and a PGP public key which I no longer use. The use of the
     [Tidelift security contact][tidelift] is recommended over direct disclosure.
 
+- Enhancements:
+
+  - Support large file size encoded in base-256 encoding which is a GNU tar extension
+    [#121][pull-121].
+
+  - Support large file size encoded in PAX extension header. [#121][pull-121].
+
 ## 1.0.2 / 2024-08-23
 
 - Bugfix:
@@ -256,5 +263,5 @@
 [pull-40]: https://github.com/halostatue/minitar/pull/40
 [pull-42]: https://github.com/halostatue/minitar/pull/42
 [pull-43]: https://github.com/halostatue/minitar/pull/43
-[pull-47]: https://github.com/halostatue/minitar/pull/47
+[pull-121]: https://github.com/halostatue/minitar/pull/121
 [tidelift]: https://tidelift.com/security

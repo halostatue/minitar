@@ -21,6 +21,7 @@ Thanks to everyone who has contributed to minitar:
 - Mike Furr
 - [@ooooooo-q](https://github.com/ooooooo-q)
 - Pete Fritchman
+- [@sorah](https://github.com/sorah)
 - Vijay ([@bv-vijay](https://github.com/bv-vijay))
 - Yamamoto Kōhei
 - Zach Dennis
