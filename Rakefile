@@ -16,6 +16,8 @@ Hoe.plugins.delete :signing
 spec = Hoe.spec "minitar" do
   developer("Austin Ziegler", "halostatue@gmail.com")
 
+  self.trusted_release = ENV["rubygems_release_gem"] == "true"
+
   require_ruby_version ">= 3.1"
 
   self.licenses = ["Ruby", "BSD-2-Clause"]

@@ -263,5 +263,6 @@
 [pull-40]: https://github.com/halostatue/minitar/pull/40
 [pull-42]: https://github.com/halostatue/minitar/pull/42
 [pull-43]: https://github.com/halostatue/minitar/pull/43
+[pull-47]: https://github.com/halostatue/minitar/pull/47
 [pull-121]: https://github.com/halostatue/minitar/pull/121
 [tidelift]: https://tidelift.com/security

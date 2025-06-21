@@ -3,9 +3,9 @@
 class Minitar
   # Implements the PAX Extended Header as a Ruby class. The header consists of following strings:
   #
-  #    "#{length} #{keyword}=#{value}\n"
+  #    <wordlength><space><asciikeyword>=<asciivalue>\n
   #
-  # There are several keywords defined in the POSIX standard and some of it are supported in this class.
+  # There are several keywords defined in the POSIX standard and some of them are supported in this class.
   # This class provides minimal functionality to extract size information for large file support.
   class PaxHeader
     BLOCK_SIZE = 512
