@@ -76,6 +76,10 @@ module TarTestHelpers
     update_checksum(header("2", name, prefix, 0, mode, target))
   end
 
+  def tar_pax_header(name, prefix, content_size)
+    update_checksum(header("x", name, prefix, content_size, 0o644))
+  end
+
   def header(type, fname, dname, length, mode, link_name = "")
     raw_header(type,
       asciiz(fname, 100),

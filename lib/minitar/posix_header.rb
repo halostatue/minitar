@@ -53,10 +53,13 @@ class Minitar
     # longer (up to BLOCK_SIZE bytes) if using the GNU long name tar extension.
     attr_accessor :name
 
+    # The size of the file. Required.
+    attr_accessor :size
+
     # The pack format passed to Array#pack for encoding a header.
     HEADER_PACK_FORMAT = "a100a8a8a8a12a12a7aaa100a6a2a32a32a8a8a155"
     # The unpack format passed to String#unpack for decoding a header.
-    HEADER_UNPACK_FORMAT = "Z100A8A8A8A12A12A8aZ100A6A2Z32Z32A8A8Z155"
+    HEADER_UNPACK_FORMAT = "Z100A8A8A8a12A12A8aZ100A6A2Z32Z32A8A8Z155"
 
     class << self
       # Creates a new PosixHeader from a data stream.
@@ -78,7 +81,7 @@ class Minitar
         mode = fields.shift.oct
         uid = fields.shift.oct
         gid = fields.shift.oct
-        size = strict_oct(fields.shift)
+        size = parse_numeric_field(fields.shift)
         mtime = fields.shift.oct
         checksum = fields.shift.oct
         typeflag = fields.shift
@@ -116,9 +119,25 @@ class Minitar
 
       private
 
-      def strict_oct(string)
-        return string.oct if /\A[0-7 ]*\z/.match?(string)
-        raise ArgumentError, "#{string.inspect} is not a valid octal string"
+      def parse_numeric_field(string)
+        return string.oct if /\A[0-7 \0]*\z/.match?(string) # \0 appears as a padding
+        return parse_base256(string) if string.bytes.first == 0x80 || string.bytes.first == 0xff
+        raise ArgumentError, "#{string.inspect} is not a valid numeric field"
+      end
+
+      def parse_base256(string)
+        # https://www.gnu.org/software/tar/manual/html_node/Extensions.html
+        bytes = string.bytes
+        case bytes.first
+        when 0x80 # Positive number: *non-leading* bytes, number in big-endian order
+          bytes[1..-1].inject(0) { |r, byte| (r << 8) | byte }
+        when 0xff # Negative number: *all* bytes, two's complement in big-endian order
+          result = bytes.inject(0) { |r, byte| (r << 8) | byte }
+          bit_length = bytes.size * 8
+          result - (1 << bit_length)
+        else
+          raise ArgumentError, "Invalid binary field format"
+        end
       end
     end
 
@@ -158,6 +177,12 @@ class Minitar
       typeflag == "L" && name == GNU_EXT_LONG_LINK
     end
 
+    # Returns +true+ if the header is a PAX extended header which contains
+    # metadata for the next file entry.
+    def pax_header?
+      typeflag == "x"
+    end
+
     # A string representation of the header.
     def to_s
       update_checksum
@@ -192,10 +217,6 @@ class Minitar
       str = arr.pack(HEADER_PACK_FORMAT)
       str + "\0" * ((BLOCK_SIZE - str.bytesize) % BLOCK_SIZE)
     end
-
-    ##
-    # :attr_reader: size
-    # The size of the file. Required.
 
     ##
     # :attr_reader: prefix
