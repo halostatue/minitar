@@ -2,6 +2,7 @@
 
 require "fileutils"
 require "rbconfig"
+require "rbconfig/sizeof"
 
 # == Synopsis
 #
