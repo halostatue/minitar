@@ -264,7 +264,7 @@ class Minitar
 
         if Minitar.seekable?(@io, :seek)
           # avoid reading...
-          @io.seek(size - entry.bytes_read, IO::SEEK_CUR)
+          try_seek(size - entry.bytes_read)
         else
           pending = size - entry.bytes_read
           while pending > 0
@@ -287,6 +287,23 @@ class Minitar
     end
 
     def close
+    end
+
+    private
+
+    def try_seek(bytes)
+      raise RangeError
+      @io.seek(bytes, IO::SEEK_CUR)
+    rescue RangeError
+      # This happens when skipping the large entry and the skipping entry size exceeds
+      # maximum allowed size (varies by platform and underlying IO object).
+      max = RbConfig::LIMITS.fetch('INT_MAX', 2147483647)
+      skipped = 0
+      while skipped < bytes
+        to_skip = [bytes - skipped, max].min
+        @io.seek(to_skip, IO::SEEK_CUR)
+        skipped += to_skip
+      end
     end
   end
 end
