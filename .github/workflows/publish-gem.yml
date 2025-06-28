@@ -21,6 +21,7 @@ permissions: {}
 
 jobs:
   release:
+    name: Release minitar
     if: github.repository == 'halostatue/minitar' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged))
 
     runs-on: ubuntu-latest

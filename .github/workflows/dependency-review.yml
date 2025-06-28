@@ -13,6 +13,7 @@ permissions: {}
 
 jobs:
   dependency-review:
+    name: Dependency Review
     permissions:
       contents: read
 
