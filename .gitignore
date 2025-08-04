@@ -3,14 +3,15 @@
 .byebug_history
 .rake_tasks~
 .source_index
-Gemfile.lock
-mise.toml
 /benchmarks/
 /coverage/
 /doc/
 /html/
 /pkg/
 /publish/
+/research/
 /test/cache.tst
 /tmp/
 /vendor/
+/website/index.html
+Gemfile.lock
