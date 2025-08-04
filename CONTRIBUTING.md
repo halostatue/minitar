@@ -1,8 +1,7 @@
 # Contributing
 
-Contribution to minitar is encouraged in any form: a bug report, a feature
-request, or code contributions. There are a few DOs and DON'Ts for
-contributions.
+Contribution to minitar is encouraged: bug reports, feature requests, or code
+contributions. There are a few DOs and DON'Ts that should be followed:
 
 - DO:
 
@@ -36,6 +35,20 @@ contributions.
 
   - Modify the `Gemfile`.
 
+## LLM-Generated Contribution Policy
+
+minitar-cli accepts only issues or pull requests that are well understood by the
+submitter and that, especially for pull requests, the developer can attest to
+the [Developer Certificate of Origin][dco] for each pull request (see
+[LICENCE](LICENCE.md)).
+
+If LLM assistance is used in writing pull requests, this must be documented in
+the commit message and pull request. If there is evidence of LLM assistance
+without such declaration, the pull request **will be declined**.
+
+Any contribution (bug, feature request, or pull request) that uses unreviewed
+LLM output will be rejected.
+
 ## Test Dependencies
 
 minitar uses Ryan Davis's [Hoe][Hoe] to manage the release process, and it adds
@@ -64,6 +77,7 @@ Here's the most direct way to get your work merged into the project:
 - Create a pull request against halostatue/minitar and describe what your change
   does and the why you think it should be merged.
 
+[dco]: licences/dco.txt
 [hoe]: https://github.com/seattlerb/hoe
 [minitest]: https://github.com/seattlerb/minitest
 [qcm]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html

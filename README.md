@@ -1,8 +1,8 @@
 # minitar
 
-- home :: https://github.com/halostatue/minitar
-- issues :: https://github.com/halostatue/minitar/issues
-- code :: https://github.com/halostatue/minitar/
+- code :: <https://github.com/halostatue/minitar>
+- issues :: <https://github.com/halostatue/minitar/issues>
+- changelog :: <https://github.com/halostatue/minitar/blob/main/CHANGELOG.md>
 
 ## Description
 
