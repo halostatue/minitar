@@ -14,6 +14,10 @@
     Keybase.io and a PGP public key which I no longer use. The use of the
     [Tidelift security contact][tidelift] is recommended over direct disclosure.
 
+  Changes described below are effective 2025-08-04.
+
+  - Contributions to minitar-cli now require a DCO certification.
+
 ## 1.0.2 / 2024-08-23
 
 - Bugfix:
