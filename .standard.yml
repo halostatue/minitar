@@ -6,6 +6,6 @@ ignore:
   - '*.gemspec'
   - pkg/**/*
 
-plugins:
-  - standard-minitest
-  - standard-thread_safety
+# plugins:
+#   - standard-minitest
+#   - standard-thread_safety
