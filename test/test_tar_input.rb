@@ -6,18 +6,6 @@ require "base64"
 require "zlib"
 
 class TestTarInput < Minitest::Test
-  TEST_TGZ = Base64.decode64(<<~EOS).freeze
-    H4sIAKJpllQAA0tJLEnUK0ks0kuvYqAVMDAwMDMxUQDR5mbmYNrACMIHA2MjIwUDc3NzEzMz
-    QxMDAwUDQ2NTczMGBQOauQgJlBYDfQ90SiKQkZmHWx1QWVoaHnMgXlGA00MEyHdzMMzOnBbC
-    wPz28n2uJgOR44Xrq7tsHc/utNe/9FdihkmH3pZ7+zOTRFREzkzYJ99iHHDn4n0/Wb3E8Ceq
-    S0uOdSyMMg9Z+WVvX0vJucxs77vrvZf2arWcvHP9wa1Yp9lRnJmC59/P9+43PXum+tj7Ga+8
-    rtT+u3d941e765Y/bOrnvpv8X6jtz+wKqyk/v3n8P5xlO3l/1dn9q9Zotpy5funw/Of77Y/5
-    LVltz7ToTl7dXf5ppmf3n9p+PPxz/sz/qjZn9yf9Y4R7I2Ft3tqfPTUMGgMYlEMSpGXmpBrT
-    2A5Qvjc1xZ3/DTDyv5GJmfFo/qcHCMnILFYAIlA6UDDWU+DlGmgXjYJRMApGwSgYBaNgFIyC
-    UTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIwCUgAAGnyo6wAoAAA=
-  EOS
-  FILETIMES = Time.utc(2004).to_i
-
   TEST_CONTENTS = {
     "data.tar.gz" => {size: 210, mode: 0o644},
     "file3" => {size: 18, mode: 0o755}
@@ -31,16 +19,17 @@ class TestTarInput < Minitest::Test
   }.freeze
 
   def setup
+    @reader = open_fixture("tar_input")
     FileUtils.mkdir_p("data__")
   end
 
   def teardown
+    @reader&.close unless @reader&.closed?
     FileUtils.rm_rf("data__")
   end
 
   def test_open_no_block
-    reader = Zlib::GzipReader.new(StringIO.new(TEST_TGZ))
-    input = Minitar::Input.open(reader)
+    input = Minitar::Input.open(@reader)
     refute input.closed?
   ensure
     input.close
@@ -48,8 +37,7 @@ class TestTarInput < Minitest::Test
   end
 
   def test_each_works
-    reader = Zlib::GzipReader.new(StringIO.new(TEST_TGZ))
-    Minitar::Input.open(reader) do |stream|
+    Minitar::Input.open(@reader) do |stream|
       outer = 0
       stream.each.with_index do |entry, i|
         assert_kind_of Minitar::Reader::EntryStream, entry
@@ -86,8 +74,7 @@ class TestTarInput < Minitest::Test
   end
 
   def test_extract_entry_works
-    reader = Zlib::GzipReader.new(StringIO.new(TEST_TGZ))
-    Minitar::Input.open(reader) do |stream|
+    Minitar::Input.open(@reader) do |stream|
       outer_count = 0
       stream.each_with_index do |entry, i|
         stream.extract_entry("data__", entry)
@@ -150,7 +137,7 @@ class TestTarInput < Minitest::Test
     File.symlink("data__/file4", "data__/file3")
     File.symlink("data__/file4", "data__/data")
 
-    Minitar.unpack(Zlib::GzipReader.new(StringIO.new(TEST_TGZ)), "data__")
+    Minitar.unpack(@reader, "data__")
     Minitar.unpack(Zlib::GzipReader.new(File.open("data__/data.tar.gz", "rb")),
       "data__")
 
@@ -158,13 +145,8 @@ class TestTarInput < Minitest::Test
     refute File.symlink?("data__/data")
   end
 
-  RELATIVE_DIRECTORY_TGZ = Base64.decode64 <<~EOS
-    H4sICIIoKVgCA2JhZC1kaXIudGFyANPT0y8sTy0qqWSgHTAwMDAzMVEA0eZmpmDawAjChwEFQ2MDQyMg
-    MDUzVDAwNDY0N2VQMGCgAygtLkksAjolEcjIzMOtDqgsLQ2/J0H+gNOjYBSMglEwyAEA2LchrwAGAAA=
-  EOS
-
   def test_extract_entry_fails_with_relative_directory
-    reader = Zlib::GzipReader.new(StringIO.new(RELATIVE_DIRECTORY_TGZ))
+    reader = open_fixture("test_input_relative")
     Minitar::Input.open(reader) do |stream|
       stream.each do |entry|
         assert_raises Minitar::SecureRelativePathError do
@@ -174,52 +156,26 @@ class TestTarInput < Minitest::Test
     end
   end
 
-  NON_STRICT_OCTAL_TGZ = Base64.decode64(<<~EOS).freeze
-    H4sIAEk55FsAA0tJLEnUK0ks0kuvYqAVMDAwMDMxUQDR5mbmYNrACMjX0zMH
-    AzMDUwUDIG1iZmZoYmCgYGBobGpuxqBgQDMXIYHSYqDvgU5KBDIy83CrAypL
-    S8NjjgEYKMDpIQLkuzkYZmdOC2Fgfnv5PleTgcjxwvXVXbaOZ3fa61/6KzHD
-    pENvy739mUkiKiJnJuyTbzEOuHPxvp+sXmL4E9WlJcc6FkaZh6z8srevpeRc
-    Zrb33fXeS3u1Wk7euf7gVqzT7CjOTMHz7+d795uePVN97P2MV15Xav/du77x
-    q911yx829XPfTf4v1PZndoXVlJ/fPP4fzrKdvL/q7P5VazRbzly/dHj+8/32
-    x/yWrLZnWnQnr+4u/zTTs/tPbT8e/jl/5n9Vm7P7k/4xwr2RsDZv7c+eGgaN
-    AQzKIQnSMnNSjWlsByjfm5pi5n8DGDAyQsv/RiZmxqP5nx4gJCOzWAGIQOlA
-    wVhPgZdroF00CkbBKBgFo2AUjIJRMApGwSgYBaNgFIyCUTAKRsEoGAWjYBSM
-    glEwCkbBKBgFo2AUjIJRMApIAQD0DyzXACgAAA==
-  EOS
-
   def test_extract_with_non_strict_octal
-    reader = Zlib::GzipReader.new(StringIO.new(NON_STRICT_OCTAL_TGZ))
+    reader = open_fixture("test_input_non_strict_octal")
 
     assert_raises(ArgumentError) do
       Minitar.unpack(reader, "data__")
     end
   end
 
-  OCTAL_WRAPPED_BY_SPACE_TGZ = Base64.decode64(<<~EOS).freeze
-    H4sIAOQg5FsAA0tJLEnUK0ks0kuvYqAVMDAwMDMxUQDR5mbmYNrACMhXgAJj
-    IyMFA3NzcxMzM0MTAwMFA0NjU3MzBgUDmrkICZQWA30PdFIikJGZh1sdUFla
-    Gh5zDMBAAU4PESDfzcEwO3NaCAPz28v3uZoMRI4Xrq/usnU8u9Ne/9JfiRkm
-    HXpb7u3PTBJRETkzYZ98i3HAnYv3/WT1EsOfqC4tOdaxMMo8ZOWXvX0tJecy
-    s73vrvde2qvVcvLO9Qe3Yp1mR3FmCp5/P9+73/Tsmepj72e88rpS++/e9Y1f
-    7a5b/rCpn/tu8n+htj+zK6ym/Pzm8f9wlu3k/VVn969ao9ly5vqlw/Of77c/
-    5rdktT3Tojt5dXf5p5me3X9q+/Hwz/kz/6vanN2f9I8R7o2EtXlrf/bUMGgM
-    YFAOSZCWmZNqTGM7QPne1BQz/xvAAEb+NzIxMx7N//QAIRmZxQpABEoHCsZ6
-    CrxcA+2iUTAKRsEoGAWjYBSMglEwCkbBKBgFo2AUjIJRMApGwSgYBaNgFIyC
-    UTAKRsEoGAWjYBSMglFACgAAuUHUvwAoAAA=
-  EOS
-
   def test_extract_octal_wrapped_by_space
-    reader = Zlib::GzipReader.new(StringIO.new(OCTAL_WRAPPED_BY_SPACE_TGZ))
+    reader = open_fixture("test_input_space_octal")
     header = Minitar::PosixHeader.from_stream(reader)
     assert_equal 210, header.size
 
-    reader = Zlib::GzipReader.new(StringIO.new(OCTAL_WRAPPED_BY_SPACE_TGZ))
+    reader = open_fixture("test_input_space_octal")
     Minitar.unpack(reader, "data__", [])
   end
 
   def test_fsync_false
     outer = 0
-    Minitar.unpack(Zlib::GzipReader.new(StringIO.new(TEST_TGZ)), "data__", [], fsync: false) do |_label, _path, _stats|
+    Minitar.unpack(@reader, "data__", [], fsync: false) do |_label, _path, _stats|
       outer += 1
     end
     assert_equal 6, outer
