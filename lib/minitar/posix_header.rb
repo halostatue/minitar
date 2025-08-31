@@ -5,29 +5,27 @@ class Minitar
   # the POSIX tar header is:
   #
   #   struct tarfile_entry_posix
-  #   {                      //                               pack/unpack
-  #      char name[100];     // ASCII (+ Z unless filled)     a100/Z100
-  #      char mode[8];       // 0 padded, octal, null         a8  /A8
-  #      char uid[8];        // 0 padded, octal, null         a8  /A8
-  #      char gid[8];        // 0 padded, octal, null         a8  /A8
-  #      char size[12];      // 0 padded, octal, null         a12 /A12
-  #      char mtime[12];     // 0 padded, octal, null         a12 /A12
-  #      char checksum[8];   // 0 padded, octal, null, space  a8  /A8
-  #      char typeflag[1];   // see below                     a   /a
-  #      char linkname[100]; // ASCII + (Z unless filled)     a100/Z100
-  #      char magic[6];      // "ustar\0"                     a6  /A6
-  #      char version[2];    // "00"                          a2  /A2
-  #      char uname[32];     // ASCIIZ                        a32 /Z32
-  #      char gname[32];     // ASCIIZ                        a32 /Z32
-  #      char devmajor[8];   // 0 padded, octal, null         a8  /A8
-  #      char devminor[8];   // 0 padded, octal, null         a8  /A8
-  #      char prefix[155];   // ASCII (+ Z unless filled)     a155/Z155
+  #   {                      //                               pack   unpack
+  #      char name[100];     // ASCII (+ Z unless filled)     a100   Z100
+  #      char mode[8];       // 0 padded, octal, null         a8     A8
+  #      char uid[8];        // 0 padded, octal, null         a8     A8
+  #      char gid[8];        // 0 padded, octal, null         a8     A8
+  #      char size[12];      // 0 padded, octal, null         a12    A12
+  #      char mtime[12];     // 0 padded, octal, null         a12    A12
+  #      char checksum[8];   // 0 padded, octal, null, space  a8     A8
+  #      char typeflag[1];   // see below                     a      a
+  #      char linkname[100]; // ASCII + (Z unless filled)     a100   Z100
+  #      char magic[6];      // "ustar\0"                     a6     A6
+  #      char version[2];    // "00"                          a2     A2
+  #      char uname[32];     // ASCIIZ                        a32    Z32
+  #      char gname[32];     // ASCIIZ                        a32    Z32
+  #      char devmajor[8];   // 0 padded, octal, null         a8     A8
+  #      char devminor[8];   // 0 padded, octal, null         a8     A8
+  #      char prefix[155];   // ASCII (+ Z unless filled)     a155   Z155
   #   };
   #
-  # The #typeflag is one of several known values.
-  #
-  # POSIX indicates that "A POSIX-compliant implementation must treat any
-  # unrecognized typeflag value as a regular file."
+  # The #typeflag is one of several known values. POSIX indicates that "A POSIX-compliant
+  # implementation must treat any unrecognized typeflag value as a regular file."
   class PosixHeader
     BLOCK_SIZE = 512
     MAGIC_BYTES = "ustar"
@@ -46,12 +44,14 @@ class Minitar
     FIELDS = (REQUIRED_FIELDS + OPTIONAL_FIELDS).freeze
 
     FIELDS.each do |f|
-      attr_reader f.to_sym unless f.to_sym == :name
+      attr_reader f.to_sym
     end
 
-    # The name of the file. By default, limited to 100 bytes. Required. May be
-    # longer (up to BLOCK_SIZE bytes) if using the GNU long name tar extension.
-    attr_accessor :name
+    ##
+    def name=(value)
+      valid_name!(value)
+      @name = value
+    end
 
     # The size of the file. Required.
     attr_accessor :size
@@ -141,8 +141,8 @@ class Minitar
       end
     end
 
-    # Creates a new PosixHeader. A PosixHeader cannot be created unless
-    # +name+, +size+, +prefix+, and +mode+ are provided.
+    # Creates a new PosixHeader. A PosixHeader cannot be created unless +name+, +size+,
+    # +prefix+, and +mode+ are provided.
     def initialize(v)
       REQUIRED_FIELDS.each do |f|
         raise ArgumentError, "Field #{f} is required." unless v.key?(f)
@@ -159,6 +159,8 @@ class Minitar
       end
 
       @empty = v[:empty]
+
+      valid_name!(v[:name]) unless v[:empty]
     end
 
     # Indicates if the header was an empty header.
@@ -183,6 +185,19 @@ class Minitar
       typeflag == "x"
     end
 
+    # Sets the +name+ to the +value+ provided and clears +prefix+.
+    #
+    # Used by Minitar::Reader#each_entry to set the long name when processing GNU long
+    # filename extensions.
+    #
+    # The +value+ must be the complete name, including leading directory components.
+    def long_name=(value)
+      valid_name!(value)
+
+      @prefix = ""
+      @name = value
+    end
+
     # A string representation of the header.
     def to_s
       update_checksum
@@ -198,6 +213,11 @@ class Minitar
 
     private
 
+    def valid_name!(value)
+      return if value.is_a?(String) && !value.empty?
+      raise ArgumentError, "Field name must be a non-empty string"
+    end
+
     def oct(num, len)
       if num.nil?
         "\0" * (len + 1)
@@ -207,7 +227,7 @@ class Minitar
     end
 
     def calculate_checksum(hdr)
-      hdr.unpack("C*").inject { |a, e| a + e }
+      hdr.unpack("C*").inject(:+)
     end
 
     def header(chksum)
@@ -217,6 +237,13 @@ class Minitar
       str = arr.pack(HEADER_PACK_FORMAT)
       str + "\0" * ((BLOCK_SIZE - str.bytesize) % BLOCK_SIZE)
     end
+
+    ##
+    # :attr_accessor: name
+    # The name of the file. Required.
+    #
+    # By default, limited to 100 bytes, but may be up to BLOCK_SIZE bytes if using the
+    # GNU long name tar extension.
 
     ##
     # :attr_reader: prefix
@@ -266,10 +293,11 @@ class Minitar
     # +5+::  Directory.
     # +6+::  FIFO node.
     # +7+::  Reserved.
+    # +L+::  GNU extension for long filenames when #name is <tt>././@LongLink</tt>.
 
     ##
     # :attr_reader: linkname
-    # The name of the link stored. Not currently used.
+    # The target of the symbolic link.
 
     ##
     # :attr_reader: magic
