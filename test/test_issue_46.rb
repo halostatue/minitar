@@ -1,17 +1,10 @@
-#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-require "minitar"
 require "minitest_helper"
-require "base64"
-require "zlib"
 
 class TestIssue46 < Minitest::Test
-  FILETIMES = Time.utc(2004).to_i
-
-  superlong_name = (["0123456789abcde"] * 33).join("/")
-
   SUPERLONG_CONTENTS = {
-    superlong_name => {size: 496, mode: 0o644},
+    ["0123456789abcde"].then { _1 * 33 }.join("/") => {size: 496, mode: 0o644},
     "endfile" => {size: 0, mode: 0o644}
   }
 
@@ -23,12 +16,11 @@ class TestIssue46 < Minitest::Test
         assert SUPERLONG_CONTENTS.key?(entry.name), "File #{entry.name} not defined"
 
         assert_equal SUPERLONG_CONTENTS[entry.name][:size],
-          entry.size,
-          "File sizes sizes do not match: #{entry.name}"
+          entry.size, "File sizes sizes do not match: #{entry.name}"
 
         assert_modes_equal(SUPERLONG_CONTENTS[entry.name][:mode],
           entry.mode, entry.name)
-        assert_equal FILETIMES, entry.mtime, "entry.mtime"
+        assert_equal TIME_2004, entry.mtime, "entry.mtime"
 
         outer += 1
       end

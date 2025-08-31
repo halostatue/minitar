@@ -1,9 +1,6 @@
-#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-require "minitar"
 require "minitest_helper"
-require "base64"
-require "zlib"
 
 class TestTarInput < Minitest::Test
   TEST_CONTENTS = {
@@ -46,7 +43,7 @@ class TestTarInput < Minitest::Test
         assert_equal TEST_CONTENTS[entry.name][:size], entry.size, entry.name
         assert_modes_equal(TEST_CONTENTS[entry.name][:mode],
           entry.mode, entry.name)
-        assert_equal FILETIMES, entry.mtime, "entry.mtime"
+        assert_equal TIME_2004, entry.mtime, "entry.mtime"
 
         if i.zero?
           data_reader = Zlib::GzipReader.new(StringIO.new(entry.read))
@@ -59,7 +56,7 @@ class TestTarInput < Minitest::Test
                 entry2.name)
               assert_modes_equal(TEST_DATA_CONTENTS[entry2.name][:mode],
                 entry2.mode, entry2.name)
-              assert_equal FILETIMES, entry2.mtime, entry2.name
+              assert_equal TIME_2004, entry2.mtime, entry2.name
               inner += 1
             end
             assert_equal 4, inner

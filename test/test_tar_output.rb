@@ -1,6 +1,5 @@
-#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-require "minitar"
 require "minitest_helper"
 
 class TestTarOutput < Minitest::Test
