@@ -1,13 +1,12 @@
-#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-require "minitar"
 require "minitest_helper"
 
 class TestTarReader < Minitest::Test
   def test_open_no_block
-    str = tar_file_header("lib/foo", "", 0o10644, 10) + "\0" * 512
-    str += tar_file_header("bar", "baz", 0o644, 0)
-    str += tar_dir_header("foo", "bar", 0o12345)
+    str = build_tar_file_header("lib/foo", "", 0o10644, 10) + "\0" * 512
+    str += build_tar_file_header("bar", "baz", 0o644, 0)
+    str += build_tar_dir_header("foo", "bar", 0o12345)
     str += "\0" * 1024
 
     reader = Minitar::Reader.open(StringIO.new(str))
@@ -18,10 +17,10 @@ class TestTarReader < Minitest::Test
   end
 
   def test_multiple_entries
-    str = tar_file_header("lib/foo", "", 0o10644, 10) + "\0" * 512
-    str += tar_file_header("bar", "baz", 0o644, 0)
-    str += tar_dir_header("foo", "bar", 0o12345)
-    str += tar_file_header("src/", "", 0o755, 0) # "file" with a trailing slash
+    str = build_tar_file_header("lib/foo", "", 0o10644, 10) + "\0" * 512
+    str += build_tar_file_header("bar", "baz", 0o644, 0)
+    str += build_tar_dir_header("foo", "bar", 0o12345)
+    str += build_tar_file_header("src/", "", 0o755, 0) # "file" with a trailing slash
     str += "\0" * 1024
     names = %w[lib/foo bar foo src/]
     prefixes = ["", "baz", "bar", ""]
@@ -52,7 +51,7 @@ class TestTarReader < Minitest::Test
 
   def test_rewind_entry_works
     content = ("a".."z").to_a.join(" ")
-    str = tar_file_header("lib/foo", "", 0o10644, content.bytesize) +
+    str = build_tar_file_header("lib/foo", "", 0o10644, content.bytesize) +
       content + "\0" * (512 - content.bytesize)
     str << "\0" * 1024
     Minitar::Reader.new(StringIO.new(str)) do |is|
@@ -68,7 +67,7 @@ class TestTarReader < Minitest::Test
 
   def test_rewind_works
     content = ("a".."z").to_a.join(" ")
-    str = tar_file_header("lib/foo", "", 0o10644, content.bytesize) +
+    str = build_tar_file_header("lib/foo", "", 0o10644, content.bytesize) +
       content + "\0" * (512 - content.bytesize)
     str << "\0" * 1024
     Minitar::Reader.new(StringIO.new(str)) do |is|
@@ -86,7 +85,7 @@ class TestTarReader < Minitest::Test
 
   def test_read_works
     contents = ("a".."z").inject(+"") { |a, e| a << e * 100 }
-    str = tar_file_header("lib/foo", "", 0o10644, contents.bytesize) + contents
+    str = build_tar_file_header("lib/foo", "", 0o10644, contents.bytesize) + contents
     str += "\0" * (512 - (str.bytesize % 512))
     Minitar::Reader.new(StringIO.new(str)) do |is|
       is.each_entry do |entry|
@@ -120,7 +119,7 @@ class TestTarReader < Minitest::Test
   end
 
   def test_eof_works
-    str = tar_file_header("bar", "baz", 0o644, 0)
+    str = build_tar_file_header("bar", "baz", 0o644, 0)
     Minitar::Reader.new(StringIO.new(str)) do |is|
       is.each_entry do |entry|
         assert_kind_of Minitar::Reader::EntryStream, entry
@@ -132,7 +131,7 @@ class TestTarReader < Minitest::Test
         assert entry.eof?
       end
     end
-    str = tar_dir_header("foo", "bar", 0o12345)
+    str = build_tar_dir_header("foo", "bar", 0o12345)
     Minitar::Reader.new(StringIO.new(str)) do |is|
       is.each_entry do |entry|
         assert_kind_of Minitar::Reader::EntryStream, entry
@@ -144,9 +143,9 @@ class TestTarReader < Minitest::Test
         assert entry.eof?
       end
     end
-    str = tar_dir_header("foo", "bar", 0o12345)
-    str += tar_file_header("bar", "baz", 0o644, 0)
-    str += tar_file_header("bar", "baz", 0o644, 0)
+    str = build_tar_dir_header("foo", "bar", 0o12345)
+    str += build_tar_file_header("bar", "baz", 0o644, 0)
+    str += build_tar_file_header("bar", "baz", 0o644, 0)
     Minitar::Reader.new(StringIO.new(str)) do |is|
       is.each_entry do |entry|
         assert_kind_of Minitar::Reader::EntryStream, entry

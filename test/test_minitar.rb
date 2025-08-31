@@ -1,18 +1,14 @@
-#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-require "minitar"
 require "minitest_helper"
-require "zlib"
 
 class TestMinitar < Minitest::Test
-  FILE_2004 = Time.utc(2004).to_i
-
   def test_pack_as_file
     input = [
       ["path", nil],
       ["test", "test"],
       ["extra/test", "extra/test"],
-      [{name: "empty2004", mtime: FILE_2004, mode: 0o755}, ""]
+      [{name: "empty2004", mtime: TIME_2004, mode: 0o755}, ""]
     ]
 
     writer = StringIO.new
@@ -26,7 +22,7 @@ class TestMinitar < Minitest::Test
       {name: "path", size: 0, mode: 0o755},
       {name: "test", size: 4, mode: 0o644, data: "test"},
       {name: "extra/test", size: 10, mode: 0o0644, data: "extra/test"},
-      {name: "empty2004", size: 0, mode: 0o755, mtime: FILE_2004, nil: true}
+      {name: "empty2004", size: 0, mode: 0o755, mtime: TIME_2004, nil: true}
     ]
 
     count = 0
