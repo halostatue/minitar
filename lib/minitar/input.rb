@@ -3,8 +3,8 @@
 require "minitar/reader"
 
 class Minitar
-  # Wraps a Minitar::Reader with convenience methods and wrapped stream management;
-  # Input only works with data streams that can be rewound.
+  # Wraps a Minitar::Reader with convenience methods and wrapped stream management; Input
+  # only works with data streams that can be rewound.
   #
   # === Security Notice
   #
@@ -28,15 +28,15 @@ class Minitar
     # the Input object will automatically be closed when the block terminates (this also
     # closes the wrapped stream object). The return value will be the value of the block.
     #
-    # call-seq:
+    # :call-seq:
     #    Minitar::Input.open(io) -> input
     #    Minitar::Input.open(io) { |input| block } -> obj
     def self.open(input)
       stream = new(input)
 
       if block_given?
-        # This exception context must remain, otherwise the stream closes on
-        # open even if a block is not given.
+        # This exception context must remain, otherwise the stream closes on open even if
+        # a block is not given.
         begin
           yield stream
         ensure
@@ -57,7 +57,7 @@ class Minitar
     #
     # If a block is not provided, an enumerator will be created with the same behaviour.
     #
-    # call-seq:
+    # :call-seq:
     #    Minitar::Input.each_entry(io) -> enumerator
     #    Minitar::Input.each_entry(io) { |entry| block } -> obj
     def self.each_entry(input)
@@ -77,19 +77,18 @@ class Minitar
     # An exception will be raised if the stream that is wrapped does not support
     # rewinding.
     #
-    # call-seq:
+    # :call-seq:
     #    Minitar::Input.new(io) -> input
     #    Minitar::Input.new(path) -> input
     def initialize(input)
-      @io = if input.respond_to?(:read)
-        input
-      else
-        ::Kernel.open(input, "rb")
-      end
+      @io =
+        if input.respond_to?(:read)
+          input
+        else
+          ::Kernel.open(input, "rb")
+        end
 
-      unless Minitar.seekable?(@io, :rewind)
-        raise Minitar::NonSeekableStream
-      end
+      raise Minitar::NonSeekableStream unless Minitar.seekable?(@io, :rewind)
 
       @tar = Reader.new(@io)
     end
@@ -128,7 +127,7 @@ class Minitar
     # <tt>:currinc</tt>:: The current number of bytes read in this read cycle.
     # <tt>:entry</tt>::   The entry being extracted; this is a Reader::EntryStream, with
     #                     all methods thereof.
-    def extract_entry(destdir, entry, options = {}, &) # :yields action, name, stats:
+    def extract_entry(destdir, entry, options = {}, &) # :yields: action, name, stats
       stats = {
         current: 0,
         currinc: 0,
@@ -157,9 +156,7 @@ class Minitar
     end
 
     # Returns false if the wrapped data stream is open.
-    def closed?
-      @io.closed?
-    end
+    def closed? = @io.closed?
 
     # Returns the Reader object for direct access.
     attr_reader :tar
@@ -215,7 +212,11 @@ class Minitar
       File.unlink(destfile) if File.symlink?(destfile)
 
       # Errno::ENOENT
-      FileUtils.chmod(0o600, destfile) rescue nil # standard:disable Style/RescueModifier
+      begin
+        FileUtils.chmod(0o600, destfile)
+      rescue
+        nil
+      end
 
       yield :file_start, full_name, stats if block_given?
 

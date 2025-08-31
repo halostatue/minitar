@@ -14,4 +14,6 @@
 /tmp/
 /vendor/
 /website/index.html
+!test/fixtures/*.tar
+!test/fixtures/*.gz
 Gemfile.lock
