@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.0 / 2025-09-DD
+## 1.1.0 / 2025-09-07
 
 - Enhancements:
 
@@ -8,6 +8,18 @@
     extension [#121][pull-121].
 
   - Support large file size encoded in PAX extension header. [#121][pull-121].
+
+- Bug fix:
+
+  - Resolved [#52][issue-52]. The initial solution was developed with the
+    assistance of Claude Sonnet 4 via Kiro, but nearly every line of the
+    solution and tests were rewritten as part of a comprehensive review of all
+    tests.
+
+- Breaking Change:
+
+  - Removed `Minitar::PosixHeader.new_from_stream` which should have been
+    removed with 1.0.0 and has been deprecated for a decade or so.
 
 - Governance:
 
@@ -27,14 +39,14 @@
 
 ## 1.0.2 / 2024-08-23
 
-- Bugfix:
+- Bug fix:
 
   - Minitar 1.0.1 was released with an unchanged gemspec. Reported by Debashish
     Biswas in [#65][issue-65].
 
 ## 1.0.1 / 2024-08-08
 
-- Bugfix:
+- Bug fix:
 
   - Resolve a constant lookup issue. The accepted fix has been provided by Aram
     Price in [#58][issue-58].
@@ -252,6 +264,7 @@
 [issue-31]: https://github.com/halostatue/minitar/issues/31
 [issue-45]: https://github.com/halostatue/minitar/issues/45
 [issue-46]: https://github.com/halostatue/minitar/issues/46
+[issue-52]: https://github.com/halostatue/minitar/issues/52
 [issue-58]: https://github.com/halostatue/minitar/issues/58
 [issue-63]: https://github.com/halostatue/minitar/issues/63
 [issue-65]: https://github.com/halostatue/minitar/issues/65

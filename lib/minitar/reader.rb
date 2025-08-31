@@ -1,30 +1,22 @@
 # frozen_string_literal: true
 
 class Minitar
-  # The class that reads a tar format archive from a data stream. The data
-  # stream may be sequential or random access, but certain features only work
-  # with random access data streams.
+  # The class that reads a tar format archive from a data stream. The data stream may be
+  # sequential or random access, but certain features only work with random access data
+  # streams.
   class Reader
     include Enumerable
 
-    # This marks the EntryStream closed for reading without closing the
-    # actual data stream.
+    # This marks the EntryStream closed for reading without closing the actual data
+    # stream.
     module InvalidEntryStream
-      def read(*)
-        raise ClosedStream
-      end
+      def read(*) = raise ClosedStream # :nodoc:
 
-      def getc
-        raise ClosedStream
-      end
+      def getc = raise ClosedStream # :nodoc:
 
-      def rewind
-        raise ClosedStream
-      end
+      def rewind = raise ClosedStream # :nodoc:
 
-      def closed?
-        true
-      end
+      def closed? = true # :nodoc:
     end
 
     # EntryStreams are pseudo-streams on top of the main data stream.
@@ -60,8 +52,8 @@ class Minitar
           end
       end
 
-      # Reads +len+ bytes (or all remaining data) from the entry. Returns
-      # +nil+ if there is no more data to read.
+      # Reads +len+ bytes (or all remaining data) from the entry. Returns +nil+ if there
+      # is no more data to read.
       def read(len = nil)
         return nil if @read >= @size
         len ||= @size - @read
@@ -71,8 +63,7 @@ class Minitar
         ret
       end
 
-      # Reads one byte from the entry. Returns +nil+ if there is no more data
-      # to read.
+      # Reads one byte from the entry. Returns +nil+ if there is no more data to read.
       def getc
         return nil if @read >= @size
         ret = @io.getc
@@ -86,10 +77,9 @@ class Minitar
         when "5"
           true
         when "0", "\0"
-          # If the name ends with a slash, treat it as a directory.
-          # This is what other major tar implementations do for
-          # interoperability and compatibility with older tar variants
-          # and some new ones.
+          # If the name ends with a slash, treat it as a directory. This is what other
+          # major tar implementations do for interoperability and compatibility with older
+          # tar variants and some new ones.
           @name.end_with?("/")
         else
           false
@@ -103,16 +93,13 @@ class Minitar
       end
       alias_method :file, :file?
 
-      # Returns +true+ if the current read pointer is at the end of the
-      # EntryStream data.
-      def eof?
-        @read >= @size
-      end
+      # Returns +true+ if the current read pointer is at the end of the EntryStream data.
+      def eof? = @read >= @size
 
       # Returns the current read pointer in the EntryStream.
-      def pos
-        @read
-      end
+      def pos = @read
+
+      alias_method :bytes_read, :pos
 
       # Sets the current read pointer to the beginning of the EntryStream.
       def rewind
@@ -121,10 +108,6 @@ class Minitar
         end
         @io.pos = @orig_pos
         @read = 0
-      end
-
-      def bytes_read
-        @read
       end
 
       # Returns the full and proper name of the entry.
@@ -137,14 +120,10 @@ class Minitar
       end
 
       # Returns false if the entry stream is valid.
-      def closed?
-        false
-      end
+      def closed? = false
 
       # Closes the entry.
-      def close
-        invalidate
-      end
+      def close = invalidate
 
       private
 
@@ -153,17 +132,16 @@ class Minitar
       end
     end
 
-    # With no associated block, +Reader::open+ is a synonym for
-    # +Reader::new+. If the optional code block is given, it will be passed
-    # the new _writer_ as an argument and the Reader object will
-    # automatically be closed when the block terminates. In this instance,
-    # +Reader::open+ returns the value of the block.
+    # With no associated block, +Reader::open+ is a synonym for +Reader::new+. If the
+    # optional code block is given, it will be passed the new _writer_ as an argument and
+    # the Reader object will automatically be closed when the block terminates. In this
+    # instance, +Reader::open+ returns the value of the block.
     def self.open(io)
       reader = new(io)
       return reader unless block_given?
 
-      # This exception context must remain, otherwise the stream closes on open
-      # even if a block is not given.
+      # This exception context must remain, otherwise the stream closes on open even if
+      # a block is not given.
       begin
         yield reader
       ensure
@@ -171,8 +149,7 @@ class Minitar
       end
     end
 
-    # Iterates over each entry in the provided input. This wraps the common
-    # pattern of:
+    # Iterates over each entry in the provided input. This wraps the common pattern of:
     #
     #     Minitar::Input.open(io) do |i|
     #       inp.each do |entry|
@@ -180,10 +157,9 @@ class Minitar
     #       end
     #     end
     #
-    # If a block is not provided, an enumerator will be created with the same
-    # behaviour.
+    # If a block is not provided, an enumerator will be created with the same behaviour.
     #
-    # call-seq:
+    # :call-seq:
     #    Minitar::Reader.each_entry(io) -> enumerator
     #    Minitar::Reader.each_entry(io) { |entry| block } -> obj
     def self.each_entry(io)
@@ -206,19 +182,15 @@ class Minitar
       end
     end
 
-    # Resets the read pointer to the beginning of data stream. Do not call
-    # this during a #each or #each_entry iteration. This only works with
-    # random access data streams that respond to #rewind and #pos.
+    # Resets the read pointer to the beginning of data stream. Do not call this during
+    # a #each or #each_entry iteration. This only works with random access data streams
+    # that respond to #rewind and #pos.
     def rewind
       if @init_pos.zero?
-        unless Minitar.seekable?(@io, :rewind)
-          raise Minitar::NonSeekableStream
-        end
+        raise Minitar::NonSeekableStream unless Minitar.seekable?(@io, :rewind)
         @io.rewind
       else
-        unless Minitar.seekable?(@io, :pos=)
-          raise Minitar::NonSeekableStream
-        end
+        raise Minitar::NonSeekableStream unless Minitar.seekable?(@io, :pos=)
         @io.pos = @init_pos
       end
     end
@@ -280,9 +252,7 @@ class Minitar
     alias_method :each, :each_entry
 
     # Returns false if the reader is open (it never closes).
-    def closed?
-      false
-    end
+    def closed? = false
 
     def close
     end
@@ -290,12 +260,11 @@ class Minitar
     private
 
     def try_seek(bytes)
-      raise RangeError
       @io.seek(bytes, IO::SEEK_CUR)
     rescue RangeError
       # This happens when skipping the large entry and the skipping entry size exceeds
       # maximum allowed size (varies by platform and underlying IO object).
-      max = RbConfig::LIMITS.fetch('INT_MAX', 2147483647)
+      max = RbConfig::LIMITS.fetch("INT_MAX", 2147483647)
       skipped = 0
       while skipped < bytes
         to_skip = [bytes - skipped, max].min
