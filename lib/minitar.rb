@@ -67,7 +67,8 @@ class << Minitar
   # Tests if +path+ refers to a directory. Fixes an apparently
   # corrupted <tt>stat()</tt> call on Windows.
   def dir?(path)
-    File.directory?((path[-1] == "/") ? path : "#{path}/")
+    path = "#{path}/" unless path.to_s.end_with?("/")
+    File.directory?(path)
   end
 
   # A convenience method for wrapping Minitar::Input.open
@@ -102,9 +103,7 @@ class << Minitar
   # If +data+ is +nil+, a directory will be created. Use an empty String for a normal
   # empty file.
   def pack_as_file(entry, data, outputter) # :yields action, name, stats:
-    if outputter.is_a?(Minitar::Output)
-      outputter = outputter.tar
-    end
+    outputter = outputter.tar if outputter.is_a?(Minitar::Output)
 
     stats = {
       gid: nil,
