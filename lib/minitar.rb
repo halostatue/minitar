@@ -115,8 +115,11 @@ class << Minitar
     }
 
     if entry.is_a?(Hash)
-      name = entry.delete(:name)
-      entry.each_pair { stats[_1] = _2 unless _2.nil? }
+      name = entry[:name]
+      entry.each_pair {
+        next if _1 == :name
+        stats[_1] = _2 unless _2.nil?
+      }
     else
       name = entry
     end
