@@ -67,13 +67,6 @@ class Minitar
         from_data(stream.read(BLOCK_SIZE))
       end
 
-      # Creates a new PosixHeader from a data stream. Deprecated; use
-      # PosixHeader.from_stream instead.
-      def new_from_stream(stream)
-        warn "#{__method__} has been deprecated; use from_stream instead."
-        from_stream(stream)
-      end
-
       # Creates a new PosixHeader from a BLOCK_SIZE-byte data buffer.
       def from_data(data)
         fields = data.unpack(HEADER_UNPACK_FORMAT)
