@@ -120,7 +120,7 @@ class Minitar
         bytes = string.bytes
         case bytes.first
         when 0x80 # Positive number: *non-leading* bytes, number in big-endian order
-          bytes[1..-1].inject(0) { |r, byte| (r << 8) | byte }
+          bytes[1..].inject(0) { |r, byte| (r << 8) | byte }
         when 0xff # Negative number: *all* bytes, two's complement in big-endian order
           result = bytes.inject(0) { |r, byte| (r << 8) | byte }
           bit_length = bytes.size * 8

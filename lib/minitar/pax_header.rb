@@ -64,7 +64,7 @@ class Minitar
 
           length = length_str.to_i
           if offset + length > content.bytesize
-            raise ArgumentError, "Length beyond PAX header: '#{content[offset..-1]}'"
+            raise ArgumentError, "Length beyond PAX header: '#{content[offset..]}'"
           end
           record = content[offset, length]
 
@@ -103,7 +103,7 @@ class Minitar
           length = record.bytesize
           length_str = length.to_s
           record = "#{length_str}#{keyword_value}"
-        end while record.size != length
+        end while record.size != length # standard:disable Lint/Loop
         record
       end.join
     end
