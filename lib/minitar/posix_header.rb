@@ -36,8 +36,8 @@ class Minitar
     REQUIRED_FIELDS = [:name, :size, :prefix, :mode].freeze
     # Fields that may be set in a POSIX tar(1) header.
     OPTIONAL_FIELDS = [
-      :uid, :gid, :mtime, :checksum, :typeflag, :linkname, :magic, :version,
-      :uname, :gname, :devmajor, :devminor
+      :uid, :gid, :mtime, :checksum, :typeflag, :linkname, :magic, :version, :uname,
+      :gname, :devmajor, :devminor
     ].freeze
 
     # All fields available in a POSIX tar(1) header.
@@ -53,8 +53,7 @@ class Minitar
       @name = value
     end
 
-    # The size of the file. Required.
-    attr_accessor :size
+    attr_writer :size
 
     # The pack format passed to Array#pack for encoding a header.
     HEADER_PACK_FORMAT = "a100a8a8a8a12a12a7aaa100a6a2a32a32a8a8a155"
@@ -63,9 +62,7 @@ class Minitar
 
     class << self
       # Creates a new PosixHeader from a data stream.
-      def from_stream(stream)
-        from_data(stream.read(BLOCK_SIZE))
-      end
+      def from_stream(stream) = from_data(stream.read(BLOCK_SIZE))
 
       # Creates a new PosixHeader from a BLOCK_SIZE-byte data buffer.
       def from_data(data)
@@ -157,26 +154,18 @@ class Minitar
     end
 
     # Indicates if the header was an empty header.
-    def empty?
-      @empty
-    end
+    def empty? = @empty
 
     # Indicates if the header has a valid magic value.
-    def valid?
-      empty? || @magic == MAGIC_BYTES
-    end
+    def valid? = empty? || @magic == MAGIC_BYTES
 
     # Returns +true+ if the header is a long name special header which indicates
     # that the next block of data is the filename.
-    def long_name?
-      typeflag == "L" && name == GNU_EXT_LONG_LINK
-    end
+    def long_name? = typeflag == "L" && name == GNU_EXT_LONG_LINK
 
     # Returns +true+ if the header is a PAX extended header which contains
     # metadata for the next file entry.
-    def pax_header?
-      typeflag == "x"
-    end
+    def pax_header? = typeflag == "x"
 
     # Sets the +name+ to the +value+ provided and clears +prefix+.
     #
@@ -197,6 +186,8 @@ class Minitar
       header(@checksum)
     end
     alias_method :to_str, :to_s
+
+    # TODO: In Minitar 2, PosixHeader#to_str will be removed.
 
     # Update the checksum field.
     def update_checksum
@@ -237,6 +228,10 @@ class Minitar
     #
     # By default, limited to 100 bytes, but may be up to BLOCK_SIZE bytes if using the
     # GNU long name tar extension.
+
+    ##
+    # :attr_accessor: size
+    # The size of the file. Required.
 
     ##
     # :attr_reader: prefix

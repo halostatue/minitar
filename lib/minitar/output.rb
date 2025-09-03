@@ -27,7 +27,7 @@ class Minitar
     # the Output object will automatically be closed when the block terminates (this also
     # closes the wrapped stream object). The return value will be the value of the block.
     #
-    # call-seq:
+    # :call-seq:
     #    Minitar::Output.open(io) -> output
     #    Minitar::Output.open(io) { |output| block } -> obj
     def self.open(output)
@@ -47,7 +47,7 @@ class Minitar
     # the Output object. If a block is not provided, an enumerator will be created with
     # the same behaviour.
     #
-    # call-seq:
+    # :call-seq:
     #    Minitar::Output.tar(io) -> enumerator
     #    Minitar::Output.tar(io) { |tar| block } -> obj
     def self.tar(output)
@@ -62,7 +62,7 @@ class Minitar
     # then it will simply be wrapped. Otherwise, one will be created and opened using
     # Kernel#open. When Output#close is called, the stream object wrapped will be closed.
     #
-    # call-seq:
+    # :call-seq:
     #    Minitar::Output.new(io) -> output
     #    Minitar::Output.new(path) -> output
     def initialize(output)
@@ -78,9 +78,7 @@ class Minitar
     attr_reader :tar
 
     # Returns false if the wrapped data stream is open.
-    def closed?
-      @io.closed?
-    end
+    def closed? = @io.closed?
 
     # Closes the Writer object and the wrapped data stream.
     def close

@@ -268,12 +268,14 @@ class TestTarHeader < Minitest::Test
   def test_parse_numeric_field_binary_positive_number
     binary_data = [0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x12, 0x34, 0x56, 0x78, 0x9A].pack("C*")
 
-    header = raw_header(0,
+    header = build_raw_header(
+      0,
       asciiz("large_file.bin", 100),
       asciiz("", 155),
       binary_data,
-      z(octal(0o12345, 7)))
-    header = update_checksum(header)
+      z(octal(0o12345, 7))
+    )
+    header = update_header_checksum(header)
     io = StringIO.new(header)
     h = Minitar::PosixHeader.from_stream(io)
 
@@ -284,13 +286,15 @@ class TestTarHeader < Minitest::Test
   def test_parse_numeric_field_binary_negative_number
     binary_data = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF].pack("C*")
 
-    header = raw_header(0,
+    header = build_raw_header(
+      0,
       asciiz("negative_size.bin", 100),
       asciiz("", 155),
       binary_data,
-      z(octal(0o12345, 7)))
+      z(octal(0o12345, 7))
+    )
 
-    header = update_checksum(header)
+    header = update_header_checksum(header)
     io = StringIO.new(header)
     h = Minitar::PosixHeader.from_stream(io)
 
