@@ -89,11 +89,20 @@ module Minitar::TestHelpers::Tarball
       else
         Pathname(Dir.mktmpdir)
       end
-    source = tmpdir.join("source").mkpath
-    target = tmpdir.join("target").mkpath
+
+    source = tmpdir.join("source")
+    target = tmpdir.join("target")
     tarball = tmpdir.join("test.tar")
 
-    @workspace = Workspace.new(source:, tarball:, target:, tmpdir:)
+    @workspace = Workspace.new(
+      tmpdir: tmpdir,
+      source: source,
+      target: target,
+      tarball: tarball
+    )
+
+    source.mkpath
+    target.mkpath
 
     prepare_workspace(with_files:) if with_files
 
