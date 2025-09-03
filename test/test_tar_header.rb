@@ -272,7 +272,7 @@ class TestTarHeader < Minitest::Test
       asciiz("large_file.bin", 100),
       asciiz("", 155),
       binary_data,
-      z(to_oct(0o12345, 7)))
+      z(octal(0o12345, 7)))
     header = update_checksum(header)
     io = StringIO.new(header)
     h = Minitar::PosixHeader.from_stream(io)
@@ -288,7 +288,7 @@ class TestTarHeader < Minitest::Test
       asciiz("negative_size.bin", 100),
       asciiz("", 155),
       binary_data,
-      z(to_oct(0o12345, 7)))
+      z(octal(0o12345, 7)))
 
     header = update_checksum(header)
     io = StringIO.new(header)

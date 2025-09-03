@@ -26,7 +26,7 @@ class TestPaxHeader < Minitest::Test
   end
 
   def test_from_stream_with_invalid_header
-    header_data = tar_file_header("regular_file.txt", "", 0o644, 100)
+    header_data = build_tar_file_header("regular_file.txt", "", 0o644, 100)
     io = StringIO.new(header_data)
 
     posix_header = Minitar::PosixHeader.from_stream(io)
@@ -94,8 +94,8 @@ class TestPaxHeader < Minitest::Test
   private
 
   def create_pax_header_from_stream(pax_content, name = "./PaxHeaders.X/test_file")
-    pax_header_data = tar_pax_header(name, "", pax_content.bytesize)
-    padded_content = pax_content.ljust(((pax_content.bytesize / 512.0).ceil * 512), "\0")
+    pax_header_data = build_tar_pax_header(name, "", pax_content.bytesize)
+    padded_content = pax_content.ljust((pax_content.bytesize / 512.0).ceil * 512, "\0")
     io = StringIO.new(pax_header_data + padded_content)
 
     posix_header = Minitar::PosixHeader.from_stream(io)
