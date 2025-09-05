@@ -54,12 +54,12 @@ class TestPaxSupport < Minitest::Test
 
   def create_pax_with_file_headers(pax_content, pax_name, file_name, file_size, posix_header_file_size)
     file_content = "x" * file_size
-    padded_file_content = file_content.ljust(((file_size / 512.0).ceil * 512), "\0")
-    
+    padded_file_content = file_content.ljust((file_size / 512.0).ceil * 512, "\0")
+
     [
-      tar_pax_header(pax_name, "", pax_content.bytesize),
-      pax_content.ljust(((pax_content.bytesize / 512.0).ceil * 512), "\0"),
-      tar_file_header(file_name, "", 0o644, file_size),
+      build_tar_pax_header(pax_name, "", pax_content.bytesize),
+      pax_content.ljust((pax_content.bytesize / 512.0).ceil * 512, "\0"),
+      build_tar_file_header(file_name, "", 0o644, file_size),
       padded_file_content
     ].join
   end

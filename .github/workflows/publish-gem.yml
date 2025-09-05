@@ -62,9 +62,9 @@ jobs:
         run: |
           ruby -e \
             'print "version=", Gem::Specification.load(ARGV[0]).rubygems_version, "\n"' \
-            mime-types.gemspec >>"${GITHUB_OUTPUT}"
+            minitar.gemspec >>"${GITHUB_OUTPUT}"
 
-      - uses: ruby/setup-ruby@efbf473cab83af4468e8606cc33eca9281bb213f # v1.256.0
+      - uses: ruby/setup-ruby@44511735964dcb71245e7e55f72539531f7bc0eb # v1.257.0
         with:
           bundler-cache: false
           ruby-version: ruby
@@ -77,3 +77,17 @@ jobs:
           RUBYGEMS_VERSION: ${{ steps.rubygems.outputs.version }}
 
       - uses: rubygems/release-gem@a25424ba2ba8b387abc8ef40807c2c85b96cbe32 # v1.1.1
+
+      - name: Show the status if release failed
+        if: failure()
+        run: |
+          git status
+          git diff
+
+  publish_docs:
+    needs: release
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/publish-docs.yml
