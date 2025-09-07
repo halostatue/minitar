@@ -77,9 +77,9 @@ class << Minitar
     when "r", "rb"
       Minitar::Input.open(dest, &)
     when "w", "wb"
-      Minitar::Output.open(dest, &block)
+      Minitar::Output.open(dest, &)
     else
-      raise "Unknown open mode for Minitar.open."
+      raise ArgumentError, "Unknown open mode for Minitar.open."
     end
   end
 

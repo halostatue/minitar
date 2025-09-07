@@ -22,33 +22,33 @@ module Minitar::TestHelpers::Header
     end
   end
 
-  def assert_modes_equal(expected, actual, name)
+  def assert_modes_equal(expected, actual, filename)
     return if Minitar.windows?
 
-    assert_equal mode_string(expected), mode_string(actual), "Mode for #{name} does not match"
+    assert_equal mode_string(expected), mode_string(actual), "Mode for #{filename} does not match"
   end
 
-  def build_raw_header(type, fname, dname, length, mode, link_name = "") =
+  def build_raw_header(type, name, prefix, size, mode, link_name = "") =
     [
-      fname, mode, z(octal(nil, 7)), z(octal(nil, 7)), length, z(octal(0, 11)),
+      name, mode, z(octal(nil, 7)), z(octal(nil, 7)), size, z(octal(0, 11)),
       BLANK_CHECKSUM, type, asciiz(link_name, 100), USTAR, DOUBLE_ZERO, asciiz("", 32),
-      asciiz("", 32), z(octal(nil, 7)), z(octal(nil, 7)), dname
+      asciiz("", 32), z(octal(nil, 7)), z(octal(nil, 7)), prefix
     ].join.bytes.to_a.pack("C100C8C8C8C12C12C8CC100C6C2C32C32C8C8C155").then {
       "#{_1}#{"\0" * (512 - _1.bytesize)}"
     }.tap { assert_equal 512, _1.bytesize }
 
-  def build_header(type, fname, dname, length, mode, link_name = "") =
+  def build_header(type, name, prefix, size, mode, link_name = "") =
     build_raw_header(
       type,
-      asciiz(fname, 100),
-      asciiz(dname, 155),
-      z(octal(length, 11)),
+      asciiz(name, 100),
+      asciiz(prefix, 155),
+      z(octal(size, 11)),
       z(octal(mode, 7)),
       asciiz(link_name, 100)
     )
 
-  def build_tar_file_header(fname, dname, mode, length) =
-    build_header("0", fname, dname, length, mode).then {
+  def build_tar_file_header(name, prefix, mode, size) =
+    build_header("0", name, prefix, size, mode).then {
       update_header_checksum(_1)
     }
 
@@ -80,7 +80,7 @@ module Minitar::TestHelpers::Header
 
   def octal(n, pad_size) = n.nil? ? "\0" * pad_size : "%0#{pad_size}o" % n
 
-  def asciiz(str, length) = "#{str}#{"\0" * (length - str.bytesize)}"
+  def asciiz(str, size) = "#{str}#{"\0" * (size - str.bytesize)}"
 
   def sp(s) = "#{s} "
 
