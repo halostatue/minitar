@@ -1,6 +1,6 @@
 # Licence
 
-- SPDX-License-Identifier: [Ruby][ruby-license] OR [BSD-2-Clause]
+- SPDX-License-Identifier: [Ruby][ruby-license] OR [BSD-2-Clause][bsd-2-clause]
 
 minitar is free software that may be redistributed and/or modified under the
 terms of Ruby’s licence or the Simplified BSD licence.

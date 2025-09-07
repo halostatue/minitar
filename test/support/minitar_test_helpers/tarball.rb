@@ -21,7 +21,7 @@ module Minitar::TestHelpers::Tarball
 
   # Given the +original_files+ file hash (input to +create_tar_string+) and the
   # +extracted_files+ file has (output from +extract_tar_string+), ensures that the tar
-  # structure is preserved, including checking for possible regression of issue 52.
+  # structure is preserved, including checking for possible regression of issue 62.
   #
   # Such a regression would result in a directory like <tt>>/b/c.txt</tt> looking like
   # <tt>a/b/a/b/c.txt</tt> (but only for long filenames).
@@ -46,7 +46,7 @@ module Minitar::TestHelpers::Tarball
       duplicated_paths = extracted_paths.select { |path| path == bad_pattern }
 
       refute duplicated_paths.any?,
-        "Regression of #52, path duplication on extraction! " \
+        "Regression of #62, path duplication on extraction! " \
         "Original: #{filename}, " \
         "Bad pattern found: #{bad_pattern}, " \
         "All extracted paths: #{extracted_paths}"
@@ -58,6 +58,7 @@ module Minitar::TestHelpers::Tarball
     StringIO.new.tap { |io|
       Minitar::Output.open(io) do |output|
         file_hash.each do |filename, content|
+          next if content.nil?
           Minitar.pack_as_file(filename, content.to_s.dup, output)
         end
       end
