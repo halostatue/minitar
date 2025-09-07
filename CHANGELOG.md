@@ -11,7 +11,7 @@
 
 - Bug fix:
 
-  - Resolved [#52][issue-52]. The initial solution was developed with the
+  - Resolved [#62][issue-62]. The initial solution was developed with the
     assistance of Claude Sonnet 4 via Kiro, but nearly every line of the
     solution and tests were rewritten as part of a comprehensive review of all
     tests.
@@ -264,8 +264,8 @@
 [issue-31]: https://github.com/halostatue/minitar/issues/31
 [issue-45]: https://github.com/halostatue/minitar/issues/45
 [issue-46]: https://github.com/halostatue/minitar/issues/46
-[issue-52]: https://github.com/halostatue/minitar/issues/52
 [issue-58]: https://github.com/halostatue/minitar/issues/58
+[issue-62]: https://github.com/halostatue/minitar/issues/62
 [issue-63]: https://github.com/halostatue/minitar/issues/63
 [issue-65]: https://github.com/halostatue/minitar/issues/65
 [pull-12]: https://github.com/halostatue/minitar/pull/12
