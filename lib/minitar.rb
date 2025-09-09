@@ -4,45 +4,52 @@ require "fileutils"
 require "rbconfig"
 require "rbconfig/sizeof"
 
-# == Synopsis
+# ## Synopsis
 #
 # Using minitar is easy. The simplest case is:
 #
-#     require 'zlib'
-#     require 'minitar'
+# ```ruby
+# require 'zlib'
+# require 'minitar'
 #
-#     # Packs everything that matches Find.find('tests'). test.tar will automatically be
-#     # closed by Minitar.pack.
-#     Minitar.pack('tests', File.open('test.tar', 'wb'))
+# # Packs everything that matches Find.find('tests'). test.tar will automatically be
+# # closed by Minitar.pack.
+# Minitar.pack('tests', File.open('test.tar', 'wb'))
 #
-#     # Unpacks 'test.tar' to 'x', creating 'x' if necessary.
-#     Minitar.unpack('test.tar', 'x')
+# # Unpacks 'test.tar' to 'x', creating 'x' if necessary.
+# Minitar.unpack('test.tar', 'x')
+# ```
 #
 # A gzipped tar can be written with:
 #
-#     # test.tgz will be closed automatically.
-#     Minitar.pack('tests', Zlib::GzipWriter.new(File.open('test.tgz', 'wb'))
 #
-#     # test.tgz will be closed automatically.
-#     Minitar.unpack(Zlib::GzipReader.new(File.open('test.tgz', 'rb')), 'x')
+# ```ruby
+# # test.tgz will be closed automatically.
+# Minitar.pack('tests', Zlib::GzipWriter.new(File.open('test.tgz', 'wb'))
+#
+# # test.tgz will be closed automatically.
+# Minitar.unpack(Zlib::GzipReader.new(File.open('test.tgz', 'rb')), 'x')
+# ```
 #
 # As the case above shows, one need not write to a file. However, it will sometimes
 # require that one dive a little deeper into the API, as in the case of StringIO objects.
 # Note that I'm not providing a block with Minitar::Output, as Minitar::Output#close
 # automatically closes both the Output object and the wrapped data stream object.
 #
-#     begin
-#       sgz = Zlib::GzipWriter.new(StringIO.new(""))
-#       tar = Minitar::Output.new(sgz)
-#       Find.find('tests') do |entry|
-#         Minitar.pack_file(entry, tar)
-#       end
-#     ensure
-#         # Closes both tar and sgz.
-#       tar.close
-#     end
+# ```ruby
+# begin
+#   sgz = Zlib::GzipWriter.new(StringIO.new(""))
+#   tar = Minitar::Output.new(sgz)
+#   Find.find('tests') do |entry|
+#     Minitar.pack_file(entry, tar)
+#   end
+# ensure
+#     # Closes both tar and sgz.
+#   tar.close
+# end
+# ```
 class Minitar
-  # The base class for any minitar error.
+  # The base class for any Minitar error.
   Error = Class.new(::StandardError)
   # Raised when a wrapped data stream class is not seekable.
   NonSeekableStream = Class.new(Error)
@@ -54,7 +61,7 @@ class Minitar
   FileNameTooLong = Class.new(Error)
   # The exception raised when a data stream ends before the amount of data expected in the
   # archive's PosixHeader.
-  UnexpectedEOF = Class.new(StandardError)
+  UnexpectedEOF = Class.new(Error)
   # The exception raised when a file contains a relative path in secure mode (the default
   # for this version).
   SecureRelativePathError = Class.new(Error)
@@ -63,15 +70,15 @@ class Minitar
 end
 
 class << Minitar
-  # Tests if +path+ refers to a directory. Fixes an apparently corrupted <tt>stat()</tt>
-  # call on Windows.
-  def dir?(path)
+  # Tests if `path` refers to a directory. Fixes an apparently corrupted `stat()` call on
+  # Windows.
+  def dir?(path) # :nodoc:
     path = "#{path}/" unless path.to_s.end_with?("/")
     File.directory?(path)
   end
 
-  # A convenience method for wrapping Minitar::Input.open (mode +r+ or +rb) and
-  # Minitar::Output.open (mode +w+ or +wb+). No other modes are currently supported.
+  # A convenience method for wrapping Minitar::Input.open (mode `r` or `rb`) and
+  # Minitar::Output.open (mode `w` or `wb`). No other modes are currently supported.
   def open(dest, mode = "r", &)
     case mode
     when "r", "rb"
@@ -79,7 +86,7 @@ class << Minitar
     when "w", "wb"
       Minitar::Output.open(dest, &)
     else
-      raise ArgumentError, "Unknown open mode for Minitar.open."
+      raise ArgumentError, "Unknown open mode #{mode.inspect} for Minitar.open."
     end
   end
 
@@ -88,19 +95,19 @@ class << Minitar
       RbConfig::CONFIG["host_os"].to_s =~ /^(cygwin|mingw|mswin|windows)/i ||
       File::ALT_SEPARATOR == "\\"
 
-  # A convenience method to pack the provided +data+ as a file named +entry+. +entry+ may
-  # either be a name or a Hash with the fields described below. When only a name is
+  # A convenience method to pack the provided `data` as a file named `entry`, which may
+  # either be a name String or a Hash with the fields described below. When only a name is
   # provided, or only some Hash fields are provided, the default values will apply.
   #
-  # <tt>:name</tt>::  The filename to be packed into the archive. Required.
-  # <tt>:mode</tt>::  The mode to be applied. Defaults to 0o644 for files and 0o755 for
-  #                   directories.
-  # <tt>:uid</tt>::   The user owner of the file. Default is +nil+.
-  # <tt>:gid</tt>::   The group owner of the file. Default is +nil+.
-  # <tt>:mtime</tt>:: The modification Time of the file. Default is +Time.now+.
+  # - `:name` (**required**): The filename to be packed into the archive.
+  # - `:mode`: The mode to be applied. Defaults to `0o644` for files and `0o755` for
+  #   directories.
+  # - `:uid`: The user owner of the file. Default is `nil`.
+  # - `:gid`: The group owner of the file. Default is `nil`.
+  # - `:mtime`: The modification Time of the file. Default is `Time.now`.
   #
-  # If +data+ is +nil+, a directory will be created. Use an empty String for a normal
-  # empty file.
+  # If `data` is `nil`, a directory will be created. Use an empty String for an empty
+  # file.
   def pack_as_file(entry, data, outputter) # :yields: action, name, stats
     outputter = outputter.tar if outputter.is_a?(Minitar::Output)
 
@@ -143,35 +150,36 @@ class << Minitar
     end
   end
 
-  # A convenience method to pack the file provided. +entry+ may either be a filename (in
-  # which case various values for the file (see below) will be obtained from
-  # <tt>File#stat(entry)</tt> or a Hash with the fields:
+  # A convenience method to pack the file provided. `entry` may either be a filename
+  # string (which will in which case various values for the file will be obtained from
+  # `File#stat(entry)` or a Hash with the fields:
   #
-  # <tt>:name</tt>::  The filename to be packed into the archive. Required.
-  # <tt>:mode</tt>::  The mode to be applied.
-  # <tt>:uid</tt>::   The user owner of the file. (Ignored on Windows.)
-  # <tt>:gid</tt>::   The group owner of the file. (Ignored on Windows.)
-  # <tt>:mtime</tt>:: The modification Time of the file.
+  # - `:name` (**required**): The filename to be packed into the archive.
+  # - `:mode`: The mode to be applied.
+  # - `:uid`: The user owner of the file, ignored on Windows.
+  # - `:gid`: The group owner of the file, ignored on Windows.
+  # - `:mtime`: The modification Time of the file.
   #
-  # During packing, if a block is provided, #pack_file yields an +action+ Symbol, the full
+  # During packing, if a block is provided, #pack_file yields an `action` Symbol, the full
   # name of the file being packed, and a Hash of statistical information, just as with
   # Minitar::Input#extract_entry.
   #
-  # The +action+ will be one of:
-  # <tt>:dir</tt>::           The +entry+ is a directory.
-  # <tt>:file_start</tt>::    The +entry+ is a file; the extract of the file is just
-  #                           beginning.
-  # <tt>:file_progress</tt>:: Yielded every 4096 bytes during the extract of the +entry+.
-  # <tt>:file_done</tt>::     Yielded when the +entry+ is completed.
+  # The `action` will be one of:
   #
-  # The +stats+ hash contains the following keys:
-  # <tt>:current</tt>:: The current total number of bytes read in the +entry+.
-  # <tt>:currinc</tt>:: The current number of bytes read in this read cycle.
-  # <tt>:name</tt>::    The filename to be packed into the tarchive. *REQUIRED*.
-  # <tt>:mode</tt>::    The mode to be applied.
-  # <tt>:uid</tt>::     The user owner of the file. (+nil+ on Windows.)
-  # <tt>:gid</tt>::     The group owner of the file. (+nil+ on Windows.)
-  # <tt>:mtime</tt>::   The modification Time of the file.
+  # - `:dir`: The `entry` is a directory.
+  # - `:file_start`: The `entry` is a file; the extract of the file is just beginning.
+  # - `:file_progress`: Yielded every 4096 bytes during the extract of the file `entry`.
+  # - `file_done`: Yielded when the file `entry` is completed.
+  #
+  # The +stats+ hash may contain the following keys:
+  #
+  # - `:current`: The current total number of bytes read in the `entry`.
+  # - `:currinc`: The current number of bytes read in this read cycle.
+  # - `:name`: The filename packed into the tarchive.
+  # - `:mode`: The mode to be applied.
+  # - `:uid`: The user owner of the file, `nil` on Windows.
+  # - `:gid`: The group owner of the file, `nil` on Windows.
+  # - `:mtime`: The modification Time of the file.
   def pack_file(entry, outputter) # :yields: action, name, stats
     outputter = outputter.tar if outputter.is_a?(Minitar::Output)
 
@@ -219,11 +227,12 @@ class << Minitar
     end
   end
 
-  # A convenience method to pack files specified by +src+ into +dest+. If +src+ is an
+  # A convenience method to pack files specified by `src` into `dest`. If `src` is an
   # Array, then each file detailed therein will be packed into the resulting
-  # Minitar::Output stream; if +recurse_dirs+ is true, then directories will be recursed.
+  # Minitar::Output stream. If `recurse_dirs` is `true` (the default), then directories
+  # will be recursed.
   #
-  # If +src+ is not an Array, it will be treated as the result of Find.find; all files
+  # If `src` is not an Array, it will be treated as the source of Find.find; all files
   # matching will be packed.
   def pack(src, dest, recurse_dirs = true, &block)
     require "find"
@@ -246,8 +255,10 @@ class << Minitar
     end
   end
 
-  # A convenience method to unpack files from +src+ into the directory specified by
-  # +dest+. Only those files named explicitly in +files+ will be extracted.
+  # A convenience method to unpack files from `src` into the directory specified by
+  # `dest`.
+  #
+  # If `files` is not empty, it will act as a full name filter to restrict extraction.
   def unpack(src, dest, files = [], options = {}, &block)
     Minitar::Input.open(src) do |inp|
       if File.exist?(dest) && !dir?(dest)
@@ -264,8 +275,8 @@ class << Minitar
     end
   end
 
-  # Check whether +io+ can seek without errors.
-  def seekable?(io, methods = nil)
+  # Check whether `io` can seek without errors.
+  def seekable?(io, methods = nil) # :nodoc:
     # The IO class throws an exception at runtime if we try to change position on
     # a non-regular file.
     if io.respond_to?(:stat)
@@ -283,4 +294,6 @@ require "minitar/posix_header"
 require "minitar/pax_header"
 require "minitar/input"
 require "minitar/output"
+require "minitar/reader"
+require "minitar/writer"
 require "minitar/version"
