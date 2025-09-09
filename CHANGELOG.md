@@ -8,6 +8,11 @@
     second parameter, `out_string`, where the data read from the stream will be
     read. [#166][pull-166]
 
+- Documentation:
+
+  - Removed duplicate documentation files and updated the RDoc to match the
+    configuration.
+
 ## 1.1.0 / 2025-09-07
 
 - Enhancements:
