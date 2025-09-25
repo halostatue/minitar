@@ -1,5 +1,12 @@
 # Changelog
 
+## NEXT / 2025-MM-DD
+
+- Documentation:
+
+  - Removed duplicate documentation files and updated the RDoc to match the
+    configuration.
+
 ## 1.1.0 / 2025-09-07
 
 - Enhancements:

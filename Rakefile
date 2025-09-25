@@ -79,7 +79,7 @@ end
 
 RDoc::Task.new do
   _1.title = "minitar"
-  _1.main = "lib/minitar.rb"
+  _1.main = "README.md"
   _1.rdoc_dir = "doc"
   _1.rdoc_files = hoe.spec.require_paths - ["Manifest.txt"] + hoe.spec.extra_rdoc_files
   _1.markup = "markdown"

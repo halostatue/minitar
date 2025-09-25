@@ -7,8 +7,6 @@ Manifest.txt
 README.md
 Rakefile
 SECURITY.md
-docs/bsdl.txt
-docs/ruby.txt
 lib/minitar.rb
 lib/minitar/input.rb
 lib/minitar/output.rb
