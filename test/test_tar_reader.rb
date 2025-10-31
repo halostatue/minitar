@@ -116,6 +116,14 @@ class TestTarReader < Minitest::Test
         assert entry.eof?
       end
     end
+    Minitar::Reader.open(StringIO.new(str)) do |is|
+      is.each_entry do |entry|
+        assert_kind_of Minitar::Reader::EntryStream, entry
+        buffer = +""
+        entry.read(nil, buffer)
+        assert_equal contents, buffer
+      end
+    end
   end
 
   def test_eof_works
