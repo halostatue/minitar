@@ -28,7 +28,7 @@ class TestTarReader < Minitest::Test
     sizes = [10, 0, 0, 0]
     isdir = [false, false, true, true]
     isfile = [true, true, false, false]
-    Minitar::Reader.new(StringIO.new(str)) do |is|
+    Minitar::Reader.open(StringIO.new(str)) do |is|
       i = 0
       is.each_entry do |entry|
         assert_kind_of Minitar::Reader::EntryStream, entry
@@ -54,7 +54,7 @@ class TestTarReader < Minitest::Test
     str = build_tar_file_header("lib/foo", "", 0o10644, content.bytesize) +
       content + "\0" * (512 - content.bytesize)
     str << "\0" * 1024
-    Minitar::Reader.new(StringIO.new(str)) do |is|
+    Minitar::Reader.open(StringIO.new(str)) do |is|
       is.each_entry do |entry|
         3.times do
           entry.rewind
@@ -70,7 +70,7 @@ class TestTarReader < Minitest::Test
     str = build_tar_file_header("lib/foo", "", 0o10644, content.bytesize) +
       content + "\0" * (512 - content.bytesize)
     str << "\0" * 1024
-    Minitar::Reader.new(StringIO.new(str)) do |is|
+    Minitar::Reader.open(StringIO.new(str)) do |is|
       3.times do
         is.rewind
         i = 0
@@ -87,7 +87,7 @@ class TestTarReader < Minitest::Test
     contents = ("a".."z").inject(+"") { |a, e| a << e * 100 }
     str = build_tar_file_header("lib/foo", "", 0o10644, contents.bytesize) + contents
     str += "\0" * (512 - (str.bytesize % 512))
-    Minitar::Reader.new(StringIO.new(str)) do |is|
+    Minitar::Reader.open(StringIO.new(str)) do |is|
       is.each_entry do |entry|
         assert_kind_of Minitar::Reader::EntryStream, entry
         data = entry.read(3000) # bigger than contents.bytesize
@@ -95,7 +95,7 @@ class TestTarReader < Minitest::Test
         assert entry.eof?
       end
     end
-    Minitar::Reader.new(StringIO.new(str)) do |is|
+    Minitar::Reader.open(StringIO.new(str)) do |is|
       is.each_entry do |entry|
         assert_kind_of Minitar::Reader::EntryStream, entry
         data = entry.read(100)
@@ -105,7 +105,7 @@ class TestTarReader < Minitest::Test
         assert entry.eof?
       end
     end
-    Minitar::Reader.new(StringIO.new(str)) do |is|
+    Minitar::Reader.open(StringIO.new(str)) do |is|
       is.each_entry do |entry|
         assert_kind_of Minitar::Reader::EntryStream, entry
         data = entry.read
@@ -120,7 +120,7 @@ class TestTarReader < Minitest::Test
 
   def test_eof_works
     str = build_tar_file_header("bar", "baz", 0o644, 0)
-    Minitar::Reader.new(StringIO.new(str)) do |is|
+    Minitar::Reader.open(StringIO.new(str)) do |is|
       is.each_entry do |entry|
         assert_kind_of Minitar::Reader::EntryStream, entry
         data = entry.read
@@ -132,7 +132,7 @@ class TestTarReader < Minitest::Test
       end
     end
     str = build_tar_dir_header("foo", "bar", 0o12345)
-    Minitar::Reader.new(StringIO.new(str)) do |is|
+    Minitar::Reader.open(StringIO.new(str)) do |is|
       is.each_entry do |entry|
         assert_kind_of Minitar::Reader::EntryStream, entry
         data = entry.read
@@ -146,7 +146,7 @@ class TestTarReader < Minitest::Test
     str = build_tar_dir_header("foo", "bar", 0o12345)
     str += build_tar_file_header("bar", "baz", 0o644, 0)
     str += build_tar_file_header("bar", "baz", 0o644, 0)
-    Minitar::Reader.new(StringIO.new(str)) do |is|
+    Minitar::Reader.open(StringIO.new(str)) do |is|
       is.each_entry do |entry|
         assert_kind_of Minitar::Reader::EntryStream, entry
         data = entry.read
