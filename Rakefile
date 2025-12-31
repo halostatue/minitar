@@ -73,8 +73,8 @@ end
 task default: :test
 
 task :version do
-  require "color/version"
-  puts Color::VERSION
+  require "minitar/version"
+  puts Minitar::VERSION
 end
 
 RDoc::Task.new do
