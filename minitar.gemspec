@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.metadata = { "bug_tracker_uri" => "https://github.com/halostatue/minitar/issues", "changelog_uri" => "https://github.com/halostatue/minitar/blob/main/CHANGELOG.md", "rubygems_mfa_required" => "true", "source_code_uri" => "https://github.com/halostatue/minitar" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze]
-  s.date = "2025-09-09"
+  s.date = "2025-12-31"
   s.description = "The minitar library is a pure-Ruby library that operates on POSIX tar(1) archive files.  minitar (previously called Archive::Tar::Minitar) is based heavily on code originally written by Mauricio Julio Fern\u00E1ndez Pradier for the rpa-base project.".freeze
   s.email = ["halostatue@gmail.com".freeze]
   s.extra_rdoc_files = ["CHANGELOG.md".freeze, "CODE_OF_CONDUCT.md".freeze, "CONTRIBUTING.md".freeze, "CONTRIBUTORS.md".freeze, "LICENCE.md".freeze, "Manifest.txt".freeze, "README.md".freeze, "SECURITY.md".freeze, "licenses/bsdl.txt".freeze, "licenses/dco.txt".freeze, "licenses/ruby.txt".freeze]

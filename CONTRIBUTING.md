@@ -1,32 +1,32 @@
 # Contributing
 
-Contribution to minitar is encouraged: bug reports, feature requests, or code
-contributions. There are a few DOs and DON'Ts that should be followed:
+Contribution to Minitar is encouraged: bug reports, feature requests, or code
+contributions. New features should be proposed and discussed in an
+[issue][issues].
 
-- DO:
+Before contributing patches, please read the [Licence](./LICENCE.md).
 
-  - Keep the coding style that already exists for any updated Ruby code (support
-    or otherwise). I use [Standard Ruby][standardrb] for linting and formatting.
+Minitar is governed under the [Contributor Covenant Code of Conduct][cccoc].
 
-  - Use thoughtfully-named topic branches for contributions. Rebase your commits
-    into logical chunks as necessary.
+## Code Guidelines
 
-  - Use [quality commit messages][qcm] for each commit (minitar uses a rebase
-    merge strategy). Ensure that each commit includes the required Developer
-    Certificate of Origin [sign-off][sign-off].
+I have several guidelines to contributing code through pull requests:
 
-  - Add your name or GitHub handle to `CONTRIBUTORS.md` and a record in the
-    `CHANGELOG.md` as a separate commit from your main change. (Follow the style
-    in the `CHANGELOG.md` and provide a link to your PR.)
+- All code changes require tests. In most cases, this will be added or updated
+  unit tests. I use [Minitest][minitest].
 
-  - Add or update tests as appropriate for your change. The test suite is
-    written with [minitest][minitest].
+- I use code formatters, static analysis tools, and linting to ensure consistent
+  styles and formatting. There should be no warning output from test run
+  processes. I use [Standard Ruby][standardrb].
 
-  - Add or update documentation as appropriate for your change. The
-    documentation is RDoc; mime-types does not use extensions that may be
-    present in alternative documentation generators.
+- Proposed changes should be on a thoughtfully-named topic branch and organized
+  into logical commit chunks as appropriate.
 
-- DO NOT:
+- Use [Conventional Commits][conventional] with my
+  [conventions](#commit-conventions).
+
+- Versions must not be updated in pull requests unless otherwise directed. This
+  means that you must not:
 
   - Modify `VERSION` in `lib/minitar/version.rb`. When your patch is accepted
     and a release is made, the version will be updated at that point.
@@ -37,43 +37,87 @@ contributions. There are a few DOs and DON'Ts that should be followed:
 
   - Modify the `Gemfile`.
 
-## LLM-Generated Contribution Policy
+- Documentation should be added or updated as appropriate for new or updated
+  functionality. The documentation is RDoc; Minitar does not use extensions that
+  may be present in alternative documentation generators.
 
-minitar-cli accepts only issues or pull requests that are well understood by the
-submitter and that, especially for pull requests, the developer can attest to
-the [Developer Certificate of Origin][dco] for each pull request (see
+- All GitHub Actions checks marked as required must pass before a pull request
+  may be accepted and merged.
+
+- Add your name or GitHub handle to `CONTRIBUTORS.md` and a record in the
+  `CHANGELOG.md` as a separate commit from your main change. (Follow the style
+  in the `CHANGELOG.md` and provide a link to your PR.)
+
+- Include your DCO sign-off in each commit message (see [LICENCE](LICENCE.md)).
+
+## AI Contribution Policy
+
+Minitar is a library that may have access to the underlying file system. It is
+extremely important that contributions of any sort be well understood by the
+submitter and that the developer can attest to the
+[Developer Certificate of Origin][dco] for each pull request (see
 [LICENCE](LICENCE.md)).
 
-If LLM assistance is used in writing pull requests, this must be documented in
-the commit message and pull request. If there is evidence of LLM assistance
-without such declaration, the pull request **will be declined**.
-
-Any contribution (bug, feature request, or pull request) that uses unreviewed
-LLM output will be rejected.
+Any contribution (bug, feature request, or pull request) that uses undeclared AI
+output will be rejected.
 
 For an example of how this should be done, see [#151][pr-151] and its
 [associated commits][pr-151-commits].
 
-## Test
+## Commit Conventions
 
-minitar uses Ryan Davis's [Hoe][Hoe] to manage the release process, and it adds
-a number of rake tasks. You will mostly be interested in `rake`, which runs
-tests in the same way that `rake test` does.
+Minitar has adopted a variation of the Conventional Commits format for commit
+messages. The following types are permitted:
 
-To assist with the installation of the development dependencies for minitar, I
+| Type    | Purpose                                               |
+| ------- | ----------------------------------------------------- |
+| `feat`  | A new feature                                         |
+| `fix`   | A bug fix                                             |
+| `chore` | A code change that is neither a bug fix nor a feature |
+| `docs`  | Documentation updates                                 |
+| `deps`  | Dependency updates, including GitHub Actions.         |
+
+I encourage the use of [Tim Pope's][tpope-qcm] or [Chris Beam's][cbeams]
+guidelines on the writing of commit messages
+
+I require the use of [git][trailers1] [trailers][trailers2] for specific
+additional metadata and strongly encourage it for others. The conditionally
+required metadata trailers are:
+
+- `Breaking-Change`: if the change is a breaking change. **Do not** use the
+  shorthand form (`feat!(scope)`) or `BREAKING CHANGE`.
+
+- `Signed-off-by`: this is required for all developers except me, as outlined in
+  the [Licence](./LICENCE.md#developer-certificate-of-origin).
+
+- `Fixes` or `Resolves`: If a change fixes one or more open [issues][issues],
+  that issue must be included in the `Fixes` or `Resolves` trailer. Multiple
+  issues should be listed comma separated in the same trailer:
+  `Fixes: #1, #5, #7`, but _may_ appear in separate trailers. While both `Fixes`
+  and `Resolves` are synonyms, only _one_ should be used in a given commit or
+  pull request.
+
+- `Related to`: If a change does not fix an issue, those issue references should
+  be included in this trailer.
+
+## Testing Minitar
+
+Minitar uses Ryan Davis's [Hoe][Hoe] to manage the release process, and it adds
+a number of rake tasks. You will mostly be interested in `rake`, which runs the
+tests the same way that `rake test` will do.
+
+To assist with the installation of the development dependencies for Minitar, I
 have provided the simplest possible Gemfile pointing to the (generated)
-`minitar.gemspec` file. This will permit you to use `bundle install` to install
-the development dependencies.
+`minitar.gemspec` file. This will permit you to do `bundle install` to get the
+development dependencies.
 
 You can run tests with code coverage analysis by running `rake coverage`.
-
-### Test Helpers
 
 Minitar includes a number of custom test assertions, constants, and test utility
 methods that are useful for writing tests. These are maintained through modules
 defined in `test/support`.
 
-#### Fixture Utilities
+### Fixture Utilities
 
 Minitar uses fixture tarballs in various tests, referenced by their base name
 (`test/fixtures/tar_input.tar.gz` becomes `tar_input`, etc.). There are two
@@ -87,7 +131,7 @@ utility methods:
   `Zlib::GZipReader`. A block may be provided to ensure that the fixture is
   automatically closed.
 
-#### Header Assertions and Utilities
+### Header Assertions and Utilities
 
 Tar headers need to be built and compared in an exacting way, even for tests.
 
@@ -126,13 +170,13 @@ There are several other helper methods available for working with headers:
   otherwise unspecified header type. If you find yourself using this, it is
   recommended to add a new `build_*_header` helper method.
 
-#### Tarball Helpers
+### Tarball Helpers
 
 Minitar has several complex assertions and utilities to work with both in-memory
 and on-disk tarballs. These work using two concepts, file hashes (`file_hash`)
 and workspaces (`workspace`).
 
-##### File Hashes (`file_hash`)
+#### File Hashes (`file_hash`)
 
 Many of these consume or produce a `file_hash`, which is a hash of
 `{filename => content}` where the tarball will be produced with such that each
@@ -167,7 +211,7 @@ Each file will contain the text as the content.
 If the `content` is `nil`, this will be ignored for in-memory tarballs, but will
 be created as empty directory entries for on-disk tarballs.
 
-##### Workspace (`workspace`)
+#### Workspace (`workspace`)
 
 A workspace is a temporary directory used for on-disk tests. It is created with
 the `workspace` utility method (see below) and must be passed a block where all
@@ -175,7 +219,7 @@ setup and tests will be run.
 
 At most one `workspace` may be used per test method.
 
-##### Assertions
+#### Assertions
 
 There are five assertions:
 
@@ -207,7 +251,7 @@ There are five assertions:
   all files have the same modes between source and target. This is skipped on
   Windows.
 
-##### In-Memory Tarball Utilities
+#### In-Memory Tarball Utilities
 
 - `create_tar_string`: Given a `file_hash`, this creates a string containing the
   output of `Minitar::Output.open` and `Minitar.pack_as_file`.
@@ -219,7 +263,7 @@ There are five assertions:
 - `roundtrip_tar_string`: calls `create_tar_string` on a `file_hash` and
   immediately calls `extract_tar_string`, returning a processed `file_hash`.
 
-##### On-Disk Workspace Tarball Utilities
+#### On-Disk Workspace Tarball Utilities
 
 - `workspace`: Prepares a temporary directory for working with tarballs on disk
   inside the block that must be provided. If given a hash of files, calls
@@ -247,27 +291,19 @@ There are five assertions:
 - `minitar_writer_create_in_workspace` uses `Minitar::Writer` to create the
   workspace tarball.
 
-## Workflow
-
-Here's the most direct way to get your work merged into the project:
-
-- Fork the project.
-- Clone your fork (`git clone git://github.com/<username>/minitar.git`).
-- Create a topic branch to contain your change
-  (`git checkout -b my_awesome_feature`).
-- Hack away, add tests. Not necessarily in that order.
-- Make sure everything still passes by running `rake`.
-- If necessary, rebase your commits into logical chunks, without errors.
-- Push the branch up (`git push origin my_awesome_feature`).
-- Create a pull request against halostatue/minitar and describe what your change
-  does and the why you think it should be merged.
-
+[cbeams]: https://cbea.ms/git-commit/
+[cccoc]: ./CODE_OF_CONDUCT.md
+[conventional]: https://www.conventionalcommits.org/en/v1.0.0/
 [dco]: licences/dco.txt
 [hoe]: https://github.com/seattlerb/hoe
 [issue-62]: https://github.com/halostatue/minitar/issues/62
+[issues]: https://github.com/halostatue/minitar/issues
 [minitest]: https://github.com/seattlerb/minitest
 [pr-151-commits]: https://github.com/halostatue/minitar/pull/151/commits
 [pr-151]: https://github.com/halostatue/minitar/pull/151
 [qcm]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [sign-off]: LICENCE.md#developer-certificate-of-origin
 [standardrb]: https://github.com/standardrb/standard
+[tpope-qcm]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+[trailers1]: https://git-scm.com/docs/git-interpret-trailers
+[trailers2]: https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---trailerlttokengtltvaluegt
