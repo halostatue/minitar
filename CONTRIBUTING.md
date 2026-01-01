@@ -301,9 +301,8 @@ There are five assertions:
 [minitest]: https://github.com/seattlerb/minitest
 [pr-151-commits]: https://github.com/halostatue/minitar/pull/151/commits
 [pr-151]: https://github.com/halostatue/minitar/pull/151
-[qcm]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [sign-off]: LICENCE.md#developer-certificate-of-origin
 [standardrb]: https://github.com/standardrb/standard
-[tpope-qcm]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+[tpope-qcm]: https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [trailers1]: https://git-scm.com/docs/git-interpret-trailers
 [trailers2]: https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---trailerlttokengtltvaluegt

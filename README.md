@@ -67,4 +67,4 @@ The minitar library uses a [Semantic Versioning][semver] scheme with one change:
 
 - When PATCH is zero (`0`), it will be omitted from version references.
 
-[semver]: http://semver.org/
+[semver]: https://semver.org/
