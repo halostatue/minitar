@@ -10,11 +10,12 @@
 
 ## Description
 
-The minitar library is a pure-Ruby library that operates on POSIX tar(1) archive
-files.
+The minitar library is a pure-Ruby library that operates on POSIX tar(1)
+archive files.
 
 minitar (previously called Archive::Tar::Minitar) is based heavily on code
-originally written by Mauricio Julio Fernández Pradier for the rpa-base project.
+originally written by Mauricio Julio Fernández Pradier for the rpa-base
+project.
 
 ## Synopsis
 
@@ -43,9 +44,9 @@ A gzipped tar can be written with:
 ```
 
 As the case above shows, one need not write to a file. However, it will
-sometimes require that one dive a little deeper into the API, as in the case of
-StringIO objects. Note that I'm not providing a block with Minitar::Output, as
-Minitar::Output#close automatically closes both the Output object and the
+sometimes require that one dive a little deeper into the API, as in the case
+of StringIO objects. Note that I'm not providing a block with Minitar::Output,
+as Minitar::Output#close automatically closes both the Output object and the
 wrapped data stream object.
 
 ```ruby
@@ -67,7 +68,8 @@ See [SECURITY](./SECURITY.md)
 
 ## minitar Semantic Versioning
 
-The minitar library uses a [Semantic Versioning][semver] scheme with one change:
+The minitar library uses a [Semantic Versioning][semver] scheme with one
+change:
 
 - When PATCH is zero (`0`), it will be omitted from version references.
 
