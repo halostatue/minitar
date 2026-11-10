@@ -8,7 +8,6 @@ require "minitest"
 require "minitest/test_task"
 
 Hoe.plugin :halostatue
-Hoe.plugin :rubygems
 
 Hoe.plugins.delete :debug
 Hoe.plugins.delete :newb
@@ -30,14 +29,14 @@ hoe = Hoe.spec "minitar" do
   }
 
   extra_dev_deps << ["hoe", "~> 4.0"]
-  extra_dev_deps << ["hoe-halostatue", "~> 2.1", ">= 2.1.1"]
+  extra_dev_deps << ["hoe-halostatue", "~> 3.0"]
   extra_dev_deps << ["irb", "~> 1.0"]
-  extra_dev_deps << ["minitest", "~> 5.16"]
+  extra_dev_deps << ["minitest", ">= 5.16", "< 7"]
   extra_dev_deps << ["minitest-autotest", "~> 1.0"]
   extra_dev_deps << ["minitest-focus", "~> 1.1"]
   extra_dev_deps << ["rake", ">= 10.0", "< 14"]
-  extra_dev_deps << ["rdoc", ">= 0.0", "< 7"]
-  extra_dev_deps << ["simplecov", "~> 0.22"]
+  extra_dev_deps << ["rdoc", ">= 0.0", "< 8"]
+  extra_dev_deps << ["simplecov", ">= 0.22", "< 2"]
   extra_dev_deps << ["simplecov-lcov", "~> 0.8"]
   extra_dev_deps << ["standard", "~> 1.0"]
   extra_dev_deps << ["standard-minitest", "~> 1.0"]
