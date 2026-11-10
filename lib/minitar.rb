@@ -90,10 +90,16 @@ class << Minitar
     end
   end
 
-  def windows? = # :nodoc:
-    RUBY_PLATFORM =~ /^(?:cyginw|mingw|mswin)/i ||
-      RbConfig::CONFIG["host_os"].to_s =~ /^(cygwin|mingw|mswin|windows)/i ||
-      File::ALT_SEPARATOR == "\\"
+  WINDOWS_CONFIG = RbConfig::CONFIG["host_os"].to_s =~ /^(cygwin|mingw|mswin|windows)/i
+  WINDOWS_PLATFORM = RUBY_PLATFORM =~ /^(?:cygwin|mingw|mswin)/i
+  WINDOWS_SEPARATOR = File::ALT_SEPARATOR == "\\"
+
+  private_constant :WINDOWS_CONFIG, :WINDOWS_PLATFORM, :WINDOWS_SEPARATOR
+
+  def windows? = windows_platform? || windows_config? || File::ALT_SEPARATOR == "\\" # :nodoc:
+  def windows_config? = WINDOWS_CONFIG # :nodoc:
+  def windows_platform? = WINDOWS_PLATFORM # :nodoc:
+  def windows_separator? = WINDOWS_SEPARATOR # :nodoc:
 
   # A convenience method to pack the provided `data` as a file named `entry`, which may
   # either be a name String or a Hash with the fields described below. When only a name is
