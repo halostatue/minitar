@@ -16,15 +16,20 @@ jobs:
 
     permissions:
       contents: read
+      pull-requests: write # Required to write comments on the PR
 
     steps:
       - name: Harden the runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: block
           disable-sudo: true
           allowed-endpoints: >
             api.github.com:443
             github.com:443
+            release-assets.githubusercontent.com:443
 
-      - uses: KineticCafe/actions-dco@5f160e3ee086af8fc0fb567b8add0937d074123e # v3.2.0
+      - uses: KineticCafe/actions-dco@a52e56727ec21d6cdba26513826e1ae4a752d2fc # v3.2.1
+        with:
+          config: |
+            comment = true
