@@ -65,6 +65,10 @@ class Minitar
   # The exception raised when a file contains a relative path in secure mode (the default
   # for this version).
   SecureRelativePathError = Class.new(Error)
+  # The exception raised when an entry name cannot be safely written on the current
+  # platform (for example, a name containing `:` on Windows, which may address an NTFS
+  # alternate data stream).
+  UnsafeFileNameError = Class.new(Error)
   # The exception raised when a file contains an invalid Posix header.
   InvalidTarStream = Class.new(Error)
 end

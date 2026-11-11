@@ -130,19 +130,12 @@ class Minitar::Input
       entry: entry
     }
 
-    # extract_entry is not vulnerable to prefix '/' vulnerabilities, but it is
-    # vulnerable to relative path directories. This code will break this vulnerability.
-    # For this version, we are breaking relative paths HARD by throwing an exception.
-    #
-    # Future versions may permit relative paths as long as the file does not leave
-    # `destdir`.
-    #
-    # However, squeeze consecutive '/' characters together.
-    full_name = entry.full_name.squeeze("/")
-
-    if /\.{2}(?:\/|\z)/.match?(full_name)
-      raise Minitar::SecureRelativePathError, "Path contains '..'"
-    end
+    # extract_entry is not vulnerable to prefix '/' vulnerabilities; check and reject
+    # relative path directories on both Windows and Unix-like systems. This is a hard
+    # rejection by throwing exceptions. Future versions may permit relative paths as long
+    # as the file does not leave `destdir`.
+    full_name = normalize_entry_name(entry.full_name)
+    check_relative_path!(full_name)
 
     if entry.directory?
       extract_directory(destdir, full_name, entry, stats, options, &)
@@ -164,6 +157,58 @@ class Minitar::Input
   end
 
   private
+
+  # Normalizes an entry name as the filesystem will interpret it.
+  #
+  # On Unix-like systems (`File::ALT_SEPARATOR.nil?`), consecutive `/` are always
+  # squeezed to a single `/`.
+  #
+  # On Windows, the normalization _and check_ are more extensive:
+  #
+  # - All `\` are normalized to `/` and squeezed.
+  # - Drive designators `[A-Z]:` are rejected with UnsafeFileNameError.
+  # - Files with `:` are rejected with UnsafeFileNameError (NTFS alternate data streams
+  #   are removed with `File.basename`, causing file aliasing).
+  # - Each path component is examined to see if, aside from `..` and `.`, it contains
+  #   a trailing dot or space. These are rejected with UnsafeFileNameError due to file
+  #   aliasing.
+  def normalize_entry_name(name, alt_separator = File::ALT_SEPARATOR)
+    return name.squeeze("/") unless alt_separator
+
+    name = name.tr(alt_separator, "/").squeeze("/")
+
+    # A drive designator looks like a directory (`C:` is a drive, not a stream name), so
+    # it is called out separately from the general `:` check below.
+    if name.match?(/\A[A-Za-z]:/)
+      raise Minitar::UnsafeFileNameError, "Path begins with a drive designator"
+    end
+
+    if name.include?(":")
+      raise Minitar::UnsafeFileNameError, "Path contains ':'"
+    end
+
+    # Win32 trims trailing dots and spaces from path components, so `...`, `.. `, and
+    # `dirname..` alias a different name (often the containing directory) than the
+    # literal name in the archive. `.` and `..` are left alone: `.` is harmless and `..`
+    # is handled by #check_relative_path!.
+    name.split("/").each do |part|
+      next if part == "." || part == ".."
+
+      if part.match?(/[ .]\z/)
+        raise Minitar::UnsafeFileNameError, "Path component ends with '.' or ' '"
+      end
+    end
+
+    name
+  end
+
+  # Raises Minitar::SecureRelativePathError if any path component of the (normalized)
+  # `name` is `..`.
+  def check_relative_path!(name)
+    if %r{(?:\A|/)\.\.(?:/|\z)}.match?(name)
+      raise Minitar::SecureRelativePathError, "Path contains '..'"
+    end
+  end
 
   def fsync_dir(dirname)
     # make sure this hits the disc
