@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: minitar 1.1.0 ruby lib
+# stub: minitar 1.1.1 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "minitar".freeze
-  s.version = "1.1.0".freeze
+  s.version = "1.1.1".freeze
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.metadata = { "bug_tracker_uri" => "https://github.com/halostatue/minitar/issues", "changelog_uri" => "https://github.com/halostatue/minitar/blob/main/CHANGELOG.md", "documentation_uri" => "https://halostatue.github.io/minitar/", "rubygems_mfa_required" => "true", "source_code_uri" => "https://github.com/halostatue/minitar" } if s.respond_to? :metadata=
