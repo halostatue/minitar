@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: Harden the runner
-        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
         with:
           disable-sudo: true
           egress-policy: block
@@ -64,7 +64,7 @@ jobs:
             'print "version=", Gem::Specification.load(ARGV[0]).rubygems_version, "\n"' \
             minitar.gemspec >>"${GITHUB_OUTPUT}"
 
-      - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           bundler-cache: false
           ruby-version: ruby
@@ -90,4 +90,4 @@ jobs:
       contents: read
       pages: write    # Publish documentation
       id-token: write # Authenticate for gem publishing
-    uses: ./.github/workflows/publish-docs.yml
+    uses: $/.github/workflows/publish-docs.yml
