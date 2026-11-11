@@ -51,25 +51,13 @@ class Minitar::Reader
         end
     end
 
-    # Reads `len` bytes (or all remaining data) from the entry. If `out_string`
-    # is provided, the read data is stored there instead of allocating a new
-    # string. Returns `nil` if there is no more data to read.
-    def read(len = nil, out_string = nil)
+    # Reads `len` bytes (or all remaining data) from the entry. Returns `nil` if there
+    # is no more data to read.
+    def read(len = nil)
       return nil if @read >= @size
       len ||= @size - @read
       max_read = [len, @size - @read].min
-
-      ret =
-        if out_string
-          begin
-            @io.read(max_read, out_string)
-          rescue ArgumentError # If `@io` does not support `out_string`
-            out_string.replace(@io.read(max_read))
-          end
-        else
-          @io.read(max_read)
-        end
-
+      ret = @io.read(max_read)
       @read += ret.bytesize
       ret
     end

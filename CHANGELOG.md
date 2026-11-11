@@ -1,18 +1,5 @@
 # Changelog
 
-## NEXT / YYYY-MM-DD
-
-- Enhancements:
-
-  - Richard Degenne extended `Minitar::Reader::EntryStream#read` to accept a
-    second parameter, `out_string`, where the data read from the stream will
-    be read. [#166][pull-166]
-
-- Documentation:
-
-  - Removed duplicate documentation files and updated the RDoc to match the
-    configuration.
-
 ## 1.1.1 / 2026-11-11
 
 - Security:
@@ -45,6 +32,11 @@
   - The `..` check now rejects only path components that are exactly `..`.
     Names such as `dirname../file` were previously rejected incorrectly on all
     platforms.
+
+- Documentation:
+
+  - Removed duplicate documentation files and updated the RDoc to match the
+    configuration.
 
 ## 1.1.0 / 2025-09-07
 
@@ -331,5 +323,4 @@
 [pull-43]: https://github.com/halostatue/minitar/pull/43
 [pull-47]: https://github.com/halostatue/minitar/pull/47
 [pull-121]: https://github.com/halostatue/minitar/pull/121
-[pull-166]: https://github.com/halostatue/minitar/pull/166
 [tidelift]: https://tidelift.com/security
