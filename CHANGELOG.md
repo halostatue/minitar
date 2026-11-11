@@ -13,6 +13,39 @@
   - Removed duplicate documentation files and updated the RDoc to match the
     configuration.
 
+## 1.1.1 / 2026-11-11
+
+- Security:
+
+  - Relative path rejection ignored Windows-like filenames in maliciously
+    crafted tarballs _on Windows itself_. This affects all versions of minitar
+    < 1.1.1.
+
+    Tar entry names are byte strings following POSIX rules, where `/` is the
+    only directory separator and characters special on Windows (`:` and `\`)
+    are ordinary. This meant that `..\x` skipped relative path rejection and
+    affected files or directories outside of the extraction destination.
+
+    When running on Windows, Minitar now normalizes all `\` characters to `/`
+    before checking for potential relative path escapes.
+
+    The following filename patterns are all rejected with
+    `UnsafeFileNameError`:
+
+    - paths that start with drive designators (`[A-Z]:`);
+    - paths that contain `:` (NTFS alternate data stream names); and
+    - path components that have trailing `.` or space characters.
+
+    UNC paths are normalized to relative directories in the destination.
+
+    Behaviour on non-Windows platform has not been changed.
+
+- Bug fix:
+
+  - The `..` check now rejects only path components that are exactly `..`.
+    Names such as `dirname../file` were previously rejected incorrectly on all
+    platforms.
+
 ## 1.1.0 / 2025-09-07
 
 - Enhancements:

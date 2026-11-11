@@ -36,6 +36,7 @@ test/test_integration_pack_unpack_cycle.rb
 test/test_issue_46.rb
 test/test_issue_62.rb
 test/test_minitar.rb
+test/test_path_normalization.rb
 test/test_pax_header.rb
 test/test_pax_support.rb
 test/test_tar_header.rb
@@ -43,3 +44,4 @@ test/test_tar_input.rb
 test/test_tar_output.rb
 test/test_tar_reader.rb
 test/test_tar_writer.rb
+test/test_windows_extraction.rb
